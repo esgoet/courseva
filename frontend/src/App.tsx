@@ -3,6 +3,8 @@ import {useEffect, useState} from "react";
 import {Course} from "./types/types.ts";
 import axios from 'axios';
 import CourseList from "./components/CourseList.tsx";
+import {Route, Routes} from "react-router-dom";
+import CoursePage from "./components/CoursePage.tsx";
 
 export default function App() {
   const [courses, setCourses] = useState<Course[]>([])
@@ -20,7 +22,11 @@ export default function App() {
   return (
     <>
       <h1>Learning Management System</h1>
-      <CourseList courses={courses}/>
+      <Routes>
+        <Route path={"/"} element={ <CourseList courses={courses}/>}/>
+        <Route path={"/course/:id"} element={<CoursePage/>}/>
+      </Routes>
+
     </>
   )
 }
