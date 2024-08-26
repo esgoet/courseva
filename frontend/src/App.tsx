@@ -2,6 +2,7 @@ import './App.css'
 import {useEffect, useState} from "react";
 import {Course} from "./types/types.ts";
 import axios from 'axios';
+import CourseList from "./components/CourseList.tsx";
 
 export default function App() {
   const [courses, setCourses] = useState<Course[]>([])
@@ -18,15 +19,8 @@ export default function App() {
 
   return (
     <>
-      <section>
-        <h2>Courses</h2>
-        {courses.map((course)=> (
-            <article>
-              <h3>{course.name}</h3>
-              <p>{course.description}</p>
-            </article>
-        ))}
-      </section>
+      <h1>Learning Management System</h1>
+      <CourseList courses={courses}/>
     </>
   )
 }
