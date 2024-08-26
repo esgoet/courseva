@@ -1,6 +1,6 @@
 export type Course = {
     id: string,
-    name: string,
+    title: string,
     description: string,
     students: string[],
     instructors: string[]

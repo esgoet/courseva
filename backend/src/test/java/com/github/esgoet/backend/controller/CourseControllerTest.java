@@ -43,7 +43,7 @@ class CourseControllerTest {
                 .andExpect(content().json("""
                     {
                       "id": "1",
-                      "name": "Math 101",
+                      "title": "Math 101",
                       "description": "This is Math 101",
                       "students": ["1","2"],
                       "instructors": ["1","2"]

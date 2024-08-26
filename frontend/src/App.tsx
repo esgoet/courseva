@@ -22,7 +22,7 @@ export default function App() {
         <h2>Courses</h2>
         {courses.map((course)=> (
             <article>
-              <h3>{course.name}</h3>
+              <h3>{course.title}</h3>
               <p>{course.description}</p>
             </article>
         ))}

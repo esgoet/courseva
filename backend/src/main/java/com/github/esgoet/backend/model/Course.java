@@ -7,7 +7,7 @@ import java.util.List;
 @Document("courses")
 public record Course(
         String id,
-        String name,
+        String title,
         String description,
         List<String> students,
         List<String> instructors
