@@ -9,6 +9,8 @@ public record Course(
         String id,
         String title,
         String description,
+        List<Lesson> lessons,
+        List<Assignment> assignments,
         List<String> students,
         List<String> instructors
 ) {
