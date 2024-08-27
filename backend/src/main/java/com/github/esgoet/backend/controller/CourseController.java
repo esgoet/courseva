@@ -1,12 +1,10 @@
 package com.github.esgoet.backend.controller;
 
+import com.github.esgoet.backend.dto.NewCourseDto;
 import com.github.esgoet.backend.model.Course;
 import com.github.esgoet.backend.service.CourseService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,6 +22,11 @@ public class CourseController {
     @GetMapping("/{id}")
     public Course getCourseById(@PathVariable String id) {
         return courseService.getCourseById(id);
+    }
+
+    @PostMapping
+    public Course createCourse(@RequestBody NewCourseDto courseDto) {
+        return courseService.createCourse(courseDto);
     }
 
 }
