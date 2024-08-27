@@ -14,7 +14,8 @@ import static org.mockito.Mockito.*;
 
 class CourseServiceTest {
     private final CourseRepository courseRepository = mock(CourseRepository.class);
-    private final CourseService courseService = new CourseService(courseRepository);
+    private final IdService idService = mock(IdService.class);
+    private final CourseService courseService = new CourseService(courseRepository, idService);
 
     @Test
     void getAllCoursesTest_whenEmptyDb_thenReturnEmptyList() {
@@ -31,12 +32,12 @@ class CourseServiceTest {
     @Test
     void getAllCoursesTest_whenCoursesExist_thenReturnListOfCourses() {
         //GIVEN
-        List<Course> courses = List.of(new Course("1", "Math 101", "This is Math 101", List.of("1","2"),  List.of("1","2")));
+        List<Course> courses = List.of(new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("1","2"),  List.of("1","2")));
         when(courseRepository.findAll()).thenReturn(courses);
         //WHEN
         List<Course> actual = courseService.getAllCourses();
         //THEN
-        List<Course> expected = List.of(new Course("1", "Math 101", "This is Math 101", List.of("1","2"),  List.of("1","2")));
+        List<Course> expected = List.of(new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("1","2"),  List.of("1","2")));
         verify(courseRepository).findAll();
         assertEquals(expected, actual);
     }
@@ -44,12 +45,12 @@ class CourseServiceTest {
     @Test
     void getCourseByIdTest_whenCourseExists_thenReturnCourse() {
         //GIVEN
-        Course course = new Course("1", "Math 101", "This is Math 101", List.of("1","2"),  List.of("1","2"));
+        Course course = new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("1","2"),  List.of("1","2"));
         when(courseRepository.findById("1")).thenReturn(Optional.of(course));
         //WHEN
         Course actual = courseService.getCourseById("1");
         //THEN
-        Course expected =  new Course("1", "Math 101", "This is Math 101", List.of("1","2"),  List.of("1","2"));
+        Course expected =  new Course("1", "Math 101", "This is Math 101",  List.of(), List.of(), List.of("1","2"),  List.of("1","2"));
         verify(courseRepository).findById("1");
         assertEquals(expected, actual);
     }
