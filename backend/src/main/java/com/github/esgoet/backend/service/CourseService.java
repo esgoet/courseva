@@ -1,5 +1,6 @@
 package com.github.esgoet.backend.service;
 
+import com.github.esgoet.backend.exception.CourseNotFoundException;
 import com.github.esgoet.backend.model.Course;
 import com.github.esgoet.backend.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,5 +15,9 @@ public class CourseService {
 
     public List<Course> getAllCourses() {
         return courseRepository.findAll();
+    }
+
+    public Course getCourseById(String id) {
+        return courseRepository.findById(id).orElseThrow(()-> new CourseNotFoundException("No course found with id: " + id));
     }
 }
