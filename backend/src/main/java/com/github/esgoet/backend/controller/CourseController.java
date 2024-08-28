@@ -1,6 +1,7 @@
 package com.github.esgoet.backend.controller;
 
 import com.github.esgoet.backend.dto.NewCourseDto;
+import com.github.esgoet.backend.dto.UpdateCourseDto;
 import com.github.esgoet.backend.model.Course;
 import com.github.esgoet.backend.service.CourseService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,11 @@ public class CourseController {
     @PostMapping
     public Course createCourse(@RequestBody NewCourseDto courseDto) {
         return courseService.createCourse(courseDto);
+    }
+
+    @PutMapping("/{id}")
+    public Course updateCourse(@PathVariable String id, @RequestBody UpdateCourseDto courseDto) {
+        return courseService.updateCourse(id, courseDto);
     }
 
 }
