@@ -2,9 +2,14 @@ import {Link, useParams} from "react-router-dom";
 import {Course} from "../types/types.ts";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {PLACEHOLDERS} from "../utils/constants.ts";
+import EditableTextDetail from "./EditableTextDetail.tsx";
+import EditableListDetail from "./EditableListDetail.tsx";
 
-export default function CoursePage() {
+type CoursePageProps = {
+    updateCourse: (course: Course, updatedProperty: string, updatedValue: string | string[]) => void
+}
+
+export default function CoursePage({updateCourse}: Readonly<CoursePageProps>) {
     const params = useParams();
     const id : string | undefined = params.id;
 
@@ -12,7 +17,9 @@ export default function CoursePage() {
 
     const fetchCourse = () => {
         axios.get(`/api/courses/${id}`)
-            .then((response) => setCourse(response.data))
+            .then((response) => {
+                setCourse(response.data)
+            })
             .catch((error) => {
                 console.log(error.response.data);
                 setCourse(undefined);
@@ -21,30 +28,28 @@ export default function CoursePage() {
 
     useEffect(() =>{
         fetchCourse()
-    },[])
+    },[]);
+
+    const handleUpdate = (updatedProperty: string, updatedValue: string | string[]) => {
+        if (course) updateCourse(course, updatedProperty, updatedValue);
+    }
 
     return (
         <>
             <Link to={"/"}>Back</Link>
             {course ?
             <>
-                <h2>{course.title}</h2>
+                <h3>
+                    <EditableTextDetail inputType={"text"} label={"Title"} name={"title"} initialValue={course.title} handleUpdate={handleUpdate}/>
+                </h3>
                 <p>{course.id}</p>
-                <p>{course.description}</p>
+                <EditableTextDetail inputType={"textarea"} label={"Description"} name={"description"} initialValue={course.description} handleUpdate={handleUpdate}/>
+                <EditableTextDetail inputType={"date"} label={"Start Date"} name={"startDate"} initialValue={course.startDate.toString()} handleUpdate={handleUpdate}/>
+                {/*add lessons and assignments*/}
                 <h3>Students</h3>
-                <ul>
-                    {course.students.map((courseStudent) => (
-                        <li key={`student-${courseStudent}`}>{PLACEHOLDERS.map(student => student.id === courseStudent && student.name)}</li>
-                        ))
-                    }
-                </ul>
+                <EditableListDetail label={"Students"} name={"students"} initialValue={course.students} handleUpdate={handleUpdate}/>
                 <h3>Instructors</h3>
-                <ul>
-                    {course.instructors.map((courseInstructor) => (
-                        <li key={`student-${courseInstructor}`}>{PLACEHOLDERS.map(instructor => instructor.id === courseInstructor && instructor.name)}</li>
-                    ))
-                    }
-                </ul>
+                <EditableListDetail label={"Instructors"} name={"instructors"} initialValue={course.instructors} handleUpdate={handleUpdate}/>
             </>
             :
             <p>No course found.</p>}

@@ -9,39 +9,41 @@ import Dashboard from "./components/Dashboard.tsx";
 import {formatDate} from "./utils/formatDate.ts";
 
 export default function App() {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const navigate = useNavigate();
+    const [courses, setCourses] = useState<Course[]>([]);
+    const navigate = useNavigate();
+    const fetchCourses = () => {
+        axios.get("/api/courses")
+            .then((response : AxiosResponse<CourseDto[]>) => setCourses(response.data.map(course => ({...course, startDate: formatDate(course.startDate)}))))
+            .catch((error) => console.log(error.response.data))
+    }
 
-  const fetchCourses = () => {
-    axios.get("/api/courses")
-        .then((response : AxiosResponse<CourseDto[]>) => setCourses(response.data.map(course => ({...course, startDate: formatDate(course.startDate)}))))
-        .catch((error) => console.log(error.response.data))
-  }
+    useEffect(()=>{
+        fetchCourses();
+        }, []);
 
-  useEffect(()=>{
-    fetchCourses();
-  }, []);
+    const createCourse = (course : NewCourseDto)  => {
+        axios.post("/api/courses", course)
+            .then((response : AxiosResponse<Course>) => {
+                if (response.status === 200) {
+                    fetchCourses();
+                    navigate(`/course/${response.data.id}`)
+                }
+            })
+            .catch((error) => console.log(error.response.data))
+    }
 
-  const createCourse = (course : NewCourseDto)  => {
-      axios.post("/api/courses", course)
-          .then((response : AxiosResponse<Course>) => {
-              if (response.status === 200) {
-                  fetchCourses();
-                  navigate(`/course/${response.data.id}`)
-              }
-          })
-          .catch((error) => console.log(error.response.data))
-  }
-
-  return (
-    <>
-        <h1>Learning Management System</h1>
-        <Routes>
-            <Route path={"/"} element={ <Dashboard courses={courses}/>}/>
-            <Route path={"/course/:id"} element={<CoursePage/>}/>
-            <Route path={"/course/create"} element={<CourseCreator createCourse={createCourse}/>}/>
-        </Routes>
-
-    </>
+    const updateCourse = (course : Course, updatedProperty: string, updatedValue: string | string[]) => {
+        axios.put(`/api/courses/${course.id}`, {...course, [updatedProperty]: updatedValue})
+            .then((response) => response.status === 200 && fetchCourses())
+    }
+    return (
+        <>
+            <h1>Learning Management System</h1>
+            <Routes>
+                <Route path={"/"} element={ <Dashboard courses={courses}/>}/>
+                <Route path={"/course/:id"} element={<CoursePage updateCourse={updateCourse}/>}/>
+                <Route path={"/course/create"} element={<CourseCreator createCourse={createCourse}/>}/>
+            </Routes>
+        </>
   )
 }
