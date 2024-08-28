@@ -1,6 +1,6 @@
 import {Lesson, LessonDto} from "../types/types.ts";
 import {Link} from "react-router-dom";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 type CourseLessonOverviewProps = {
     lessons: Lesson[] | undefined,
@@ -9,6 +9,9 @@ type CourseLessonOverviewProps = {
 
 export default function CourseLessonOverview({lessons, updateCourse}: CourseLessonOverviewProps) {
     const [currentLessons, setCurrentLessons] = useState<Lesson[] | undefined>(lessons);
+    useEffect(() => {
+        setCurrentLessons(lessons)
+    },[lessons])
     const deleteLesson = (lessonId: string) => {
         const updatedLessons : Lesson[] | undefined = currentLessons?.filter(lesson => lesson.id !== lessonId);
         if (updatedLessons) {
