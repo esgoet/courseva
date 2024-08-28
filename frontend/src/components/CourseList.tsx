@@ -13,6 +13,7 @@ export default function CourseList({courses}: CourseListProps) {
                 {courses.map((course) => (
                     <li key={course.id}>
                         <h3>{course.title}</h3>
+                        <p>{course.id}</p>
                         <Link to={`/course/${course.id}`}>Details</Link>
                     </li>
                 ))}

@@ -5,7 +5,27 @@ export type Course = {
     lessons: Lesson[],
     assignments: Assignment[],
     students: string[],
-    instructors: string[]
+    instructors: string[],
+    startDate: Date
+}
+
+export type CourseDto = {
+    id: string,
+    title: string,
+    description: string,
+    lessons: Lesson[],
+    assignments: Assignment[],
+    students: string[],
+    instructors: string[],
+    startDate: string
+}
+
+export type NewCourseDto = {
+    title: string,
+    description: string,
+    students: string[],
+    instructors: string[],
+    startDate: string
 }
 
 export type Lesson = {
