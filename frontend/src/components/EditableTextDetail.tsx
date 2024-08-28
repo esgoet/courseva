@@ -6,7 +6,7 @@ type EditableTextDetailProps = {
     label: string,
     name: string,
     initialValue: string,
-    handleUpdate: (updatedProperty: string, updatedValue: string) => void;
+    updateCourse: (updatedProperty: string, updatedValue: string) => void;
 }
 
 export default function EditableTextDetail(props: Readonly<EditableTextDetailProps>){
@@ -15,7 +15,7 @@ export default function EditableTextDetail(props: Readonly<EditableTextDetailPro
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        props.handleUpdate(props.name, input);
+        props.updateCourse(props.name, input);
     }
 
     const handleCancel = () => {

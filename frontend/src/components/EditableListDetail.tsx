@@ -5,7 +5,7 @@ type EditableListDetailProps = {
     label: string,
     name: string,
     initialValue: string[],
-    handleUpdate: ( updatedProperty: string, updatedValue: string[]) => void;
+    updateCourse: (updatedProperty: string, updatedValue: string[]) => void;
 }
 
 export default function EditableListDetail(props: Readonly<EditableListDetailProps>){
@@ -14,7 +14,7 @@ export default function EditableListDetail(props: Readonly<EditableListDetailPro
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        props.handleUpdate(props.name, input);
+        props.updateCourse(props.name, input);
     }
 
     const handleCancel = () => {

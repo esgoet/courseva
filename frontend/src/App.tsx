@@ -1,15 +1,21 @@
 import './App.css'
 import {useEffect, useState} from "react";
-import {Course, CourseDto, NewCourseDto} from "./types/types.ts";
+import {Assignment, Course, CourseDto, Lesson, NewCourseDto} from "./types/types.ts";
 import axios, {AxiosResponse} from 'axios';
 import {Route, Routes, useNavigate} from "react-router-dom";
 import CoursePage from "./components/CoursePage.tsx";
 import CourseCreator from "./components/CourseCreator.tsx";
 import Dashboard from "./components/Dashboard.tsx";
 import {formatDate} from "./utils/formatDate.ts";
+import CourseLessonOverview from "./components/CourseLessonOverview.tsx";
+import CourseAssignmentOverview from "./components/CourseAssignmentOverview.tsx";
+import CourseLesson from "./components/CourseLesson.tsx";
+import CourseAssignment from "./components/CourseAssignment.tsx";
+import CourseLessonCreator from "./components/CourseLessonCreator.tsx";
 
 export default function App() {
     const [courses, setCourses] = useState<Course[]>([]);
+    const [currentCourse, setCurrentCourse] = useState<Course | undefined>();
     const navigate = useNavigate();
     const fetchCourses = () => {
         axios.get("/api/courses")
@@ -32,16 +38,23 @@ export default function App() {
             .catch((error) => console.log(error.response.data))
     }
 
-    const updateCourse = (course : Course, updatedProperty: string, updatedValue: string | string[]) => {
-        axios.put(`/api/courses/${course.id}`, {...course, [updatedProperty]: updatedValue})
+    const updateCourse = (updatedProperty: string, updatedValue: string | string[] | Lesson[] | Assignment[]) => {
+        axios.put(`/api/courses/${currentCourse?.id}`, {...currentCourse, [updatedProperty]: updatedValue})
             .then((response) => response.status === 200 && fetchCourses())
     }
+
     return (
         <>
             <h1>Learning Management System</h1>
             <Routes>
                 <Route path={"/"} element={ <Dashboard courses={courses}/>}/>
-                <Route path={"/course/:id"} element={<CoursePage updateCourse={updateCourse}/>}/>
+                <Route path={"/course/:id"} element={<CoursePage updateCourse={updateCourse} course={currentCourse} setCourse={setCurrentCourse}/>}>
+                    <Route path={"lessons"} element={<CourseLessonOverview lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
+                    <Route path={"lessons/create"} element={<CourseLessonCreator/>}/>
+                    <Route path={"lessons/:id"} element={<CourseLesson/>}/>
+                    <Route path={"assignments"} element={<CourseAssignmentOverview assignments={currentCourse?.assignments}/>}/>
+                    <Route path={"assignments/:id"} element={<CourseAssignment/>}/>
+                </Route>
                 <Route path={"/course/create"} element={<CourseCreator createCourse={createCourse}/>}/>
             </Routes>
         </>
