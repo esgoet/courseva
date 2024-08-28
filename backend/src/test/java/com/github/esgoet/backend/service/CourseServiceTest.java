@@ -1,6 +1,7 @@
 package com.github.esgoet.backend.service;
 
 import com.github.esgoet.backend.dto.NewCourseDto;
+import com.github.esgoet.backend.dto.UpdateCourseDto;
 import com.github.esgoet.backend.exception.CourseNotFoundException;
 import com.github.esgoet.backend.model.Course;
 import com.github.esgoet.backend.repository.CourseRepository;
@@ -64,9 +65,10 @@ class CourseServiceTest {
         //GIVEN
         when(courseRepository.findById("1")).thenReturn(Optional.empty());
         //THEN
-        assertThrows(CourseNotFoundException.class,
+        CourseNotFoundException exception = assertThrows(CourseNotFoundException.class,
                 //WHEN
-                () -> courseService.getCourseById("1"));
+                ()-> courseService.getCourseById("1"));
+        assertEquals("No course found with id: 1", exception.getMessage());
         verify(courseRepository).findById("1");
     }
 
@@ -84,6 +86,39 @@ class CourseServiceTest {
         verify(idService).generateCourseId(courseDto.title(),courseDto.startDate());
         verify(courseRepository).save(course);
         assertEquals(expected, actual);
+
+    }
+
+    @Test
+    void updateCourseTest_whenCourseExists() {
+        //GIVEN
+        Course course = new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of(),  List.of("i1"), startDate);
+        UpdateCourseDto courseDto = new UpdateCourseDto("Math 101", "This is Math 101", List.of(), List.of(), List.of("s1","s2","s3"),  List.of("i1","i2"), startDate);
+        Course updatedCourse = new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s1","s2","s3"),  List.of("i1","i2"), startDate);
+        when(courseRepository.findById("1")).thenReturn(Optional.of(course));
+        when(courseRepository.save(updatedCourse)).thenReturn(updatedCourse);
+        //WHEN
+        Course actual = courseService.updateCourse("1", courseDto);
+        //THEN
+        Course expected = new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s1","s2","s3"),  List.of("i1","i2"), startDate);
+        verify(courseRepository).findById("1");
+        verify(courseRepository).save(updatedCourse);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void updateCourseTest_whenCourseDoesNotExist() {
+        //GIVEN
+        UpdateCourseDto courseDto = new UpdateCourseDto("Math 101", "This is Math 101", List.of(), List.of(), List.of("s1","s2","s3"),  List.of("i1","i2"), startDate);
+        Course updatedCourse = new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s1","s2","s3"),  List.of("i1","i2"), startDate);
+        when(courseRepository.findById("1")).thenReturn(Optional.empty());
+        //THEN
+        CourseNotFoundException exception = assertThrows(CourseNotFoundException.class,
+                //WHEN
+                ()-> courseService.updateCourse("1", courseDto));
+        assertEquals("No course found with id: 1", exception.getMessage());
+        verify(courseRepository).findById("1");
+        verify(courseRepository, never()).save(updatedCourse);
 
     }
 }

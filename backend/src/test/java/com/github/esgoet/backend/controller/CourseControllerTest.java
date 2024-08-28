@@ -39,7 +39,7 @@ class CourseControllerTest {
     @DirtiesContext
     void getCourseByIdTest_whenCourseExists() throws Exception {
         //GIVEN
-        courseRepository.save(new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("1","2"),  List.of("1","2"), startDate));
+        courseRepository.save(new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s1","s2"),  List.of("i1","i2"), startDate));
         //WHEN
         mockMvc.perform(get("/api/courses/1"))
                 //THEN
@@ -99,5 +99,64 @@ class CourseControllerTest {
                       "startDate": "2024-07-27"
                     }
                    """));
+    }
+
+    @Test
+    void updateCourseTest_whenCourseExists() throws Exception {
+        //GIVEN
+        courseRepository.save(new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s1","s2"),  List.of("i1","i2"), startDate));
+        //WHEN
+        mockMvc.perform(put("/api/courses/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                   {
+                      "title": "Math 101",
+                      "description": "This is Math 101",
+                      "lessons": [],
+                      "assignments": [],
+                      "students": ["s1","s2","s3"],
+                      "instructors": ["i1"],
+                      "startDate": "2024-07-27"
+                    }
+                   """))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                   {
+                      "id": "1",
+                      "title": "Math 101",
+                      "description": "This is Math 101",
+                      "lessons": [],
+                      "assignments": [],
+                      "students": ["s1","s2","s3"],
+                      "instructors": ["i1"],
+                      "startDate": "2024-07-27"
+                    }
+                   """));
+    }
+
+    @Test
+    void updateCourseTest_whenCourseDoesNotExist() throws Exception {
+        //WHEN
+        mockMvc.perform(put("/api/courses/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                   {
+                      "title": "Math 101",
+                      "description": "This is Math 101",
+                      "lessons": [],
+                      "assignments": [],
+                      "students": ["s1","s2","s3"],
+                      "instructors": ["i1"],
+                      "startDate": "2024-07-27"
+                    }
+                   """))
+                .andExpect(status().isNotFound())
+                .andExpect(content().json("""
+                    {
+                      "message": "No course found with id: 1",
+                      "statusCode": 404
+                    }
+                    """))
+                .andExpect(jsonPath("$.timestamp").exists());
     }
 }
