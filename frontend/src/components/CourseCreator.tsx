@@ -7,7 +7,7 @@ type CourseCreatorProps = {
     createCourse: (course: NewCourseDto) => void;
 }
 
-export default function CourseCreator({createCourse}: CourseCreatorProps) {
+export default function CourseCreator({createCourse}: Readonly<CourseCreatorProps>) {
     const [course, setCourse] = useState<NewCourseDto>({title:"", description:"", students:[], instructors:[], startDate: ""})
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

@@ -5,7 +5,7 @@ type CourseListProps = {
     courses: Course[]
 }
 
-export default function CourseList({courses}: CourseListProps) {
+export default function CourseList({courses}: Readonly<CourseListProps>) {
     return (
         <section>
             <h2>Courses</h2>

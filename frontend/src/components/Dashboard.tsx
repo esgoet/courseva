@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 type DashboardProps = {
     courses: Course[]
 }
-export default function Dashboard({courses}: DashboardProps) {
+export default function Dashboard({courses}: Readonly<DashboardProps>) {
     return (
         <>
 
