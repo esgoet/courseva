@@ -8,9 +8,8 @@ type DashboardProps = {
 export default function Dashboard({courses}: Readonly<DashboardProps>) {
     return (
         <>
-
             <Link to={"/course/create"}>Create a Course</Link>
-            <CourseList courses={courses.sort((a,b)=> a?.startDate.getTime() - b?.startDate.getTime())}/>
+            <CourseList courses={courses.toSorted((a,b)=> a?.startDate.getTime() - b?.startDate.getTime())}/>
         </>
     )
 }
