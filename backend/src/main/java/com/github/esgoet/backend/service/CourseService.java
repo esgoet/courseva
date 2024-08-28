@@ -4,6 +4,7 @@ import com.github.esgoet.backend.dto.NewCourseDto;
 import com.github.esgoet.backend.dto.UpdateCourseDto;
 import com.github.esgoet.backend.exception.CourseNotFoundException;
 import com.github.esgoet.backend.model.Course;
+import com.github.esgoet.backend.model.Lesson;
 import com.github.esgoet.backend.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,10 +32,11 @@ public class CourseService {
     }
 
     public Course updateCourse(String id, UpdateCourseDto courseDto) {
+        List<Lesson> lessons = courseDto.lessons().stream().map(lesson -> new Lesson(idService.randomId(), lesson.title(), lesson.content(), lesson.whenPublic())).toList();
         Course course = courseRepository.findById(id).orElseThrow(()-> new CourseNotFoundException("No course found with id: " + id))
                 .withTitle(courseDto.title())
                 .withDescription(courseDto.description())
-                .withLessons(courseDto.lessons())
+                .withLessons(lessons)
                 .withAssignments(courseDto.assignments())
                 .withStudents(courseDto.students())
                 .withInstructors(courseDto.instructors())

@@ -1,12 +1,8 @@
-package com.github.esgoet.backend.model;
-
-import lombok.With;
+package com.github.esgoet.backend.dto;
 
 import java.time.LocalDateTime;
 
-@With
-public record Lesson(
-        String id,
+public record LessonDto(
         String title,
         String content,
         LocalDateTime whenPublic

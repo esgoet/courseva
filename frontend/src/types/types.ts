@@ -13,7 +13,7 @@ export type CourseDto = {
     id: string,
     title: string,
     description: string,
-    lessons: Lesson[],
+    lessons: LessonDto[],
     assignments: Assignment[],
     students: string[],
     instructors: string[],
@@ -33,6 +33,12 @@ export type Lesson = {
     title: string,
     content: string,
     whenPublic: Date
+}
+export type LessonDto = {
+    id: string,
+    title: string,
+    content: string,
+    whenPublic: string
 }
 
 export type Assignment = {

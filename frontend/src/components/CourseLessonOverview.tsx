@@ -1,10 +1,10 @@
-import {Lesson} from "../types/types.ts";
+import {Lesson, LessonDto} from "../types/types.ts";
 import {Link} from "react-router-dom";
 import {useState} from "react";
 
 type CourseLessonOverviewProps = {
     lessons: Lesson[] | undefined,
-    updateCourse: (updatedProperty: string, updatedValue: Lesson[]) => void;
+    updateCourse: (updatedProperty: string, updatedValue: LessonDto[]) => void;
 }
 
 export default function CourseLessonOverview({lessons, updateCourse}: CourseLessonOverviewProps) {
@@ -13,7 +13,9 @@ export default function CourseLessonOverview({lessons, updateCourse}: CourseLess
         const updatedLessons : Lesson[] | undefined = currentLessons?.filter(lesson => lesson.id !== lessonId);
         if (updatedLessons) {
             setCurrentLessons(updatedLessons);
-            updateCourse("lessons", updatedLessons);
+            updateCourse("lessons", updatedLessons.map(lesson => ({
+                ...lesson,
+                whenPublic: lesson.whenPublic.toString()})));
         }
     }
     return (

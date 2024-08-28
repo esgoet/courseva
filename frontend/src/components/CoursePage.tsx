@@ -1,34 +1,22 @@
 import {Link, Outlet, useParams} from "react-router-dom";
 import {Course} from "../types/types.ts";
-import {Dispatch, SetStateAction, useEffect} from "react";
-import axios from "axios";
+import { useEffect} from "react";
 import EditableTextDetail from "./EditableTextDetail.tsx";
 import EditableListDetail from "./EditableListDetail.tsx";
 
 type CoursePageProps = {
     updateCourse: (updatedProperty: string, updatedValue: string | string[]) => void,
     course: Course | undefined,
-    setCourse: Dispatch<SetStateAction<Course | undefined>>
+    fetchCourse: (id: string) => void;
 }
 
-export default function CoursePage({updateCourse, course, setCourse}: Readonly<CoursePageProps>) {
+export default function CoursePage({updateCourse, course, fetchCourse}: Readonly<CoursePageProps>) {
     const params = useParams();
     const id : string | undefined = params.id;
 
-    const fetchCourse = () => {
-        axios.get(`/api/courses/${id}`)
-            .then((response) => {
-                setCourse(response.data)
-            })
-            .catch((error) => {
-                console.log(error.response.data);
-                setCourse(undefined);
-            })
-    }
-
     useEffect(() =>{
-        fetchCourse()
-    },[]);
+        if (id) fetchCourse(id);
+    },[id]);
 
     return (
         <>
@@ -46,7 +34,9 @@ export default function CoursePage({updateCourse, course, setCourse}: Readonly<C
                 <EditableListDetail label={"Students"} name={"students"} initialValue={course.students} updateCourse={updateCourse}/>
                 <h3>Instructors</h3>
                 <EditableListDetail label={"Instructors"} name={"instructors"} initialValue={course.instructors} updateCourse={updateCourse}/>
+                <Link to={"lessons"}>Lessons</Link>
                 <Outlet/>
+
             </>
             :
             <p>No course found.</p>}

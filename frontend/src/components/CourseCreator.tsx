@@ -35,6 +35,7 @@ export default function CourseCreator({createCourse}: Readonly<CourseCreatorProp
                     <label htmlFor={"description"}>Course Description</label>
                     <textarea name={"description"} value={course.description} onChange={handleChange}
                               placeholder={"Enter Course Description"} autoCapitalize={"on"} required aria-required/>
+                    <label htmlFor={"startDate"}>Course Start Date</label>
                     <input type={"date"} name={"startDate"} value={course.startDate} onChange={handleChange} required aria-required/>
                 </fieldset>
                 <fieldset>

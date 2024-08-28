@@ -1,6 +1,6 @@
 import './App.css'
 import {useEffect, useState} from "react";
-import {Assignment, Course, CourseDto, Lesson, NewCourseDto} from "./types/types.ts";
+import {Assignment, Course, CourseDto, LessonDto, NewCourseDto} from "./types/types.ts";
 import axios, {AxiosResponse} from 'axios';
 import {Route, Routes, useNavigate} from "react-router-dom";
 import CoursePage from "./components/CoursePage.tsx";
@@ -17,9 +17,16 @@ export default function App() {
     const [courses, setCourses] = useState<Course[]>([]);
     const [currentCourse, setCurrentCourse] = useState<Course | undefined>();
     const navigate = useNavigate();
+
     const fetchCourses = () => {
         axios.get("/api/courses")
-            .then((response : AxiosResponse<CourseDto[]>) => setCourses(response.data.map(course => ({...course, startDate: formatDate(course.startDate)}))))
+            .then((response : AxiosResponse<CourseDto[]>) => setCourses(response.data.map(course =>
+                ({...course,
+                    startDate: formatDate(course.startDate),
+                    lessons: course.lessons.map(lesson => ({
+                    ...lesson,
+                    whenPublic: formatDate(lesson.whenPublic)
+                }))}))))
             .catch((error) => console.log(error.response.data))
     }
 
@@ -37,10 +44,26 @@ export default function App() {
             })
             .catch((error) => console.log(error.response.data))
     }
+    const fetchCourse = (id: string) => {
+        axios.get(`/api/courses/${id}`)
+            .then((response) => {
+                setCurrentCourse(response.data)
+                console.log("fetching course")
+            })
+            .catch((error) => {
+                console.log(error.response.data);
+                setCurrentCourse(undefined);
+            })
+    }
 
-    const updateCourse = (updatedProperty: string, updatedValue: string | string[] | Lesson[] | Assignment[]) => {
+    const updateCourse = (updatedProperty: string, updatedValue: string | string[] | LessonDto[] | Assignment[]) => {
         axios.put(`/api/courses/${currentCourse?.id}`, {...currentCourse, [updatedProperty]: updatedValue})
-            .then((response) => response.status === 200 && fetchCourses())
+            .then((response) => {
+                if (response.status === 200) {
+                    if (currentCourse?.id) fetchCourse(currentCourse.id);
+                    fetchCourses();
+                }
+            })
     }
 
     return (
@@ -48,9 +71,9 @@ export default function App() {
             <h1>Learning Management System</h1>
             <Routes>
                 <Route path={"/"} element={ <Dashboard courses={courses}/>}/>
-                <Route path={"/course/:id"} element={<CoursePage updateCourse={updateCourse} course={currentCourse} setCourse={setCurrentCourse}/>}>
+                <Route path={"/course/:id"} element={<CoursePage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse}/>}>
                     <Route path={"lessons"} element={<CourseLessonOverview lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
-                    <Route path={"lessons/create"} element={<CourseLessonCreator/>}/>
+                    <Route path={"lessons/create"} element={<CourseLessonCreator updateCourse={updateCourse} lessons={currentCourse?.lessons}/>}/>
                     <Route path={"lessons/:id"} element={<CourseLesson/>}/>
                     <Route path={"assignments"} element={<CourseAssignmentOverview assignments={currentCourse?.assignments}/>}/>
                     <Route path={"assignments/:id"} element={<CourseAssignment/>}/>
