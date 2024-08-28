@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -22,6 +23,8 @@ class CourseControllerTest {
     MockMvc mockMvc;
     @Autowired
     CourseRepository courseRepository;
+
+    private final LocalDate startDate = LocalDate.parse("2024-07-27");
 
     @Test
     void getAllCoursesTest() throws Exception {
@@ -36,7 +39,7 @@ class CourseControllerTest {
     @DirtiesContext
     void getCourseByIdTest_whenCourseExists() throws Exception {
         //GIVEN
-        courseRepository.save(new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("1","2"),  List.of("1","2")));
+        courseRepository.save(new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("1","2"),  List.of("1","2"), startDate));
         //WHEN
         mockMvc.perform(get("/api/courses/1"))
                 //THEN
@@ -49,7 +52,8 @@ class CourseControllerTest {
                       "lessons": [],
                       "assignments": [],
                       "students": ["1","2"],
-                      "instructors": ["1","2"]
+                      "instructors": ["1","2"],
+                      "startDate": "2024-07-27"
                     }
                     """));
     }
@@ -78,20 +82,22 @@ class CourseControllerTest {
                       "title": "Math 101",
                       "description": "This is Math 101",
                       "students": [],
-                      "instructors": []
+                      "instructors": [],
+                      "startDate": "2024-07-27"
                     }
                     """))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                    {
+                      "id": "math-101-24-07-27-1",
                       "title": "Math 101",
                       "description": "This is Math 101",
                       "lessons": [],
                       "assignments": [],
                       "students": [],
-                      "instructors": []
+                      "instructors": [],
+                      "startDate": "2024-07-27"
                     }
-                   """))
-                .andExpect(jsonPath("$.id").exists());
+                   """));
     }
 }
