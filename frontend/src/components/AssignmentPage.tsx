@@ -69,7 +69,7 @@ export default function AssignmentPage({assignments, updateCourse}: Readonly<Ass
                         <ul>
                             {assignment.submissions.map(submission => (
                                 <li key={`submission-${submission.id}`}>
-                                    <Link to={`${submission.id}`}>
+                                    <Link to={`submission/${submission.id}`}>
                                         <p>{submission.studentId}</p>
                                         <p>{submission.timestamp}</p>
                                     </Link>
