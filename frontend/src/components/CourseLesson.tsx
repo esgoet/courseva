@@ -15,7 +15,7 @@ export default function CourseLesson({lessons, updateCourse}: Readonly<CourseLes
 
     useEffect(()=>{
         if (lessons) {
-            const currentLesson : Lesson | undefined = lessons?.find(lesson => lesson.id === lessonId);
+            const currentLesson : Lesson | undefined = lessons.find(lesson => lesson.id === lessonId);
             if (currentLesson) setLesson(convertToLessonDto(currentLesson));
         }
     },[lessons, lessonId])
@@ -38,7 +38,7 @@ export default function CourseLesson({lessons, updateCourse}: Readonly<CourseLes
                         <EditableTextDetail inputType={"text"} label={"Lesson Title"} name={"title"}
                                             initialValue={lesson.title} updateCourse={handleUpdate}/>
                     </h3>
-                    <EditableTextDetail inputType={"datetime-local"} label={"Public Release Date and Time"} name={"whenPublic"}
+                    <EditableTextDetail inputType={"datetime-local"} label={"Lesson Release"} name={"whenPublic"}
                                         initialValue={lesson.whenPublic} updateCourse={handleUpdate}/>
                     <EditableTextDetail inputType={"textarea"} label={"Lesson Content"} name={"content"}
                                         initialValue={lesson.content} updateCourse={handleUpdate}/>

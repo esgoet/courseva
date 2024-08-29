@@ -1,6 +1,7 @@
 import {Lesson, LessonDto} from "../types/types.ts";
 import {ChangeEvent, FormEvent, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {convertToLessonDtoList} from "../utils/convertToLessonDto.ts";
 
 type CourseLessonCreatorProps = {
     updateCourse: (updatedProperty: string, updatedValue: LessonDto[]) => void,
@@ -21,9 +22,7 @@ export default function CourseLessonCreator({updateCourse, lessons}:Readonly<Cou
     }
     const handleSubmit = (e : FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (lessons) updateCourse("lessons", [lesson,...lessons.map(lesson => ({
-            ...lesson,
-            whenPublic: lesson.whenPublic.toString()}))])
+        if (lessons) updateCourse("lessons", [lesson,...convertToLessonDtoList(lessons)])
         navigate("..",{ relative: "path" });
     }
     
@@ -36,7 +35,7 @@ export default function CourseLessonCreator({updateCourse, lessons}:Readonly<Cou
                     <label htmlFor={"title"}>Lesson Title</label>
                     <input type={"text"} name={"title"} value={lesson.title} onChange={handleChange}
                            placeholder={"Enter Lesson Title"} autoCapitalize={"on"} required aria-required/>
-                    <label htmlFor={"whenPublic"}>When should the lesson go public?</label>
+                    <label htmlFor={"whenPublic"}>Lesson Release</label>
                     <input type={"datetime-local"} name={"whenPublic"} value={lesson.whenPublic} onChange={handleChange} required
                            aria-required/>
                 </fieldset>

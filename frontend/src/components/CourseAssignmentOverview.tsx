@@ -8,9 +8,10 @@ type CourseAssignmentOverviewProps = {
 }
 
 export default function CourseAssignmentOverview({assignments, updateCourse}:CourseAssignmentOverviewProps) {
+
     const deleteAssignment = (assignmentId: string) => {
         if (assignments) {
-            updateCourse("lessons",
+            updateCourse("assignments",
                 convertToAssignmentDtoList(assignments.filter(assignment => assignment.id !== assignmentId)))
         }
     }
@@ -18,9 +19,10 @@ export default function CourseAssignmentOverview({assignments, updateCourse}:Cou
     return (
         <>
             <h3>Assignments</h3>
+            <Link to={"create"}>Create New Assignment</Link>
             <ul>
-                {assignments?.filter(assignment => new Date(assignment.deadline).valueOf() < Date.now()).map(assignment => (
-                    <li key={`lesson-${assignment.id}`}>
+                {assignments?.filter(assignment => new Date(assignment.whenPublic).valueOf() < Date.now()).map(assignment => (
+                    <li key={`assignment-${assignment.id}`}>
                         <Link to={`${assignment.id}`}>
                             <h4>{assignment.title}</h4>
                         </Link>

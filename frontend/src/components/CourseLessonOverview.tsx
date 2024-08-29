@@ -29,7 +29,6 @@ export default function CourseLessonOverview({lessons, updateCourse}: Readonly<C
                     </li>
                 ))}
             </ul>
-            {/*    add lesson, lesson list with option to delete or edit*/}
         </>
     )
 }

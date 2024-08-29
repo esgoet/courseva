@@ -3,6 +3,7 @@ package com.github.esgoet.backend.service;
 import com.github.esgoet.backend.dto.NewCourseDto;
 import com.github.esgoet.backend.dto.UpdateCourseDto;
 import com.github.esgoet.backend.exception.CourseNotFoundException;
+import com.github.esgoet.backend.model.Assignment;
 import com.github.esgoet.backend.model.Course;
 import com.github.esgoet.backend.model.Lesson;
 import com.github.esgoet.backend.repository.CourseRepository;
@@ -38,11 +39,17 @@ public class CourseService {
             }
             return lesson;
         }).toList();
+        List<Assignment> assignments = courseDto.assignments().stream().map(assignment -> {
+            if (assignment.id().isEmpty()) {
+                return new Assignment(idService.randomId(), assignment.title(), assignment.description(), assignment.whenPublic(), assignment.deadline(), assignment.submissions());
+            }
+            return assignment;
+        }).toList();
         Course course = courseRepository.findById(id).orElseThrow(()-> new CourseNotFoundException("No course found with id: " + id))
                 .withTitle(courseDto.title())
                 .withDescription(courseDto.description())
                 .withLessons(lessons)
-                .withAssignments(courseDto.assignments())
+                .withAssignments(assignments)
                 .withStudents(courseDto.students())
                 .withInstructors(courseDto.instructors())
                 .withStartDate(courseDto.startDate());

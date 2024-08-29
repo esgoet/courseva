@@ -12,6 +12,8 @@ import CourseAssignmentOverview from "./components/CourseAssignmentOverview.tsx"
 import CourseLesson from "./components/CourseLesson.tsx";
 import CourseAssignment from "./components/CourseAssignment.tsx";
 import CourseLessonCreator from "./components/CourseLessonCreator.tsx";
+import CourseAssignmentCreator from "./components/CourseAssignmentCreator.tsx";
+import Submission from "./components/Submission.tsx";
 
 export default function App() {
     const [courses, setCourses] = useState<Course[]>([]);
@@ -86,7 +88,9 @@ export default function App() {
                     <Route path={"lessons/create"} element={<CourseLessonCreator updateCourse={updateCourse} lessons={currentCourse?.lessons}/>}/>
                     <Route path={"lessons/:lessonId"} element={<CourseLesson lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
                     <Route path={"assignments"} element={<CourseAssignmentOverview assignments={currentCourse?.assignments} updateCourse={updateCourse}/>}/>
-                    <Route path={"assignments/:assignmentId"} element={<CourseAssignment/>}/>
+                    <Route path={"assignments/create"} element={<CourseAssignmentCreator assignments={currentCourse?.assignments} updateCourse={updateCourse} />}/>
+                    <Route path={"assignments/:assignmentId"} element={<CourseAssignment assignments={currentCourse?.assignments} updateCourse={updateCourse}/>}/>
+                    <Route path={"assignments/:assignmentId/submission/:submissionId"} element={<Submission assignments={currentCourse?.assignments}/>}/>
                 </Route>
                 <Route path={"/course/create"} element={<CourseCreator createCourse={createCourse}/>}/>
             </Routes>
