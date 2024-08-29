@@ -22,7 +22,7 @@ public class IdService {
         String id = title.toLowerCase().replace(" ", "-") + "-" + startTime.toString().substring(2) + "-";
         boolean isUnique = false;
         while (!isUnique) {
-            if (courseRepository.existsById(id + cycle)) {
+            if (!courseRepository.existsById(id + cycle)) {
                 isUnique = true;
             } else {
                 cycle += 1;

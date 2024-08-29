@@ -34,7 +34,7 @@ class IdServiceTest {
     void generateCourseIdTest_whenIdDoesNotExistYet() {
         //GIVEN
         String title = "Math 101";
-        when(courseRepository.existsById(anyString())).thenReturn(true);
+        when(courseRepository.existsById(anyString())).thenReturn(false);
         //WHEN
         String actual = idService.generateCourseId(title, startDate);
         //THEN
@@ -47,8 +47,8 @@ class IdServiceTest {
     void testGenerateCourseId_whenIdDoesAlreadyExist() {
         //GIVEN
         String title = "Math 101";
-        when(courseRepository.existsById("math-101-24-08-27-1")).thenReturn(false);
-        when(courseRepository.existsById("math-101-24-08-27-2")).thenReturn(true);
+        when(courseRepository.existsById("math-101-24-08-27-1")).thenReturn(true);
+        when(courseRepository.existsById("math-101-24-08-27-2")).thenReturn(false);
 
         //WHEN
         String actual = idService.generateCourseId(title, startDate);
