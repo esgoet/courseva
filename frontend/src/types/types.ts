@@ -14,7 +14,7 @@ export type CourseDto = {
     title: string,
     description: string,
     lessons: LessonDto[],
-    assignments: Assignment[],
+    assignments: AssignmentDto[],
     students: string[],
     instructors: string[],
     startDate: string
@@ -40,6 +40,14 @@ export type LessonDto = {
     content: string,
     whenPublic: string
 }
+export type AssignmentDto = {
+    id: string,
+    title: string,
+    description: string,
+    whenPublic: string,
+    deadline: string,
+    submissions: SubmissionDto[]
+}
 
 export type Assignment = {
     id: string,
@@ -55,4 +63,11 @@ export type Submission = {
     studentId: string,
     content: string,
     timestamp: Date
+}
+
+export type SubmissionDto = {
+    id: string,
+    studentId: string,
+    content: string,
+    timestamp: string
 }

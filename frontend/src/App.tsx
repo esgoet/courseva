@@ -1,6 +1,6 @@
 import './App.css'
 import {useEffect, useState} from "react";
-import {Assignment, Course, CourseDto, LessonDto, NewCourseDto} from "./types/types.ts";
+import {AssignmentDto, Course, CourseDto, LessonDto, NewCourseDto} from "./types/types.ts";
 import axios, {AxiosResponse} from 'axios';
 import {Route, Routes, useNavigate} from "react-router-dom";
 import CoursePage from "./pages/CoursePage.tsx";
@@ -25,8 +25,18 @@ export default function App() {
                     startDate: formatDate(course.startDate),
                     lessons: course.lessons.map(lesson => ({
                     ...lesson,
-                    whenPublic: formatDate(lesson.whenPublic)
-                }))}))))
+                    whenPublic: formatDate(lesson.whenPublic),
+                    })),
+                    assignments: course.assignments.map(assignment => ({
+                        ...assignment,
+                        whenPublic: formatDate(assignment.whenPublic),
+                        deadline: formatDate(assignment.deadline),
+                        submissions: assignment.submissions.map(submission => ({
+                            ...submission,
+                            timestamp: formatDate(submission.timestamp)
+                        }))
+                    }))
+                }))))
             .catch((error) => console.log(error.response.data))
     }
 
@@ -56,7 +66,7 @@ export default function App() {
             })
     }
 
-    const updateCourse = (updatedProperty: string, updatedValue: string | string[] | LessonDto[] | Assignment[]) => {
+    const updateCourse = (updatedProperty: string, updatedValue: string | string[] | LessonDto[] | AssignmentDto[]) => {
         axios.put(`/api/courses/${currentCourse?.id}`, {...currentCourse, [updatedProperty]: updatedValue})
             .then((response) => {
                 if (response.status === 200) {
@@ -75,7 +85,7 @@ export default function App() {
                     <Route path={"lessons"} element={<CourseLessonOverview lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
                     <Route path={"lessons/create"} element={<CourseLessonCreator updateCourse={updateCourse} lessons={currentCourse?.lessons}/>}/>
                     <Route path={"lessons/:lessonId"} element={<CourseLesson lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
-                    <Route path={"assignments"} element={<CourseAssignmentOverview assignments={currentCourse?.assignments}/>}/>
+                    <Route path={"assignments"} element={<CourseAssignmentOverview assignments={currentCourse?.assignments} updateCourse={updateCourse}/>}/>
                     <Route path={"assignments/:assignmentId"} element={<CourseAssignment/>}/>
                 </Route>
                 <Route path={"/course/create"} element={<CourseCreator createCourse={createCourse}/>}/>
