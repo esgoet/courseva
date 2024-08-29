@@ -5,7 +5,7 @@ type CourseListProps = {
     courses: Course[]
 }
 
-export default function CourseList({courses}: CourseListProps) {
+export default function CourseList({courses}: Readonly<CourseListProps>) {
     return (
         <section>
             <h2>Courses</h2>
@@ -13,6 +13,7 @@ export default function CourseList({courses}: CourseListProps) {
                 {courses.map((course) => (
                     <li key={course.id}>
                         <h3>{course.title}</h3>
+                        <p>{course.id}</p>
                         <Link to={`/course/${course.id}`}>Details</Link>
                     </li>
                 ))}
