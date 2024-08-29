@@ -1,8 +1,8 @@
 import {Link, Outlet, useParams} from "react-router-dom";
 import {Course} from "../types/types.ts";
 import { useEffect} from "react";
-import EditableTextDetail from "./EditableTextDetail.tsx";
-import EditableListDetail from "./EditableListDetail.tsx";
+import EditableTextDetail from "../components/EditableTextDetail.tsx";
+import EditableListDetail from "../components/EditableListDetail.tsx";
 
 type CoursePageProps = {
     updateCourse: (updatedProperty: string, updatedValue: string | string[]) => void,
@@ -35,6 +35,7 @@ export default function CoursePage({updateCourse, course, fetchCourse}: Readonly
                 <h3>Instructors</h3>
                 <EditableListDetail label={"Instructors"} name={"instructors"} initialValue={course.instructors} updateCourse={updateCourse}/>
                 <Link to={"lessons"}>Lessons</Link>
+                <Link to={"assignments"}>Assignments</Link>
                 <Outlet/>
 
             </>

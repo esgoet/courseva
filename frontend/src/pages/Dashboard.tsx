@@ -1,4 +1,4 @@
-import CourseList from "./CourseList.tsx";
+import CourseList from "../components/CourseList.tsx";
 import {Course} from "../types/types.ts";
 import {Link} from "react-router-dom";
 
