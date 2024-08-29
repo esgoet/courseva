@@ -16,6 +16,7 @@ export default function EditableTextDetail(props: Readonly<EditableTextDetailPro
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         props.updateCourse(props.name, input);
+        setEditable(false);
     }
 
     const handleCancel = () => {
@@ -29,7 +30,9 @@ export default function EditableTextDetail(props: Readonly<EditableTextDetailPro
             {props.inputType !== "textarea" ?
                 <input type={props.inputType} name={props.name} value={input} onChange={(e)=>setInput(e.target.value)} disabled={!editable}/> :
                 <textarea name={props.name} value={input} onChange={(e)=>setInput(e.target.value)} disabled={!editable} />}
-            <button onClick={() => setEditable(!editable)}>{editable ? "Save" : "Edit"}</button>
+            {editable && <button type={"submit"}>Save</button>}
+            {!editable && <button type={"button"} onClick={()=>setEditable(true)}>Edit</button>}
+
             {editable && <button type={"reset"} onClick={handleCancel}>Cancel</button>}
         </form>
     )

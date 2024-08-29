@@ -7,16 +7,16 @@ import EditableListDetail from "./EditableListDetail.tsx";
 type CoursePageProps = {
     updateCourse: (updatedProperty: string, updatedValue: string | string[]) => void,
     course: Course | undefined,
-    fetchCourse: (id: string) => void;
+    fetchCourse: (courseId: string) => void;
 }
 
 export default function CoursePage({updateCourse, course, fetchCourse}: Readonly<CoursePageProps>) {
-    const params = useParams();
-    const id : string | undefined = params.id;
+
+    const { courseId } = useParams();
 
     useEffect(() =>{
-        if (id) fetchCourse(id);
-    },[id]);
+        if (courseId) fetchCourse(courseId);
+    },[courseId]);
 
     return (
         <>

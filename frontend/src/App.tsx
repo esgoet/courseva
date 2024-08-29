@@ -71,12 +71,12 @@ export default function App() {
             <h1>Learning Management System</h1>
             <Routes>
                 <Route path={"/"} element={ <Dashboard courses={courses}/>}/>
-                <Route path={"/course/:id"} element={<CoursePage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse}/>}>
+                <Route path={"/course/:courseId"} element={<CoursePage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse}/>}>
                     <Route path={"lessons"} element={<CourseLessonOverview lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
                     <Route path={"lessons/create"} element={<CourseLessonCreator updateCourse={updateCourse} lessons={currentCourse?.lessons}/>}/>
-                    <Route path={"lessons/:id"} element={<CourseLesson/>}/>
+                    <Route path={"lessons/:lessonId"} element={<CourseLesson lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
                     <Route path={"assignments"} element={<CourseAssignmentOverview assignments={currentCourse?.assignments}/>}/>
-                    <Route path={"assignments/:id"} element={<CourseAssignment/>}/>
+                    <Route path={"assignments/:assignmentId"} element={<CourseAssignment/>}/>
                 </Route>
                 <Route path={"/course/create"} element={<CourseCreator createCourse={createCourse}/>}/>
             </Routes>

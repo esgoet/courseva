@@ -32,7 +32,12 @@ public class CourseService {
     }
 
     public Course updateCourse(String id, UpdateCourseDto courseDto) {
-        List<Lesson> lessons = courseDto.lessons().stream().map(lesson -> new Lesson(idService.randomId(), lesson.title(), lesson.content(), lesson.whenPublic())).toList();
+        List<Lesson> lessons = courseDto.lessons().stream().map(lesson -> {
+            if (lesson.id().isEmpty()) {
+                return  new Lesson(idService.randomId(), lesson.title(), lesson.content(), lesson.whenPublic());
+            }
+            return lesson;
+        }).toList();
         Course course = courseRepository.findById(id).orElseThrow(()-> new CourseNotFoundException("No course found with id: " + id))
                 .withTitle(courseDto.title())
                 .withDescription(courseDto.description())
