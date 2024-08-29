@@ -7,8 +7,13 @@ type CourseLessonCreatorProps = {
     lessons: Lesson[] | undefined
 }
 
-export default function CourseLessonCreator({updateCourse, lessons}:CourseLessonCreatorProps) {
-    const [lesson, setLesson] = useState<LessonDto>({id:"",title:"",content:"",whenPublic:""});
+export default function CourseLessonCreator({updateCourse, lessons}:Readonly<CourseLessonCreatorProps>) {
+    const [lesson, setLesson] = useState<LessonDto>({
+        id:"",
+        title:"",
+        content:"",
+        whenPublic: new Date(Date.now()).toISOString().substring(0,19)
+    });
     const navigate = useNavigate();
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -27,12 +32,12 @@ export default function CourseLessonCreator({updateCourse, lessons}:CourseLesson
             <h4>Create New Lesson</h4>
             <form onSubmit={handleSubmit}>
                 <fieldset>
-                    <legend>Required Lessson Information</legend>
+                    <legend>Required Lesson Information</legend>
                     <label htmlFor={"title"}>Lesson Title</label>
                     <input type={"text"} name={"title"} value={lesson.title} onChange={handleChange}
                            placeholder={"Enter Lesson Title"} autoCapitalize={"on"} required aria-required/>
                     <label htmlFor={"whenPublic"}>When should the lesson go public?</label>
-                    <input type={"datetime-local"} name={"whenPublic"} value={lesson.whenPublic.toString()} onChange={handleChange} required
+                    <input type={"datetime-local"} name={"whenPublic"} value={lesson.whenPublic} onChange={handleChange} required
                            aria-required/>
                 </fieldset>
                 <fieldset>
@@ -43,7 +48,7 @@ export default function CourseLessonCreator({updateCourse, lessons}:CourseLesson
                 </fieldset>
                 <button type={"reset"}
                         onClick={() => setLesson({
-                            id: "", title: "", content: "", whenPublic: ""
+                            id: "", title: "", content: "", whenPublic: new Date(Date.now()).toISOString().substring(0,19)
                         })}>Reset
                 </button>
                 <button type={"submit"}>Create Lesson</button>
