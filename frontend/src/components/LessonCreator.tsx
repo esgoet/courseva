@@ -3,12 +3,12 @@ import {ChangeEvent, FormEvent, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {convertToLessonDtoList} from "../utils/convertToLessonDto.ts";
 
-type CourseLessonCreatorProps = {
+type LessonCreatorProps = {
     updateCourse: (updatedProperty: string, updatedValue: LessonDto[]) => void,
     lessons: Lesson[] | undefined
 }
 
-export default function CourseLessonCreator({updateCourse, lessons}:Readonly<CourseLessonCreatorProps>) {
+export default function LessonCreator({updateCourse, lessons}:Readonly<LessonCreatorProps>) {
     const [lesson, setLesson] = useState<LessonDto>({
         id:"",
         title:"",

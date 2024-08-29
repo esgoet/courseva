@@ -3,12 +3,12 @@ import {Link} from "react-router-dom";
 import { convertToLessonDtoList} from "../utils/convertToLessonDto.ts";
 
 
-type CourseLessonOverviewProps = {
+type LessonOverviewProps = {
     lessons: Lesson[] | undefined,
     updateCourse: (updatedProperty: string, updatedValue: LessonDto[]) => void;
 }
 
-export default function CourseLessonOverview({lessons, updateCourse}: Readonly<CourseLessonOverviewProps>) {
+export default function LessonOverview({lessons, updateCourse}: Readonly<LessonOverviewProps>) {
 
     const deleteLesson = (lessonId: string) => {
         if (lessons) {

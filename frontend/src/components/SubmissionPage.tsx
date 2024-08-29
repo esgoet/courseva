@@ -2,11 +2,11 @@ import {useParams} from "react-router-dom";
 import {Assignment, SubmissionDto} from "../types/types.ts";
 import {useEffect, useState} from "react";
 
-type SubmissionProps = {
+type SubmissionPageProps = {
     assignments: Assignment[] | undefined
 }
 
-export default function Submission({assignments}: SubmissionProps) {
+export default function SubmissionPage({assignments}: Readonly<SubmissionPageProps>) {
     const {submissionId, assignmentId} = useParams();
     const [submission, setSubmission] = useState<SubmissionDto | undefined>();
 

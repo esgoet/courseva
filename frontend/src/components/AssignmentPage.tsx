@@ -5,11 +5,11 @@ import {convertToAssignmentDto} from "../utils/convertToAssignmentDto.ts";
 import {convertToAssignmentDtoList} from "../utils/convertToAssignmentDto.ts";
 import EditableTextDetail from "./EditableTextDetail.tsx";
 
-type CourseAssignmentProps = {
+type AssignmentPageProps = {
     assignments: Assignment[] | undefined,
     updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void
 }
-export default function CourseAssignment({assignments, updateCourse}: CourseAssignmentProps) {
+export default function AssignmentPage({assignments, updateCourse}: Readonly<AssignmentPageProps>) {
     const [assignment, setAssignment] = useState<AssignmentDto|undefined>();
     const {assignmentId} = useParams();
     const [submission, setSubmission] = useState<SubmissionDto>({

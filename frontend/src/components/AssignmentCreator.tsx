@@ -3,12 +3,12 @@ import {ChangeEvent, FormEvent, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {convertToAssignmentDtoList} from "../utils/convertToAssignmentDto.ts";
 
-type CourseAssignmentCreatorProps = {
+type AssignmentCreatorProps = {
     updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void,
     assignments: Assignment[] | undefined
 }
 
-export default function CourseAssignmentCreator({assignments, updateCourse}: CourseAssignmentCreatorProps) {
+export default function AssignmentCreator({assignments, updateCourse}: Readonly<AssignmentCreatorProps>) {
     const [assignment, setAssignment] = useState<AssignmentDto>({
         id: "",
         title: "",

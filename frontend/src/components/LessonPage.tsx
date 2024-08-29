@@ -4,12 +4,12 @@ import {useEffect, useState} from "react";
 import EditableTextDetail from "./EditableTextDetail.tsx";
 import {convertToLessonDto, convertToLessonDtoList} from "../utils/convertToLessonDto.ts";
 
-type CourseLessonProps = {
+type LessonPageProps = {
     lessons: Lesson[] | undefined,
     updateCourse: (updatedProperty: string, updatedValue: LessonDto[]) => void,
 }
 
-export default function CourseLesson({lessons, updateCourse}: Readonly<CourseLessonProps>) {
+export default function LessonPage({lessons, updateCourse}: Readonly<LessonPageProps>) {
     const [lesson, setLesson] = useState<LessonDto | undefined>();
     const {lessonId} = useParams();
 

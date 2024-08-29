@@ -2,12 +2,12 @@ import {Assignment, AssignmentDto} from "../types/types.ts";
 import {Link} from "react-router-dom";
 import {convertToAssignmentDtoList} from "../utils/convertToAssignmentDto.ts";
 
-type CourseAssignmentOverviewProps = {
+type AssignmentOverviewProps = {
     assignments: Assignment[] | undefined,
     updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void;
 }
 
-export default function CourseAssignmentOverview({assignments, updateCourse}:CourseAssignmentOverviewProps) {
+export default function AssignmentOverview({assignments, updateCourse}: Readonly<AssignmentOverviewProps>) {
 
     const deleteAssignment = (assignmentId: string) => {
         if (assignments) {

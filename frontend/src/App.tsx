@@ -7,13 +7,13 @@ import CoursePage from "./pages/CoursePage.tsx";
 import CourseCreator from "./components/CourseCreator.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import {formatDate} from "./utils/formatDate.ts";
-import CourseLessonOverview from "./components/CourseLessonOverview.tsx";
-import CourseAssignmentOverview from "./components/CourseAssignmentOverview.tsx";
-import CourseLesson from "./components/CourseLesson.tsx";
-import CourseAssignment from "./components/CourseAssignment.tsx";
-import CourseLessonCreator from "./components/CourseLessonCreator.tsx";
-import CourseAssignmentCreator from "./components/CourseAssignmentCreator.tsx";
-import Submission from "./components/Submission.tsx";
+import LessonOverview from "./components/LessonOverview.tsx";
+import AssignmentOverview from "./components/AssignmentOverview.tsx";
+import LessonPage from "./components/LessonPage.tsx";
+import AssignmentPage from "./components/AssignmentPage.tsx";
+import LessonCreator from "./components/LessonCreator.tsx";
+import AssignmentCreator from "./components/AssignmentCreator.tsx";
+import SubmissionPage from "./components/SubmissionPage.tsx";
 
 export default function App() {
     const [courses, setCourses] = useState<Course[]>([]);
@@ -84,13 +84,13 @@ export default function App() {
             <Routes>
                 <Route path={"/"} element={ <Dashboard courses={courses}/>}/>
                 <Route path={"/course/:courseId"} element={<CoursePage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse}/>}>
-                    <Route path={"lessons"} element={<CourseLessonOverview lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
-                    <Route path={"lessons/create"} element={<CourseLessonCreator updateCourse={updateCourse} lessons={currentCourse?.lessons}/>}/>
-                    <Route path={"lessons/:lessonId"} element={<CourseLesson lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
-                    <Route path={"assignments"} element={<CourseAssignmentOverview assignments={currentCourse?.assignments} updateCourse={updateCourse}/>}/>
-                    <Route path={"assignments/create"} element={<CourseAssignmentCreator assignments={currentCourse?.assignments} updateCourse={updateCourse} />}/>
-                    <Route path={"assignments/:assignmentId"} element={<CourseAssignment assignments={currentCourse?.assignments} updateCourse={updateCourse}/>}/>
-                    <Route path={"assignments/:assignmentId/submission/:submissionId"} element={<Submission assignments={currentCourse?.assignments}/>}/>
+                    <Route path={"lessons"} element={<LessonOverview lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
+                    <Route path={"lessons/create"} element={<LessonCreator updateCourse={updateCourse} lessons={currentCourse?.lessons}/>}/>
+                    <Route path={"lessons/:lessonId"} element={<LessonPage lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
+                    <Route path={"assignments"} element={<AssignmentOverview assignments={currentCourse?.assignments} updateCourse={updateCourse}/>}/>
+                    <Route path={"assignments/create"} element={<AssignmentCreator assignments={currentCourse?.assignments} updateCourse={updateCourse} />}/>
+                    <Route path={"assignments/:assignmentId"} element={<AssignmentPage assignments={currentCourse?.assignments} updateCourse={updateCourse}/>}/>
+                    <Route path={"assignments/:assignmentId/submission/:submissionId"} element={<SubmissionPage assignments={currentCourse?.assignments}/>}/>
                 </Route>
                 <Route path={"/course/create"} element={<CourseCreator createCourse={createCourse}/>}/>
             </Routes>
