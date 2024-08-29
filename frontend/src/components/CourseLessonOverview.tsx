@@ -1,6 +1,5 @@
 import {Lesson, LessonDto} from "../types/types.ts";
 import {Link} from "react-router-dom";
-import {useEffect, useState} from "react";
 
 type CourseLessonOverviewProps = {
     lessons: Lesson[] | undefined,
@@ -8,15 +7,10 @@ type CourseLessonOverviewProps = {
 }
 
 export default function CourseLessonOverview({lessons, updateCourse}: CourseLessonOverviewProps) {
-    const [currentLessons, setCurrentLessons] = useState<Lesson[] | undefined>(lessons);
-    useEffect(() => {
-        setCurrentLessons(lessons)
-    },[lessons])
+
     const deleteLesson = (lessonId: string) => {
-        const updatedLessons : Lesson[] | undefined = currentLessons?.filter(lesson => lesson.id !== lessonId);
-        if (updatedLessons) {
-            setCurrentLessons(updatedLessons);
-            updateCourse("lessons", updatedLessons.map(lesson => ({
+        if (lessons) {
+            updateCourse("lessons", lessons.filter(lesson => lesson.id !== lessonId).map(lesson => ({
                 ...lesson,
                 whenPublic: lesson.whenPublic.toString()})));
         }
@@ -26,7 +20,7 @@ export default function CourseLessonOverview({lessons, updateCourse}: CourseLess
             <h3>Lessons</h3>
             <Link to={"create"}>Create New Lesson</Link>
             <ul>
-                {currentLessons?.filter(lesson => new Date(lesson.whenPublic).valueOf() < Date.now()).map(lesson=> (
+                {lessons?.filter(lesson => new Date(lesson.whenPublic).valueOf() < Date.now()).map(lesson=> (
                     <li key={`lesson-${lesson.id}`}>
                         <Link to={`${lesson.id}`}>
                             <h4>{lesson.title}</h4>
