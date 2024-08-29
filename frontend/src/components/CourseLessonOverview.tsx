@@ -1,5 +1,6 @@
 import {Lesson, LessonDto} from "../types/types.ts";
 import {Link} from "react-router-dom";
+import { convertToLessonDtoList} from "../utils/convertToLessonDto.ts";
 
 
 type CourseLessonOverviewProps = {
@@ -11,9 +12,7 @@ export default function CourseLessonOverview({lessons, updateCourse}: Readonly<C
 
     const deleteLesson = (lessonId: string) => {
         if (lessons) {
-            updateCourse("lessons", lessons.filter(lesson => lesson.id !== lessonId).map(lesson => ({
-                ...lesson,
-                whenPublic: lesson.whenPublic.toString()})));
+            updateCourse("lessons", convertToLessonDtoList(lessons.filter(lesson => lesson.id !== lessonId)))
         }
     }
     return (
