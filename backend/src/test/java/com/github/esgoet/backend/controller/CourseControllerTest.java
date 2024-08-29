@@ -51,8 +51,8 @@ class CourseControllerTest {
                       "description": "This is Math 101",
                       "lessons": [],
                       "assignments": [],
-                      "students": ["1","2"],
-                      "instructors": ["1","2"],
+                      "students": ["s1","s2"],
+                      "instructors": ["i1","i2"],
                       "startDate": "2024-07-27"
                     }
                     """));
