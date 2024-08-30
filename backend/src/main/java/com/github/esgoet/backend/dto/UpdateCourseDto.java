@@ -1,15 +1,12 @@
-package com.github.esgoet.backend.model;
+package com.github.esgoet.backend.dto;
 
-import lombok.With;
-import org.springframework.data.mongodb.core.mapping.Document;
+import com.github.esgoet.backend.model.Assignment;
+import com.github.esgoet.backend.model.Lesson;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@With
-@Document("courses")
-public record Course(
-        String id,
+public record UpdateCourseDto(
         String title,
         String description,
         List<Lesson> lessons,
