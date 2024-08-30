@@ -23,7 +23,7 @@ export default function App() {
     const fetchCourses = () => {
         axios.get("/api/courses")
             .then((response : AxiosResponse<CourseDto[]>) => setCourses(response.data.map(convertToCourse)))
-            .catch((error) => console.log(error.response.data))
+            .catch((error) => console.error(error.response.data))
     }
 
     useEffect(()=>{
@@ -38,16 +38,16 @@ export default function App() {
                     navigate(`/course/${response.data.id}`)
                 }
             })
-            .catch((error) => console.log(error.response.data))
+            .catch((error) => console.error(error.response.data))
     }
     const fetchCourse = (id: string) => {
         axios.get(`/api/courses/${id}`)
             .then((response) => {
-                setCurrentCourse(response.data)
+                setCurrentCourse(convertToCourse(response.data))
                 console.log("fetching course")
             })
             .catch((error) => {
-                console.log(error.response.data);
+                console.error(error.response.data);
                 setCurrentCourse(undefined);
             })
     }
@@ -60,14 +60,21 @@ export default function App() {
                     fetchCourses();
                 }
             })
+            .catch((error)=>console.error(error.response.data))
+    }
+
+    const deleteCourse = (courseId: string) => {
+        axios.delete(`/api/courses/${courseId}`)
+            .then((response)=> response.status === 200 && fetchCourses())
+            .catch((error)=> console.error(error.response.data))
     }
 
     return (
         <>
             <h1>Learning Management System</h1>
             <Routes>
-                <Route path={"/"} element={ <Dashboard courses={courses}/>}/>
-                <Route path={"/course/:courseId"} element={<CoursePage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse}/>}>
+                <Route path={"/"} element={ <Dashboard courses={courses} deleteCourse={deleteCourse}/> }/>
+                <Route path={"/course/:courseId"} element={<CoursePage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse} deleteCourse={deleteCourse}/>}>
                     <Route path={"lessons"} element={<LessonOverview lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
                     <Route path={"lessons/create"} element={<LessonCreator updateCourse={updateCourse} lessons={currentCourse?.lessons}/>}/>
                     <Route path={"lessons/:lessonId"} element={<LessonPage lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>

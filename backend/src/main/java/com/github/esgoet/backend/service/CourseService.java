@@ -65,4 +65,8 @@ public class CourseService {
                 .withStartDate(courseDto.startDate());
         return courseRepository.save(course);
     }
+
+    public void deleteCourse(String id) {
+        courseRepository.deleteById(id);
+    }
 }

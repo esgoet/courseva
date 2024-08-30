@@ -194,6 +194,15 @@ class CourseServiceTest {
         assertEquals("No course found with id: 1", exception.getMessage());
         verify(courseRepository).findById("1");
         verify(courseRepository, never()).save(updatedCourse);
+    }
 
+    @Test
+    void deleteCourseTest() {
+        //GIVEN
+        doNothing().when(courseRepository).deleteById("1");
+        //WHEN
+        courseService.deleteCourse("1");
+        //THEN
+        verify(courseRepository).deleteById("1");
     }
 }

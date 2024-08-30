@@ -1,17 +1,19 @@
 import {Link, Outlet, useParams} from "react-router-dom";
 import {Course} from "../types/types.ts";
-import { useEffect} from "react";
+import {useEffect, useState} from "react";
 import EditableTextDetail from "../components/EditableTextDetail.tsx";
 import EditableListDetail from "../components/EditableListDetail.tsx";
+import DeleteDialog from "../components/DeleteDialog.tsx";
 
 type CoursePageProps = {
     updateCourse: (updatedProperty: string, updatedValue: string | string[]) => void,
     course: Course | undefined,
-    fetchCourse: (courseId: string) => void;
+    fetchCourse: (courseId: string) => void,
+    deleteCourse: (courseId: string) => void
 }
 
-export default function CoursePage({updateCourse, course, fetchCourse}: Readonly<CoursePageProps>) {
-
+export default function CoursePage({updateCourse, course, fetchCourse, deleteCourse}: Readonly<CoursePageProps>) {
+    const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
     const { courseId } = useParams();
 
     useEffect(() =>{
@@ -27,9 +29,10 @@ export default function CoursePage({updateCourse, course, fetchCourse}: Readonly
                     <EditableTextDetail inputType={"text"} label={"Title"} name={"title"} initialValue={course.title} updateCourse={updateCourse}/>
                 </h3>
                 <p>{course.id}</p>
+                <button onClick={()=>setConfirmDelete(true)}>Delete Course</button>
+                <DeleteDialog course={course} modal={confirmDelete} closeModal={()=>setConfirmDelete(false)} deleteCourse={deleteCourse}/>
                 <EditableTextDetail inputType={"textarea"} label={"Description"} name={"description"} initialValue={course.description} updateCourse={updateCourse}/>
                 <EditableTextDetail inputType={"date"} label={"Start Date"} name={"startDate"} initialValue={course.startDate.toString()} updateCourse={updateCourse}/>
-                {/*add lessons and assignments*/}
                 <h3>Students</h3>
                 <EditableListDetail label={"Students"} name={"students"} initialValue={course.students} updateCourse={updateCourse}/>
                 <h3>Instructors</h3>

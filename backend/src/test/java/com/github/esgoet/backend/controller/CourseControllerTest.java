@@ -73,6 +73,7 @@ class CourseControllerTest {
     }
 
     @Test
+    @DirtiesContext
     void createCourseTest() throws Exception {
         //WHEN
         mockMvc.perform(post("/api/courses")
@@ -102,6 +103,7 @@ class CourseControllerTest {
     }
 
     @Test
+    @DirtiesContext
     void updateCourseTest_whenCourseExists() throws Exception {
         //GIVEN
         courseRepository.save(new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s1","s2"),  List.of("i1","i2"), startDate));
@@ -158,5 +160,20 @@ class CourseControllerTest {
                     }
                     """))
                 .andExpect(jsonPath("$.timestamp").exists());
+    }
+
+    @Test
+    @DirtiesContext
+    void deleteCourse() throws Exception {
+        //GIVEN
+        courseRepository.save(new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s1", "s2"), List.of("i1", "i2"), startDate));
+        //WHEN
+        mockMvc.perform(delete("/api/courses/1"))
+                //THEN
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/courses"))
+                //THEN
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
     }
 }
