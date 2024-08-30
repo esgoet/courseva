@@ -35,4 +35,9 @@ public class CourseController {
         return courseService.updateCourse(id, courseDto);
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteCourse(@PathVariable String id) {
+        courseService.deleteCourse(id);
+    }
+
 }
