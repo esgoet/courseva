@@ -6,7 +6,6 @@ import {Route, Routes, useNavigate} from "react-router-dom";
 import CoursePage from "./pages/CoursePage.tsx";
 import CourseCreator from "./components/CourseCreator.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
-import {formatDate} from "./utils/formatDate.ts";
 import LessonOverview from "./components/LessonOverview.tsx";
 import AssignmentOverview from "./components/AssignmentOverview.tsx";
 import LessonPage from "./components/LessonPage.tsx";
@@ -14,6 +13,7 @@ import AssignmentPage from "./components/AssignmentPage.tsx";
 import LessonCreator from "./components/LessonCreator.tsx";
 import AssignmentCreator from "./components/AssignmentCreator.tsx";
 import SubmissionPage from "./components/SubmissionPage.tsx";
+import {convertToCourse} from "./utils/convertToCourse.ts";
 
 export default function App() {
     const [courses, setCourses] = useState<Course[]>([]);
@@ -22,23 +22,7 @@ export default function App() {
 
     const fetchCourses = () => {
         axios.get("/api/courses")
-            .then((response : AxiosResponse<CourseDto[]>) => setCourses(response.data.map(course =>
-                ({...course,
-                    startDate: formatDate(course.startDate),
-                    lessons: course.lessons.map(lesson => ({
-                    ...lesson,
-                    whenPublic: formatDate(lesson.whenPublic),
-                    })),
-                    assignments: course.assignments.map(assignment => ({
-                        ...assignment,
-                        whenPublic: formatDate(assignment.whenPublic),
-                        deadline: formatDate(assignment.deadline),
-                        submissions: assignment.submissions.map(submission => ({
-                            ...submission,
-                            timestamp: formatDate(submission.timestamp)
-                        }))
-                    }))
-                }))))
+            .then((response : AxiosResponse<CourseDto[]>) => setCourses(response.data.map(convertToCourse)))
             .catch((error) => console.log(error.response.data))
     }
 
