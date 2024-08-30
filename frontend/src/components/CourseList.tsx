@@ -1,5 +1,5 @@
 import {Course} from "../types/types.ts";
-import {Link} from "react-router-dom";
+import CourseEntry from "./CourseEntry.tsx";
 
 type CourseListProps = {
     courses: Course[],
@@ -7,17 +7,13 @@ type CourseListProps = {
 }
 
 export default function CourseList({courses, deleteCourse}: Readonly<CourseListProps>) {
+
     return (
         <section>
             <h2>Courses</h2>
             <ul>
                 {courses.map((course) => (
-                    <li key={course.id}>
-                        <h3>{course.title}</h3>
-                        <p>{course.id}</p>
-                        <Link to={`/course/${course.id}`}>Details</Link>
-                        <button onClick={()=>deleteCourse(course.id)}>Delete</button>
-                    </li>
+                  <CourseEntry key={course.id} course={course} deleteCourse={deleteCourse}/>
                 ))}
             </ul>
         </section>

@@ -43,7 +43,7 @@ export default function App() {
     const fetchCourse = (id: string) => {
         axios.get(`/api/courses/${id}`)
             .then((response) => {
-                setCurrentCourse(response.data)
+                setCurrentCourse(convertToCourse(response.data))
                 console.log("fetching course")
             })
             .catch((error) => {
@@ -64,7 +64,7 @@ export default function App() {
     }
 
     const deleteCourse = (courseId: string) => {
-        axios.delete(`api/courses/${courseId}`)
+        axios.delete(`/api/courses/${courseId}`)
             .then((response)=> response.status === 200 && fetchCourses())
             .catch((error)=> console.error(error.response.data))
     }
