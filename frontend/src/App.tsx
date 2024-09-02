@@ -2,7 +2,7 @@ import './App.css'
 import {useEffect, useState} from "react";
 import {AssignmentDto, Course, CourseDto, LessonDto, NewCourseDto} from "./types/types.ts";
 import axios, {AxiosResponse} from 'axios';
-import {Route, Routes, useNavigate} from "react-router-dom";
+import {Link, Route, Routes, useNavigate} from "react-router-dom";
 import CoursePage from "./pages/CoursePage.tsx";
 import CourseCreator from "./components/CourseCreator.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
@@ -14,6 +14,8 @@ import LessonCreator from "./components/LessonCreator.tsx";
 import AssignmentCreator from "./components/AssignmentCreator.tsx";
 import SubmissionPage from "./components/SubmissionPage.tsx";
 import {convertToCourse} from "./utils/convertToCourse.ts";
+import SignUpPage from "./components/SignUpPage.tsx";
+import LoginPage from "./components/LoginPage.tsx";
 
 export default function App() {
     const [courses, setCourses] = useState<Course[]>([]);
@@ -69,11 +71,20 @@ export default function App() {
             .catch((error)=> console.error(error.response.data))
     }
 
+    const handleLogin = () => {
+        const host = window.location.host === 'localhost:5173' ? 'http://localhost:8080': window.location.origin;
+        window.open(host + '/oauth2/authorization/github', '_self');
+    }
+
     return (
         <>
             <h1>Learning Management System</h1>
+            <Link to={"/signup"}>Sign Up</Link>
+            <Link to={"/login"}>Login</Link>
             <Routes>
                 <Route path={"/"} element={ <Dashboard courses={courses} deleteCourse={deleteCourse}/> }/>
+                <Route path={"/signup"} element={<SignUpPage handleLogin={handleLogin}/>}/>
+                <Route path={"/login"} element={<LoginPage handleLogin={handleLogin}/>}/>
                 <Route path={"/course/:courseId"} element={<CoursePage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse} deleteCourse={deleteCourse}/>}>
                     <Route path={"lessons"} element={<LessonOverview lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
                     <Route path={"lessons/create"} element={<LessonCreator updateCourse={updateCourse} lessons={currentCourse?.lessons}/>}/>
