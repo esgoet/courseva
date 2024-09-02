@@ -9,7 +9,7 @@ type DeleteDialogProps = {
     deleteCourse: (id: string) => void
 }
 
-export default function DeleteDialog({course, modal, closeModal, deleteCourse}:DeleteDialogProps) {
+export default function DeleteDialog({course, modal, closeModal, deleteCourse}: Readonly<DeleteDialogProps>) {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const navigate = useNavigate();
 

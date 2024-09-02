@@ -8,7 +8,7 @@ type CourseEntryProps = {
     deleteCourse: (id: string) => void
 }
 
-export default function CourseEntry({course, deleteCourse}:CourseEntryProps) {
+export default function CourseEntry({course, deleteCourse}: Readonly<CourseEntryProps>) {
     const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
 
     return (
