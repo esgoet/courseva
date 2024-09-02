@@ -1,5 +1,5 @@
 import {ChangeEvent, FormEvent, useState} from "react";
-import {NewCourseDto} from "../types/types.ts";
+import {NewCourseDto} from "../types/courseTypes.ts";
 import {Link} from "react-router-dom";
 import {PLACEHOLDERS} from "../utils/constants.ts";
 

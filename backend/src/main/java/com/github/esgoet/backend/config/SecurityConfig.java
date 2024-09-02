@@ -6,6 +6,7 @@ import com.github.esgoet.backend.service.InstructorService;
 import com.github.esgoet.backend.service.StudentService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +32,7 @@ import java.util.Map;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+    @Autowired
     private final HttpServletRequest httpServletRequest;
     private final StudentService studentService;
     private final InstructorService instructorService;
@@ -62,10 +64,10 @@ public class SecurityConfig {
     public OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService() {
         DefaultOAuth2UserService delegate = new DefaultOAuth2UserService();
 
-
         return request -> {
             OAuth2User oAuth2User = delegate.loadUser(request);
             String gitHubId = oAuth2User.getName();
+            System.out.println(gitHubId);
             String selectedRole = getSelectedRole(gitHubId);
 
             if (INSTRUCTOR_ROLE.equalsIgnoreCase(selectedRole)) {

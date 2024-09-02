@@ -1,4 +1,4 @@
-import {Assignment, AssignmentDto, SubmissionDto} from "../types/types.ts";
+import {Assignment, AssignmentDto, SubmissionDto} from "../types/courseTypes.ts";
 import {FormEvent, useEffect, useState} from "react";
 import {Link, useParams} from "react-router-dom";
 import {convertToAssignmentDto, convertToAssignmentDtoList} from "../utils/convertToAssignmentDto.ts";

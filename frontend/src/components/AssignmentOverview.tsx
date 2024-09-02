@@ -1,4 +1,4 @@
-import {Assignment, AssignmentDto} from "../types/types.ts";
+import {Assignment, AssignmentDto} from "../types/courseTypes.ts";
 import {Link} from "react-router-dom";
 import {convertToAssignmentDtoList} from "../utils/convertToAssignmentDto.ts";
 

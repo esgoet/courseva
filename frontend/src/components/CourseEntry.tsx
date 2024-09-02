@@ -1,6 +1,6 @@
 import {Link} from "react-router-dom";
 import DeleteDialog from "./DeleteDialog.tsx";
-import {Course} from "../types/types.ts";
+import {Course} from "../types/courseTypes.ts";
 import {useState} from "react";
 
 type CourseEntryProps = {

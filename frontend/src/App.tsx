@@ -1,6 +1,6 @@
 import './App.css'
 import {useEffect, useState} from "react";
-import {AssignmentDto, Course, CourseDto, LessonDto, NewCourseDto} from "./types/types.ts";
+import {AssignmentDto, Course, CourseDto, LessonDto, NewCourseDto} from "./types/courseTypes.ts";
 import axios, {AxiosResponse} from 'axios';
 import {Link, Route, Routes, useNavigate} from "react-router-dom";
 import CoursePage from "./pages/CoursePage.tsx";
@@ -20,12 +20,13 @@ import LoginPage from "./components/LoginPage.tsx";
 export default function App() {
     const [courses, setCourses] = useState<Course[]>([]);
     const [currentCourse, setCurrentCourse] = useState<Course | undefined>();
+    const [user, setUser] = useState<string>("");
     const navigate = useNavigate();
 
     const fetchCourses = () => {
         axios.get("/api/courses")
             .then((response : AxiosResponse<CourseDto[]>) => setCourses(response.data.map(convertToCourse)))
-            .catch((error) => console.error(error.response.data))
+            .catch((error) => console.error(error))
     }
 
     useEffect(()=>{
@@ -76,11 +77,22 @@ export default function App() {
         window.open(host + '/oauth2/authorization/github', '_self');
     }
 
+    const loadUser = () => {
+        axios.get("/api/auth/me")
+            .then((response) => setUser(response.data))
+            .catch(error => console.error(error.response.data));
+    }
+
+    useEffect(()=>{
+        loadUser()
+    },[])
+
     return (
         <>
             <h1>Learning Management System</h1>
             <Link to={"/signup"}>Sign Up</Link>
             <Link to={"/login"}>Login</Link>
+            <p>Hello {user}</p>
             <Routes>
                 <Route path={"/"} element={ <Dashboard courses={courses} deleteCourse={deleteCourse}/> }/>
                 <Route path={"/signup"} element={<SignUpPage handleLogin={handleLogin}/>}/>

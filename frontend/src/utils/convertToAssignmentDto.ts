@@ -1,4 +1,4 @@
-import {Assignment, AssignmentDto} from "../types/types.ts";
+import {Assignment, AssignmentDto} from "../types/courseTypes.ts";
 
 export function convertToAssignmentDto(assignment: Assignment): AssignmentDto {
     return {

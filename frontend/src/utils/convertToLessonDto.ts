@@ -1,4 +1,4 @@
-import {Lesson, LessonDto} from "../types/types.ts";
+import {Lesson, LessonDto} from "../types/courseTypes.ts";
 
 export function convertToLessonDto(lesson: Lesson) : LessonDto {
     return {...lesson, whenPublic: lesson.whenPublic.toString()}

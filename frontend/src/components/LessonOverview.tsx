@@ -1,4 +1,4 @@
-import {Lesson, LessonDto} from "../types/types.ts";
+import {Lesson, LessonDto} from "../types/courseTypes.ts";
 import {Link} from "react-router-dom";
 import { convertToLessonDtoList} from "../utils/convertToLessonDto.ts";
 

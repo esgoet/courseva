@@ -1,5 +1,5 @@
 import CourseList from "../components/CourseList.tsx";
-import {Course} from "../types/types.ts";
+import {Course} from "../types/courseTypes.ts";
 import {Link} from "react-router-dom";
 
 type DashboardProps = {

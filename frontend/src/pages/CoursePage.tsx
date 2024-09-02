@@ -1,5 +1,5 @@
 import {Link, Outlet, useParams} from "react-router-dom";
-import {Course} from "../types/types.ts";
+import {Course} from "../types/courseTypes.ts";
 import {useEffect, useState} from "react";
 import EditableTextDetail from "../components/EditableTextDetail.tsx";
 import EditableListDetail from "../components/EditableListDetail.tsx";
