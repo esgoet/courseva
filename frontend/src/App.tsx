@@ -16,11 +16,14 @@ import SubmissionPage from "./components/SubmissionPage.tsx";
 import {convertToCourse} from "./utils/convertToCourse.ts";
 import SignUpPage from "./components/SignUpPage.tsx";
 import LoginPage from "./components/LoginPage.tsx";
+import {Instructor, Student} from "./types/userTypes.ts";
 
 export default function App() {
     const [courses, setCourses] = useState<Course[]>([]);
     const [currentCourse, setCurrentCourse] = useState<Course | undefined>();
     const [user, setUser] = useState<string>("");
+    const [students, setStudents] = useState<Student[]>([]);
+    const [instructors, setInstructors] = useState<Instructor[]>([]);
     const navigate = useNavigate();
 
     const fetchCourses = () => {
@@ -28,10 +31,6 @@ export default function App() {
             .then((response : AxiosResponse<CourseDto[]>) => setCourses(response.data.map(convertToCourse)))
             .catch((error) => console.error(error))
     }
-
-    useEffect(()=>{
-        fetchCourses();
-        }, []);
 
     const createCourse = (course : NewCourseDto)  => {
         axios.post("/api/courses", course)
@@ -53,6 +52,18 @@ export default function App() {
                 console.error(error.response.data);
                 setCurrentCourse(undefined);
             })
+    }
+
+    const fetchStudents = () => {
+        axios.get("/api/students")
+            .then((response : AxiosResponse<Student[]>) => setStudents(response.data))
+            .catch((error) => console.error(error))
+    }
+
+    const fetchInstructors = () => {
+        axios.get("/api/instructors")
+            .then((response : AxiosResponse<Instructor[]>) => setInstructors(response.data))
+            .catch((error) => console.error(error))
     }
 
     const updateCourse = (updatedProperty: string, updatedValue: string | string[] | LessonDto[] | AssignmentDto[]) => {
@@ -84,8 +95,11 @@ export default function App() {
     }
 
     useEffect(()=>{
-        loadUser()
-    },[])
+        fetchCourses();
+        loadUser();
+        fetchStudents();
+        fetchInstructors();
+    }, []);
 
     return (
         <>
@@ -97,7 +111,7 @@ export default function App() {
                 <Route path={"/"} element={ <Dashboard courses={courses} deleteCourse={deleteCourse}/> }/>
                 <Route path={"/signup"} element={<SignUpPage handleLogin={handleLogin}/>}/>
                 <Route path={"/login"} element={<LoginPage handleLogin={handleLogin}/>}/>
-                <Route path={"/course/:courseId"} element={<CoursePage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse} deleteCourse={deleteCourse}/>}>
+                <Route path={"/course/:courseId"} element={<CoursePage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse} deleteCourse={deleteCourse} students={students} instructors={instructors}/>}>
                     <Route path={"lessons"} element={<LessonOverview lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
                     <Route path={"lessons/create"} element={<LessonCreator updateCourse={updateCourse} lessons={currentCourse?.lessons}/>}/>
                     <Route path={"lessons/:lessonId"} element={<LessonPage lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
@@ -106,7 +120,7 @@ export default function App() {
                     <Route path={"assignments/:assignmentId"} element={<AssignmentPage assignments={currentCourse?.assignments} updateCourse={updateCourse}/>}/>
                     <Route path={"assignments/:assignmentId/submission/:submissionId"} element={<SubmissionPage assignments={currentCourse?.assignments}/>}/>
                 </Route>
-                <Route path={"/course/create"} element={<CourseCreator createCourse={createCourse}/>}/>
+                <Route path={"/course/create"} element={<CourseCreator createCourse={createCourse} students={students} instructors={instructors}/>}/>
             </Routes>
         </>
   )

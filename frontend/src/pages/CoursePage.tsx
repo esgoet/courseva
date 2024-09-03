@@ -4,15 +4,18 @@ import {useEffect, useState} from "react";
 import EditableTextDetail from "../components/EditableTextDetail.tsx";
 import EditableListDetail from "../components/EditableListDetail.tsx";
 import DeleteDialog from "../components/DeleteDialog.tsx";
+import {Instructor, Student} from "../types/userTypes.ts";
 
 type CoursePageProps = {
     updateCourse: (updatedProperty: string, updatedValue: string | string[]) => void,
     course: Course | undefined,
     fetchCourse: (courseId: string) => void,
-    deleteCourse: (courseId: string) => void
+    deleteCourse: (courseId: string) => void,
+    students: Student[],
+    instructors: Instructor[]
 }
 
-export default function CoursePage({updateCourse, course, fetchCourse, deleteCourse}: Readonly<CoursePageProps>) {
+export default function CoursePage({updateCourse, course, fetchCourse, deleteCourse, students, instructors}: Readonly<CoursePageProps>) {
     const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
     const { courseId } = useParams();
 
@@ -34,9 +37,9 @@ export default function CoursePage({updateCourse, course, fetchCourse, deleteCou
                 <EditableTextDetail inputType={"textarea"} label={"Description"} name={"description"} initialValue={course.description} updateCourse={updateCourse}/>
                 <EditableTextDetail inputType={"date"} label={"Start Date"} name={"startDate"} initialValue={course.startDate.toString()} updateCourse={updateCourse}/>
                 <h3>Students</h3>
-                <EditableListDetail label={"Students"} name={"students"} initialValue={course.students} updateCourse={updateCourse}/>
+                <EditableListDetail label={"Students"} name={"students"} initialValue={course.students} updateCourse={updateCourse} options={students}/>
                 <h3>Instructors</h3>
-                <EditableListDetail label={"Instructors"} name={"instructors"} initialValue={course.instructors} updateCourse={updateCourse}/>
+                <EditableListDetail label={"Instructors"} name={"instructors"} initialValue={course.instructors} updateCourse={updateCourse} options={instructors}/>
                 <Link to={"lessons"}>Lessons</Link>
                 <Link to={"assignments"}>Assignments</Link>
                 <Outlet/>
