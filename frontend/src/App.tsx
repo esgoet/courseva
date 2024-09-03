@@ -2,7 +2,7 @@ import './App.css'
 import {useEffect, useState} from "react";
 import {AssignmentDto, Course, CourseDto, LessonDto, NewCourseDto} from "./types/courseTypes.ts";
 import axios, {AxiosResponse} from 'axios';
-import {Link, Route, Routes, useNavigate} from "react-router-dom";
+import {Route, Routes, useNavigate} from "react-router-dom";
 import CoursePage from "./pages/CoursePage.tsx";
 import CourseCreator from "./components/CourseCreator.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
@@ -17,13 +17,19 @@ import {convertToCourse} from "./utils/convertToCourse.ts";
 import SignUpPage from "./components/SignUpPage.tsx";
 import LoginPage from "./components/LoginPage.tsx";
 import {Instructor, Student} from "./types/userTypes.ts";
+import ProtectedRoutes from "./components/ProtectedRoutes.tsx";
+import Header from "./components/Header.tsx";
+import ProtectedInstructorRoutes from "./components/ProtectedInstructorRoutes.tsx";
+import {checkIsInstructor} from "./utils/checkIsInstructor.ts";
+import {AuthContext} from "./components/AuthContext.tsx";
 
 export default function App() {
     const [courses, setCourses] = useState<Course[]>([]);
     const [currentCourse, setCurrentCourse] = useState<Course | undefined>();
-    const [user, setUser] = useState<string>("");
+    const [user, setUser] = useState<Student | Instructor | null | undefined>();
     const [students, setStudents] = useState<Student[]>([]);
     const [instructors, setInstructors] = useState<Instructor[]>([]);
+    const [isInstructor, setIsInstructor] = useState<boolean>(false);
     const navigate = useNavigate();
 
     const fetchCourses = () => {
@@ -90,8 +96,14 @@ export default function App() {
 
     const loadUser = () => {
         axios.get("/api/auth/me")
-            .then((response) => setUser(response.data))
-            .catch(error => console.error(error.response.data));
+            .then((response) => {
+                setUser(response.data)
+                setIsInstructor(checkIsInstructor(response.data))
+            })
+            .catch(error => {
+                console.error(error.response.data)
+                setUser(null);
+            });
     }
 
     useEffect(()=>{
@@ -101,27 +113,36 @@ export default function App() {
         fetchInstructors();
     }, []);
 
-    return (
+
+
+        return (
         <>
-            <h1>Learning Management System</h1>
-            <Link to={"/signup"}>Sign Up</Link>
-            <Link to={"/login"}>Login</Link>
-            <p>Hello {user}</p>
-            <Routes>
-                <Route path={"/"} element={ <Dashboard courses={courses} deleteCourse={deleteCourse}/> }/>
-                <Route path={"/signup"} element={<SignUpPage handleLogin={handleLogin}/>}/>
-                <Route path={"/login"} element={<LoginPage handleLogin={handleLogin}/>}/>
-                <Route path={"/course/:courseId"} element={<CoursePage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse} deleteCourse={deleteCourse} students={students} instructors={instructors}/>}>
-                    <Route path={"lessons"} element={<LessonOverview lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
-                    <Route path={"lessons/create"} element={<LessonCreator updateCourse={updateCourse} lessons={currentCourse?.lessons}/>}/>
-                    <Route path={"lessons/:lessonId"} element={<LessonPage lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
-                    <Route path={"assignments"} element={<AssignmentOverview assignments={currentCourse?.assignments} updateCourse={updateCourse}/>}/>
-                    <Route path={"assignments/create"} element={<AssignmentCreator assignments={currentCourse?.assignments} updateCourse={updateCourse} />}/>
-                    <Route path={"assignments/:assignmentId"} element={<AssignmentPage assignments={currentCourse?.assignments} updateCourse={updateCourse}/>}/>
-                    <Route path={"assignments/:assignmentId/submission/:submissionId"} element={<SubmissionPage assignments={currentCourse?.assignments}/>}/>
-                </Route>
-                <Route path={"/course/create"} element={<CourseCreator createCourse={createCourse} students={students} instructors={instructors}/>}/>
-            </Routes>
+            <Header/>
+            <main>
+                <AuthContext.Provider value={{user, isInstructor}}>
+                    <Routes>
+                        <Route path={"/signup"} element={<SignUpPage handleLogin={handleLogin}/>}/>
+                        <Route path={"/login"} element={<LoginPage handleLogin={handleLogin}/>}/>
+                        <Route element={<ProtectedRoutes user={user}/>}>
+                                <Route path={"/"} element={<Dashboard courses={courses} deleteCourse={deleteCourse}/>}/>
+                                <Route path={"/course/:courseId"} element={<CoursePage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse} deleteCourse={deleteCourse} students={students} instructors={instructors}/>}>
+                                    <Route path={"lessons"} element={<LessonOverview lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
+                                    <Route path={"lessons/:lessonId"} element={<LessonPage lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
+                                    <Route path={"assignments"} element={<AssignmentOverview assignments={currentCourse?.assignments} updateCourse={updateCourse}/>}/>
+                                    <Route path={"assignments/:assignmentId"} element={<AssignmentPage assignments={currentCourse?.assignments} updateCourse={updateCourse}/>}/>
+                                    <Route path={"assignments/:assignmentId/submission/:submissionId"} element={<SubmissionPage assignments={currentCourse?.assignments}/>}/>
+                                    <Route element={<ProtectedInstructorRoutes />}>
+                                        <Route path={"lessons/create"} element={<LessonCreator updateCourse={updateCourse} lessons={currentCourse?.lessons}/>}/>
+                                        <Route path={"assignments/create"} element={<AssignmentCreator assignments={currentCourse?.assignments} updateCourse={updateCourse} />}/>
+                                    </Route>
+                                </Route>
+                                <Route element={<ProtectedInstructorRoutes/>}>
+                                    <Route path={"/course/create"} element={<CourseCreator createCourse={createCourse} students={students} instructors={instructors}/>}/>
+                                </Route>
+                        </Route>
+                    </Routes>
+                </AuthContext.Provider>
+            </main>
         </>
   )
 }

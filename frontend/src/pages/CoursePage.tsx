@@ -1,4 +1,4 @@
-import {Link, Outlet, useParams} from "react-router-dom";
+import {Link, Outlet, useOutletContext, useParams} from "react-router-dom";
 import {Course} from "../types/courseTypes.ts";
 import {useEffect, useState} from "react";
 import EditableTextDetail from "../components/EditableTextDetail.tsx";
@@ -13,6 +13,14 @@ type CoursePageProps = {
     deleteCourse: (courseId: string) => void,
     students: Student[],
     instructors: Instructor[]
+}
+
+type CourseContextType = {
+    course: Course | undefined
+}
+
+export function useCourseContext() {
+    return useOutletContext<CourseContextType>();
 }
 
 export default function CoursePage({updateCourse, course, fetchCourse, deleteCourse, students, instructors}: Readonly<CoursePageProps>) {
@@ -42,8 +50,7 @@ export default function CoursePage({updateCourse, course, fetchCourse, deleteCou
                 <EditableListDetail label={"Instructors"} name={"instructors"} initialValue={course.instructors} updateCourse={updateCourse} options={instructors}/>
                 <Link to={"lessons"}>Lessons</Link>
                 <Link to={"assignments"}>Assignments</Link>
-                <Outlet/>
-
+                <Outlet context={{course} satisfies CourseContextType}/>
             </>
             :
             <p>No course found.</p>}
