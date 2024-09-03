@@ -48,8 +48,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(a -> a
                         .requestMatchers(HttpMethod.POST,"/api/courses").hasAuthority(INSTRUCTOR_ROLE)
                         .requestMatchers(HttpMethod.DELETE, "/api/courses/**").hasAuthority(INSTRUCTOR_ROLE)
-                        .requestMatchers("/api/courses/**").authenticated()
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .exceptionHandling(e -> e
