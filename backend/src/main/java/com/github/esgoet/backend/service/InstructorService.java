@@ -22,4 +22,8 @@ public class InstructorService {
     public Instructor createInstructor(NewUserDto user) {
         return new Instructor(idService.randomId(), user.username(), user.email(), user.gitHubId(), List.of());
     }
+
+    public List<Instructor> getAllInstructors() {
+        return instructorRepository.findAll();
+    }
 }

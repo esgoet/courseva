@@ -6,11 +6,18 @@ import com.github.esgoet.backend.service.InstructorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/instructors")
 @RequiredArgsConstructor
 public class InstructorController {
     private final InstructorService instructorService;
+
+    @GetMapping
+    public List<Instructor> getAllInstructors() {
+        return instructorService.getAllInstructors();
+    }
 
     @GetMapping("/{githubId}")
     public Instructor getInstructor(@PathVariable String githubId) {

@@ -23,4 +23,8 @@ public class StudentService {
     public Student createStudent(NewUserDto user) {
         return new Student(idService.randomId(), user.username(), user.email(), user.gitHubId(), List.of(), new HashMap<>());
     }
+
+    public List<Student> getAllStudents() {
+        return studentRepository.findAll();
+    }
 }
