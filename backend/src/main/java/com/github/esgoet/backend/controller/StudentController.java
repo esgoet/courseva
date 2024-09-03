@@ -19,9 +19,9 @@ public class StudentController {
         return studentService.getAllStudents();
     }
 
-    @GetMapping("/{githubId}")
-    public Student getStudent(@PathVariable String githubId) {
-        return studentService.getStudentByGitHubId(githubId);
+    @GetMapping("/{id}")
+    public Student getStudent(@PathVariable String id) {
+        return studentService.getStudentById(id);
     }
 
     @PostMapping

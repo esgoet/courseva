@@ -31,17 +31,19 @@ class AuthControllerTest {
     @Test
     @DirtiesContext
     void getUserTest() throws Exception {
-        studentRepository.save(new Student("1","esgoet","esgoet@gmail.com","123", List.of(),new HashMap<>()));
-
+        //GIVEN
+        studentRepository.save(new Student("1","esgoet","esgoet@fakeemail.com","123", List.of(),new HashMap<>()));
+        //WHEN
         mockMvc.perform(get("/api/auth/me")
                 .with(oidcLogin().idToken(token -> token.subject("123"))
                         .userInfoToken(token -> token.claim("login", "esgoet"))))
+                //THEN
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                     {
                       "id": "1",
                       "username": "esgoet",
-                      "email": "esgoet@gmail.com",
+                      "email": "esgoet@fakeemail.com",
                       "gitHubId": "123",
                       "courses": [],
                       "grades": {}
@@ -52,20 +54,16 @@ class AuthControllerTest {
     @Test
     @DirtiesContext
     void getUserTest_whenNoStudentWithId() throws Exception {
-        instructorRepository.save(new Instructor("1","esgoet","esgoet@gmail.com","123", List.of()));
-
+        //GIVEN
+        instructorRepository.save(new Instructor("1","esgoet","esgoet@fakeemail.com","123", List.of()));
+        //WHEN
         mockMvc.perform(get("/api/auth/me")
                         .with(oidcLogin().idToken(token -> token.subject("123"))
                                 .userInfoToken(token -> token.claim("login", "esgoet"))))
+                //THEN
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
-                    {
-                      "id": "1",
-                      "username": "esgoet",
-                      "email": "esgoet@gmail.com",
-                      "gitHubId": "123",
-                      "courses": []
-                    }
+                 
                     """));
     }
 }

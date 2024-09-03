@@ -27,4 +27,9 @@ public class StudentService {
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
     }
+
+
+    public Student getStudentById(String id) {
+        return studentRepository.findById(id).orElseThrow(()-> new UserNotFoundException("No student found with id: " + id));
+    }
 }

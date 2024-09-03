@@ -19,9 +19,9 @@ public class InstructorController {
         return instructorService.getAllInstructors();
     }
 
-    @GetMapping("/{githubId}")
-    public Instructor getInstructor(@PathVariable String githubId) {
-        return instructorService.getInstructorByGitHubId(githubId);
+    @GetMapping("/{id}")
+    public Instructor getInstructorById(@PathVariable String id) {
+        return instructorService.getInstructorById(id);
     }
 
     @PostMapping

@@ -26,4 +26,8 @@ public class InstructorService {
     public List<Instructor> getAllInstructors() {
         return instructorRepository.findAll();
     }
+
+    public Instructor getInstructorById(String id) {
+        return instructorRepository.findById(id).orElseThrow(()-> new UserNotFoundException("No instructor found with id: " + id));
+    }
 }
