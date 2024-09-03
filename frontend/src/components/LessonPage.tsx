@@ -12,6 +12,7 @@ type LessonPageProps = {
 export default function LessonPage({lessons, updateCourse}: Readonly<LessonPageProps>) {
     const [lesson, setLesson] = useState<LessonDto | undefined>();
     const {lessonId} = useParams();
+    console.log(lessons)
 
     useEffect(()=>{
         if (lessons) {
@@ -24,6 +25,7 @@ export default function LessonPage({lessons, updateCourse}: Readonly<LessonPageP
         if (lesson && lessons) {
             const updatedLesson = {...lesson,[updatedProperty]: updatedValue};
             setLesson(updatedLesson);
+            console.log(updatedLesson);
             updateCourse("lessons", convertToLessonDtoList(lessons)
                .map(lesson => lesson.id === lessonId ? updatedLesson : lesson));
         }

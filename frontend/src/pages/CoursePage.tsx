@@ -51,7 +51,7 @@ export default function CoursePage({updateCourse, course, fetchCourse, deleteCou
                 }
                 <EditableTextDetail inputType={"textarea"} label={"Description"} name={"description"}
                                     initialValue={course.description} updateCourse={updateCourse}/>
-                <EditableTextDetail inputType={"date"} label={"Start Date"} name={"startDate"} initialValue={course.startDate.toString()} updateCourse={updateCourse}/>
+                <EditableTextDetail inputType={"date"} label={"Start Date"} name={"startDate"} initialValue={course.startDate.toISOString()} updateCourse={updateCourse}/>
                 <h3>Students</h3>
                 <EditableListDetail label={"Students"} name={"students"} initialValue={course.students} updateCourse={updateCourse} options={students}/>
                 <h3>Instructors</h3>
