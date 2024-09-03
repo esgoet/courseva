@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -27,6 +28,7 @@ class CourseControllerTest {
     private final LocalDate startDate = LocalDate.parse("2024-07-27");
 
     @Test
+    @WithMockUser
     void getAllCoursesTest() throws Exception {
         //WHEN
         mockMvc.perform(get("/api/courses"))
@@ -37,6 +39,7 @@ class CourseControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void getCourseByIdTest_whenCourseExists() throws Exception {
         //GIVEN
         courseRepository.save(new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s1","s2"),  List.of("i1","i2"), startDate));
@@ -59,6 +62,7 @@ class CourseControllerTest {
     }
 
     @Test
+    @WithMockUser
     void getCourseByIdTest_whenCourseDoesNotExist() throws Exception {
         //WHEN
         mockMvc.perform(get("/api/courses/1"))
@@ -74,6 +78,7 @@ class CourseControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser(authorities = {"INSTRUCTOR"})
     void createCourseTest() throws Exception {
         //WHEN
         mockMvc.perform(post("/api/courses")
@@ -104,6 +109,7 @@ class CourseControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void updateCourseTest_whenCourseExists() throws Exception {
         //GIVEN
         courseRepository.save(new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s1","s2"),  List.of("i1","i2"), startDate));
@@ -137,6 +143,7 @@ class CourseControllerTest {
     }
 
     @Test
+    @WithMockUser
     void updateCourseTest_whenCourseDoesNotExist() throws Exception {
         //WHEN
         mockMvc.perform(put("/api/courses/1")
@@ -164,6 +171,7 @@ class CourseControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser(authorities = {"INSTRUCTOR"})
     void deleteCourse() throws Exception {
         //GIVEN
         courseRepository.save(new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s1", "s2"), List.of("i1", "i2"), startDate));
