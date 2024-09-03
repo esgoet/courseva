@@ -18,4 +18,24 @@ public class GlobalExceptionHandler {
                 HttpStatus.NOT_FOUND.value()
         );
     }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public CustomErrorMessage handleUserNotFoundException(UserNotFoundException e) {
+        return new CustomErrorMessage(
+                e.getMessage(),
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value()
+        );
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public CustomErrorMessage handleException(Exception e) {
+        return new CustomErrorMessage(
+                e.getMessage(),
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value()
+        );
+    }
 }
