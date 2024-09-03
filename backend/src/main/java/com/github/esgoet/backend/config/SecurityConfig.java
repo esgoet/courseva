@@ -32,7 +32,6 @@ import java.util.Map;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    @Autowired
     private final HttpServletRequest httpServletRequest;
     private final StudentService studentService;
     private final InstructorService instructorService;
