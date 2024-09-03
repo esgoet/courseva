@@ -16,14 +16,6 @@ type CoursePageProps = {
     instructors: Instructor[]
 }
 
-type CourseContextType = {
-    course: Course | undefined
-}
-
-export function useCourseContext() {
-    return useOutletContext<CourseContextType>();
-}
-
 export default function CoursePage({updateCourse, course, fetchCourse, deleteCourse, students, instructors}: Readonly<CoursePageProps>) {
     const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
     const { courseId } = useParams();
@@ -58,7 +50,7 @@ export default function CoursePage({updateCourse, course, fetchCourse, deleteCou
                 <EditableListDetail label={"Instructors"} name={"instructors"} initialValue={course.instructors} updateCourse={updateCourse} options={instructors}/>
                 <Link to={"lessons"}>Lessons</Link>
                 <Link to={"assignments"}>Assignments</Link>
-                <Outlet context={{course} satisfies CourseContextType}/>
+                <Outlet />
             </>
             :
             <p>No course found.</p>}
