@@ -1,8 +1,9 @@
 import {Assignment, AssignmentDto, SubmissionDto} from "../../../types/courseTypes.ts";
-import {FormEvent, useEffect, useState} from "react";
+import {FormEvent, useContext, useEffect, useState} from "react";
 import {Link, useParams} from "react-router-dom";
 import {convertToAssignmentDto, convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
 import EditableTextDetail from "../../../components/Shared/EditableTextDetail.tsx";
+import {AuthContext} from "../../../context/AuthContext.ts";
 
 type AssignmentPageProps = {
     assignments: Assignment[] | undefined,
@@ -17,6 +18,7 @@ export default function AssignmentPage({assignments, updateCourse}: Readonly<Ass
         content: "",
         timestamp: ""
     });
+    const {user, isInstructor} = useContext(AuthContext);
 
     useEffect(()=> {
         if (assignments) {
@@ -58,27 +60,34 @@ export default function AssignmentPage({assignments, updateCourse}: Readonly<Ass
                                         initialValue={assignment.deadline} updateCourse={handleUpdate}/>
                     <EditableTextDetail inputType={"textarea"} label={"Assignment Content"} name={"content"}
                                         initialValue={assignment.description} updateCourse={handleUpdate}/>
-                    <h4>Submit Your Assignment</h4>
-                    <form onSubmit={handleStudentSubmission}>
-                        <textarea name={"content"} value={submission.content} onChange={(e)=>setSubmission({...submission, content: e.target.value})}/>
-                        <button>Submit</button>
-                    </form>
-                    <h4>Submissions</h4>
-                    {assignment.submissions.length > 0 ?
-                        <ul>
-                            {assignment.submissions.map(submission => (
-                                <li key={`submission-${submission.id}`}>
-                                    <Link to={`submission/${submission.id}`}>
-                                        <p>{submission.studentId}</p>
-                                        <p>{submission.timestamp}</p>
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                        :
-                        <p>No submissions yet.</p>
+                    {!isInstructor && user &&
+                        <>
+                            <h4>Submit Your Assignment</h4>
+                            <form onSubmit={handleStudentSubmission}>
+                                <textarea name={"content"} value={submission.content} onChange={(e)=>setSubmission({...submission, content: e.target.value})}/>
+                                <button>Submit</button>
+                            </form>
+                        </>
                     }
-
+                    {isInstructor &&
+                        <>
+                            <h4>Submissions</h4>
+                            {assignment.submissions.length > 0 ?
+                                <ul>
+                                    {assignment.submissions.map(submission => (
+                                        <li key={`submission-${submission.id}`}>
+                                            <Link to={`submission/${submission.id}`}>
+                                                <p>{submission.studentId}</p>
+                                                <p>{submission.timestamp}</p>
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                                :
+                                <p>No submissions yet.</p>
+                            }
+                        </>
+                    }
                 </>
             }
         </>
