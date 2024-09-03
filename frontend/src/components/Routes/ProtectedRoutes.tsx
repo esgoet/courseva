@@ -1,17 +1,13 @@
 import {Navigate, Outlet} from "react-router-dom";
-import {Instructor, Student} from "../../types/userTypes.ts";
+import {AuthContext} from "../../context/AuthContext.ts";
+import {useContext} from "react";
 
-type ProtectedRoutesProps = {
-    user: Student | Instructor | null | undefined
-}
+export default function ProtectedRoutes() {
+    const {user} = useContext(AuthContext);
 
-export default function ProtectedRoutes({user}: ProtectedRoutesProps) {
     if (user === undefined) {
         return <div>Loading...</div>
     }
-    if (user) {
-        return <Outlet />;
-    }
-    return <Navigate to={"/login"}/>;
+    return user ? <Outlet/> : <Navigate to={"/login"}/>;
 }
 
