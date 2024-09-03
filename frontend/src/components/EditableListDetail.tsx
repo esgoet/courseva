@@ -1,5 +1,6 @@
-import {FormEvent, useState} from "react";
+import {FormEvent, useContext, useState} from "react";
 import {Instructor, Student} from "../types/userTypes.ts";
+import {AuthContext} from "./AuthContext.tsx";
 
 type EditableListDetailProps = {
     label: string,
@@ -12,6 +13,7 @@ type EditableListDetailProps = {
 export default function EditableListDetail(props: Readonly<EditableListDetailProps>){
     const [editable, setEditable] = useState<boolean>(false);
     const [input, setInput ] = useState<string[]>(props.initialValue);
+    const {isInstructor} = useContext(AuthContext);
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -29,7 +31,7 @@ export default function EditableListDetail(props: Readonly<EditableListDetailPro
             <select name={props.name} value={input} onChange={(e)=>setInput([...e.target.selectedOptions].map(option => option.value))} disabled={!editable} multiple>
                 {props.options.map((option) => <option key={`${option.id}`} value={option.id}>{option.username}</option>)}
             </select>
-            <button onClick={() => setEditable(!editable)}>{editable ? "Save" : "Edit"}</button>
+            {isInstructor && <button onClick={() => setEditable(!editable)}>{editable ? "Save" : "Edit"}</button>}
             {editable && <button type={"reset"} onClick={handleCancel}>Cancel</button>}
         </form>
     )

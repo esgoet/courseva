@@ -1,10 +1,11 @@
 import {Link, Outlet, useOutletContext, useParams} from "react-router-dom";
 import {Course} from "../types/courseTypes.ts";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import EditableTextDetail from "../components/EditableTextDetail.tsx";
 import EditableListDetail from "../components/EditableListDetail.tsx";
 import DeleteDialog from "../components/DeleteDialog.tsx";
 import {Instructor, Student} from "../types/userTypes.ts";
+import {AuthContext} from "../components/AuthContext.tsx";
 
 type CoursePageProps = {
     updateCourse: (updatedProperty: string, updatedValue: string | string[]) => void,
@@ -26,6 +27,7 @@ export function useCourseContext() {
 export default function CoursePage({updateCourse, course, fetchCourse, deleteCourse, students, instructors}: Readonly<CoursePageProps>) {
     const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
     const { courseId } = useParams();
+    const {isInstructor} = useContext(AuthContext);
 
     useEffect(() =>{
         if (courseId) fetchCourse(courseId);
@@ -40,9 +42,15 @@ export default function CoursePage({updateCourse, course, fetchCourse, deleteCou
                     <EditableTextDetail inputType={"text"} label={"Title"} name={"title"} initialValue={course.title} updateCourse={updateCourse}/>
                 </h3>
                 <p>{course.id}</p>
-                <button onClick={()=>setConfirmDelete(true)}>Delete Course</button>
-                <DeleteDialog course={course} modal={confirmDelete} closeModal={()=>setConfirmDelete(false)} deleteCourse={deleteCourse}/>
-                <EditableTextDetail inputType={"textarea"} label={"Description"} name={"description"} initialValue={course.description} updateCourse={updateCourse}/>
+                {isInstructor &&
+                    <>
+                        <button onClick={() => setConfirmDelete(true)}>Delete Course</button>
+                        <DeleteDialog course={course} modal={confirmDelete} closeModal={() => setConfirmDelete(false)}
+                                      deleteCourse={deleteCourse}/>
+                    </>
+                }
+                <EditableTextDetail inputType={"textarea"} label={"Description"} name={"description"}
+                                    initialValue={course.description} updateCourse={updateCourse}/>
                 <EditableTextDetail inputType={"date"} label={"Start Date"} name={"startDate"} initialValue={course.startDate.toString()} updateCourse={updateCourse}/>
                 <h3>Students</h3>
                 <EditableListDetail label={"Students"} name={"students"} initialValue={course.students} updateCourse={updateCourse} options={students}/>
