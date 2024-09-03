@@ -1,14 +1,16 @@
 import {Navigate, Outlet} from "react-router-dom";
-import {AuthContext} from "../../context/AuthContext.ts";
-import {useContext} from "react";
+import {useAuth} from "../../hooks/useAuth.ts";
 
 export default function ProtectedInstructorRoutes() {
-    const {user, isInstructor} = useContext(AuthContext);
+    const {user, isInstructor} = useAuth();
 
     if (user === undefined) {
         return <div>Loading...</div>
     }
-
-    return isInstructor && user ? <Outlet/> : user ? <div>You cannot access this page. Please contact an admin if you believe this to be wrong.</div> : <Navigate to={"/login"}/>
+    if (user) {
+        if (isInstructor) return <Outlet/>
+        return <div>You cannot access this page. Please contact an admin if you believe this to be wrong.</div>
+    }
+    return <Navigate to={"/login"}/>
 }
 

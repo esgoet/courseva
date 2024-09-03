@@ -1,8 +1,7 @@
 import {Lesson, LessonDto} from "../../../types/courseTypes.ts";
 import {Link} from "react-router-dom";
 import { convertToLessonDtoList} from "../../../utils/convertToLessonDto.ts";
-import {useContext} from "react";
-import {AuthContext} from "../../../context/AuthContext.ts";
+import {useAuth} from "../../../hooks/useAuth.ts";
 
 
 type LessonOverviewProps = {
@@ -11,7 +10,7 @@ type LessonOverviewProps = {
 }
 
 export default function LessonOverview({lessons, updateCourse}: Readonly<LessonOverviewProps>) {
-    const {isInstructor} = useContext(AuthContext);
+    const {isInstructor} = useAuth();
 
     const deleteLesson = (lessonId: string) => {
         if (lessons) {

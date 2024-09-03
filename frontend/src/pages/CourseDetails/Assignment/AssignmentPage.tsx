@@ -1,9 +1,9 @@
 import {Assignment, AssignmentDto, SubmissionDto} from "../../../types/courseTypes.ts";
-import {FormEvent, useContext, useEffect, useState} from "react";
+import {FormEvent, useEffect, useState} from "react";
 import {Link, useParams} from "react-router-dom";
 import {convertToAssignmentDto, convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
 import EditableTextDetail from "../../../components/Shared/EditableTextDetail.tsx";
-import {AuthContext} from "../../../context/AuthContext.ts";
+import { useAuth } from "../../../hooks/useAuth.ts";
 
 type AssignmentPageProps = {
     assignments: Assignment[] | undefined,
@@ -18,7 +18,7 @@ export default function AssignmentPage({assignments, updateCourse}: Readonly<Ass
         content: "",
         timestamp: ""
     });
-    const {user, isInstructor} = useContext(AuthContext);
+    const {user, isInstructor} = useAuth();
 
     useEffect(()=> {
         if (assignments) {

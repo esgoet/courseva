@@ -1,6 +1,6 @@
-import {FormEvent, useContext, useState} from "react";
+import {FormEvent, useState} from "react";
 import {Instructor, Student} from "../../types/userTypes.ts";
-import {AuthContext} from "../../context/AuthContext.ts";
+import {useAuth} from "../../hooks/useAuth.ts";
 
 type EditableListDetailProps = {
     label: string,
@@ -13,7 +13,7 @@ type EditableListDetailProps = {
 export default function EditableListDetail(props: Readonly<EditableListDetailProps>){
     const [editable, setEditable] = useState<boolean>(false);
     const [input, setInput ] = useState<string[]>(props.initialValue);
-    const {isInstructor} = useContext(AuthContext);
+    const {isInstructor} = useAuth();
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();

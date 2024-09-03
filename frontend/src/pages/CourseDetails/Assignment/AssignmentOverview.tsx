@@ -1,8 +1,7 @@
 import {Assignment, AssignmentDto} from "../../../types/courseTypes.ts";
 import {Link} from "react-router-dom";
 import {convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
-import {useContext} from "react";
-import {AuthContext} from "../../../context/AuthContext.ts";
+import {useAuth} from "../../../hooks/useAuth.ts";
 
 type AssignmentOverviewProps = {
     assignments: Assignment[] | undefined,
@@ -10,7 +9,7 @@ type AssignmentOverviewProps = {
 }
 
 export default function AssignmentOverview({assignments, updateCourse}: Readonly<AssignmentOverviewProps>) {
-    const {isInstructor} = useContext(AuthContext);
+    const {isInstructor} = useAuth();
 
     const deleteAssignment = (assignmentId: string) => {
         if (assignments) {

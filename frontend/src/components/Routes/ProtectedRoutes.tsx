@@ -1,9 +1,8 @@
 import {Navigate, Outlet} from "react-router-dom";
-import {AuthContext} from "../../context/AuthContext.ts";
-import {useContext} from "react";
+import {useAuth} from "../../hooks/useAuth.ts";
 
 export default function ProtectedRoutes() {
-    const {user} = useContext(AuthContext);
+    const {user} = useAuth();
 
     if (user === undefined) {
         return <div>Loading...</div>

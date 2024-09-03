@@ -1,8 +1,8 @@
 import {Link} from "react-router-dom";
 import DeleteDialog from "../Shared/DeleteDialog.tsx";
 import {Course} from "../../types/courseTypes.ts";
-import {useContext, useState} from "react";
-import {AuthContext} from "../../context/AuthContext.ts";
+import {useState} from "react";
+import {useAuth} from "../../hooks/useAuth.ts";
 
 type CourseEntryProps = {
     course: Course,
@@ -10,7 +10,7 @@ type CourseEntryProps = {
 }
 
 export default function CourseEntry({course, deleteCourse}: Readonly<CourseEntryProps>) {
-    const {isInstructor} = useContext(AuthContext);
+    const {isInstructor} = useAuth();
     const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
 
     return (

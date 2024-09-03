@@ -1,15 +1,14 @@
 import CourseList from "../components/Course/CourseList.tsx";
 import {Course} from "../types/courseTypes.ts";
 import {Link} from "react-router-dom";
-import {AuthContext} from "../context/AuthContext.ts";
-import {useContext} from "react";
+import {useAuth} from "../hooks/useAuth.ts";
 
 type DashboardProps = {
     courses: Course[],
     deleteCourse: (courseId: string) => void
 }
 export default function Dashboard({courses, deleteCourse}: Readonly<DashboardProps>) {
-    const {user} = useContext(AuthContext);
+    const {user} = useAuth();
     return (
         <>
         {user &&
