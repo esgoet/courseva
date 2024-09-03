@@ -4,7 +4,7 @@ type SignUpFormProps = {
     handleLogin: () => void;
 };
 
-export default function SignUpPage({handleLogin}: SignUpFormProps) {
+export default function SignUpPage({handleLogin}: Readonly<SignUpFormProps>) {
     const [role, setRole] = useState<string>("STUDENT");
 
     const handleRoleChange = (e: ChangeEvent<HTMLInputElement>) => {

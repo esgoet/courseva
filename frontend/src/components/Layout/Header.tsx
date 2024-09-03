@@ -6,7 +6,7 @@ type HeaderProps = {
     handleLogout: () => void;
 }
 
-export default function Header({handleLogout}:HeaderProps) {
+export default function Header({handleLogout}: Readonly<HeaderProps>) {
     const {user} = useContext(AuthContext);
     return (
         <header>

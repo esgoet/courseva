@@ -4,7 +4,7 @@ type LoginPageProps = {
     handleLogin: () => void
 };
 
-export default function LoginPage({handleLogin}: LoginPageProps) {
+export default function LoginPage({handleLogin}: Readonly<LoginPageProps>) {
     return (
         <>
             <h2>Login</h2>
