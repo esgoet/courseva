@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.HashMap;
@@ -36,6 +37,7 @@ class StudentControllerTest {
 
     @Test
     @WithMockUser
+    @DirtiesContext
     void getStudentByIdTest() throws Exception {
         //GIVEN
         studentRepository.save(new Student("1","esgoet","esgoet@fakeemail.com","123", List.of(), new HashMap<>()));
@@ -56,6 +58,7 @@ class StudentControllerTest {
 
     @Test
     @WithMockUser
+    @DirtiesContext
     void createStudentTest() throws Exception {
         //WHEN
         mockMvc.perform(post("/api/students")

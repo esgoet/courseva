@@ -53,7 +53,7 @@ class AuthControllerTest {
 
     @Test
     @DirtiesContext
-    void getUserTest_whenNoStudentWithId() throws Exception {
+    void getUserTest_whenNoStudentButInstructorWithId() throws Exception {
         //GIVEN
         instructorRepository.save(new Instructor("1","esgoet","esgoet@fakeemail.com","123", List.of()));
         //WHEN
@@ -63,7 +63,31 @@ class AuthControllerTest {
                 //THEN
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
-                 
+                    {
+                      "id": "1",
+                      "username": "esgoet",
+                      "email": "esgoet@fakeemail.com",
+                      "gitHubId": "123",
+                      "courses": []
+                    }
                     """));
+    }
+
+    @Test
+    @DirtiesContext
+    void getUserTest_whenNoUserWithId() throws Exception {
+       //WHEN
+        mockMvc.perform(get("/api/auth/me")
+                        .with(oidcLogin().idToken(token -> token.subject("123"))
+                                .userInfoToken(token -> token.claim("login", "esgoet"))))
+                //THEN
+                .andExpect(status().isNotFound())
+                .andExpect(content().json("""
+                    {
+                      "message": "No instructor found with GitHub Id: 123",
+                      "statusCode":404
+                    }
+                    """))
+                .andExpect(jsonPath("$.timestamp").exists());
     }
 }
