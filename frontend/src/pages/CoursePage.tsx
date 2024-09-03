@@ -1,4 +1,4 @@
-import {Link, Outlet, useOutletContext, useParams} from "react-router-dom";
+import {Link, Outlet, useParams} from "react-router-dom";
 import {Course} from "../types/courseTypes.ts";
 import {useContext, useEffect, useState} from "react";
 import EditableTextDetail from "../components/EditableTextDetail.tsx";
