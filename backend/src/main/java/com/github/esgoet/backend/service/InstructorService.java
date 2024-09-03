@@ -16,11 +16,11 @@ public class InstructorService {
     private final IdService idService;
 
     public Instructor getInstructorByGitHubId(String githubId) {
-        return instructorRepository.findByGitHubId(githubId).orElseThrow(()-> new UserNotFoundException("No user found with GitHub Id: " + githubId));
+        return instructorRepository.findByGitHubId(githubId).orElseThrow(()-> new UserNotFoundException("No instructor found with GitHub Id: " + githubId));
     }
 
     public Instructor createInstructor(NewUserDto user) {
-        return new Instructor(idService.randomId(), user.username(), user.email(), user.gitHubId(), List.of());
+        return instructorRepository.save(new Instructor(idService.randomId(), user.username(), user.email(), user.gitHubId(), List.of()));
     }
 
     public List<Instructor> getAllInstructors() {

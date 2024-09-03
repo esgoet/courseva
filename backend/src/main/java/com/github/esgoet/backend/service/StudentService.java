@@ -17,11 +17,11 @@ public class StudentService {
     private final IdService idService;
 
     public Student getStudentByGitHubId(String githubId) {
-        return studentRepository.findByGitHubId(githubId).orElseThrow(()-> new UserNotFoundException("No user found with GitHub Id: " + githubId));
+        return studentRepository.findByGitHubId(githubId).orElseThrow(()-> new UserNotFoundException("No student found with GitHub Id: " + githubId));
     }
 
     public Student createStudent(NewUserDto user) {
-        return new Student(idService.randomId(), user.username(), user.email(), user.gitHubId(), List.of(), new HashMap<>());
+        return studentRepository.save(new Student(idService.randomId(), user.username(), user.email(), user.gitHubId(), List.of(), new HashMap<>()));
     }
 
     public List<Student> getAllStudents() {
