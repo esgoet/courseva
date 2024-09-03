@@ -1,5 +1,5 @@
 import {Navigate, Outlet} from "react-router-dom";
-import {Instructor, Student} from "../types/userTypes.ts";
+import {Instructor, Student} from "../../types/userTypes.ts";
 
 type ProtectedRoutesProps = {
     user: Student | Instructor | null | undefined

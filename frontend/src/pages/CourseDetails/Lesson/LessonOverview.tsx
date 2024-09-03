@@ -1,8 +1,8 @@
-import {Lesson, LessonDto} from "../types/courseTypes.ts";
+import {Lesson, LessonDto} from "../../../types/courseTypes.ts";
 import {Link} from "react-router-dom";
-import { convertToLessonDtoList} from "../utils/convertToLessonDto.ts";
+import { convertToLessonDtoList} from "../../../utils/convertToLessonDto.ts";
 import {useContext} from "react";
-import {AuthContext} from "./AuthContext.tsx";
+import {AuthContext} from "../../../context/AuthContext.ts";
 
 
 type LessonOverviewProps = {

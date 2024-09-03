@@ -1,8 +1,8 @@
-import {Assignment, AssignmentDto} from "../types/courseTypes.ts";
+import {Assignment, AssignmentDto} from "../../../types/courseTypes.ts";
 import {Link} from "react-router-dom";
-import {convertToAssignmentDtoList} from "../utils/convertToAssignmentDto.ts";
+import {convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
 import {useContext} from "react";
-import {AuthContext} from "./AuthContext.tsx";
+import {AuthContext} from "../../../context/AuthContext.ts";
 
 type AssignmentOverviewProps = {
     assignments: Assignment[] | undefined,

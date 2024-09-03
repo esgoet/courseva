@@ -1,6 +1,6 @@
 import {FormEvent, useContext, useState} from "react";
-import {Instructor, Student} from "../types/userTypes.ts";
-import {AuthContext} from "./AuthContext.tsx";
+import {Instructor, Student} from "../../types/userTypes.ts";
+import {AuthContext} from "../../context/AuthContext.ts";
 
 type EditableListDetailProps = {
     label: string,

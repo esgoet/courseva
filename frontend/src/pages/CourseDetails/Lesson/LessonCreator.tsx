@@ -1,7 +1,7 @@
-import {Lesson, LessonDto} from "../types/courseTypes.ts";
+import {Lesson, LessonDto} from "../../../types/courseTypes.ts";
 import {ChangeEvent, FormEvent, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {convertToLessonDtoList} from "../utils/convertToLessonDto.ts";
+import {convertToLessonDtoList} from "../../../utils/convertToLessonDto.ts";
 
 type LessonCreatorProps = {
     updateCourse: (updatedProperty: string, updatedValue: LessonDto[]) => void,

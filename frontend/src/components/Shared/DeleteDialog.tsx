@@ -1,5 +1,5 @@
 import {useEffect, useRef} from "react";
-import {Course} from "../types/courseTypes.ts";
+import {Course} from "../../types/courseTypes.ts";
 import {useNavigate} from "react-router-dom";
 
 type DeleteDialogProps = {

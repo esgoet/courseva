@@ -3,25 +3,25 @@ import {useEffect, useState} from "react";
 import {AssignmentDto, Course, CourseDto, LessonDto, NewCourseDto} from "./types/courseTypes.ts";
 import axios, {AxiosResponse} from 'axios';
 import {Route, Routes, useNavigate} from "react-router-dom";
-import CoursePage from "./pages/CoursePage.tsx";
-import CourseCreator from "./components/CourseCreator.tsx";
+import CourseDetailsPage from "./pages/CourseDetails/CourseDetailsPage.tsx";
+import CourseCreator from "./pages/CourseCreator.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
-import LessonOverview from "./components/LessonOverview.tsx";
-import AssignmentOverview from "./components/AssignmentOverview.tsx";
-import LessonPage from "./components/LessonPage.tsx";
-import AssignmentPage from "./components/AssignmentPage.tsx";
-import LessonCreator from "./components/LessonCreator.tsx";
-import AssignmentCreator from "./components/AssignmentCreator.tsx";
-import SubmissionPage from "./components/SubmissionPage.tsx";
+import LessonOverview from "./pages/CourseDetails/Lesson/LessonOverview.tsx";
+import AssignmentOverview from "./pages/CourseDetails/Assignment/AssignmentOverview.tsx";
+import LessonPage from "./pages/CourseDetails/Lesson/LessonPage.tsx";
+import AssignmentPage from "./pages/CourseDetails/Assignment/AssignmentPage.tsx";
+import LessonCreator from "./pages/CourseDetails/Lesson/LessonCreator.tsx";
+import AssignmentCreator from "./pages/CourseDetails/Assignment/AssignmentCreator.tsx";
+import SubmissionPage from "./pages/CourseDetails/Assignment/SubmissionPage.tsx";
 import {convertToCourse} from "./utils/convertToCourse.ts";
-import SignUpPage from "./components/SignUpPage.tsx";
-import LoginPage from "./components/LoginPage.tsx";
+import SignUpPage from "./pages/SignUpPage.tsx";
+import LoginPage from "./pages/LoginPage.tsx";
 import {Instructor, Student} from "./types/userTypes.ts";
-import ProtectedRoutes from "./components/ProtectedRoutes.tsx";
-import Header from "./components/Header.tsx";
-import ProtectedInstructorRoutes from "./components/ProtectedInstructorRoutes.tsx";
+import ProtectedRoutes from "./components/Routes/ProtectedRoutes.tsx";
+import Header from "./components/Layout/Header.tsx";
+import ProtectedInstructorRoutes from "./components/Routes/ProtectedInstructorRoutes.tsx";
 import {checkIsInstructor} from "./utils/checkIsInstructor.ts";
-import {AuthContext} from "./components/AuthContext.tsx";
+import {AuthContext} from "./context/AuthContext.ts";
 
 export default function App() {
     const [courses, setCourses] = useState<Course[]>([]);
@@ -131,7 +131,7 @@ export default function App() {
                             <Route path={"/login"} element={<LoginPage handleLogin={handleLogin}/>}/>
                             <Route element={<ProtectedRoutes user={user}/>}>
                                     <Route path={"/"} element={<Dashboard courses={courses} deleteCourse={deleteCourse}/>}/>
-                                    <Route path={"/course/:courseId"} element={<CoursePage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse} deleteCourse={deleteCourse} students={students} instructors={instructors}/>}>
+                                    <Route path={"/course/:courseId"} element={<CourseDetailsPage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse} deleteCourse={deleteCourse} students={students} instructors={instructors}/>}>
                                         <Route path={"lessons"} element={<LessonOverview lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
                                         <Route path={"lessons/:lessonId"} element={<LessonPage lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
                                         <Route path={"assignments"} element={<AssignmentOverview assignments={currentCourse?.assignments} updateCourse={updateCourse}/>}/>

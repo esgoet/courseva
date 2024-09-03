@@ -1,11 +1,11 @@
 import {Link, Outlet, useParams} from "react-router-dom";
-import {Course} from "../types/courseTypes.ts";
+import {Course} from "../../types/courseTypes.ts";
 import {useContext, useEffect, useState} from "react";
-import EditableTextDetail from "../components/EditableTextDetail.tsx";
-import EditableListDetail from "../components/EditableListDetail.tsx";
-import DeleteDialog from "../components/DeleteDialog.tsx";
-import {Instructor, Student} from "../types/userTypes.ts";
-import {AuthContext} from "../components/AuthContext.tsx";
+import EditableTextDetail from "../../components/Shared/EditableTextDetail.tsx";
+import EditableListDetail from "../../components/Shared/EditableListDetail.tsx";
+import DeleteDialog from "../../components/Shared/DeleteDialog.tsx";
+import {Instructor, Student} from "../../types/userTypes.ts";
+import {AuthContext} from "../../context/AuthContext.ts";
 
 type CoursePageProps = {
     updateCourse: (updatedProperty: string, updatedValue: string | string[]) => void,
@@ -16,7 +16,7 @@ type CoursePageProps = {
     instructors: Instructor[]
 }
 
-export default function CoursePage({updateCourse, course, fetchCourse, deleteCourse, students, instructors}: Readonly<CoursePageProps>) {
+export default function CourseDetailsPage({updateCourse, course, fetchCourse, deleteCourse, students, instructors}: Readonly<CoursePageProps>) {
     const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
     const { courseId } = useParams();
     const {isInstructor} = useContext(AuthContext);

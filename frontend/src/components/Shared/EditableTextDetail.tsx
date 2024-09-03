@@ -1,5 +1,5 @@
 import {FormEvent, useContext, useState} from "react";
-import {AuthContext} from "./AuthContext.tsx";
+import {AuthContext} from "../../context/AuthContext.ts";
 
 
 type EditableTextDetailProps = {

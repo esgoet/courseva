@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import {AuthContext} from "./AuthContext.tsx";
+import {AuthContext} from "../../context/AuthContext.ts";
 import {useContext} from "react";
 
 type HeaderProps = {

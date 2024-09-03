@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import {Assignment, SubmissionDto} from "../types/courseTypes.ts";
+import {Assignment, SubmissionDto} from "../../../types/courseTypes.ts";
 import {useEffect, useState} from "react";
 
 type SubmissionPageProps = {

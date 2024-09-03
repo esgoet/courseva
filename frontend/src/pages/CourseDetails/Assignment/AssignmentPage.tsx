@@ -1,8 +1,8 @@
-import {Assignment, AssignmentDto, SubmissionDto} from "../types/courseTypes.ts";
+import {Assignment, AssignmentDto, SubmissionDto} from "../../../types/courseTypes.ts";
 import {FormEvent, useEffect, useState} from "react";
 import {Link, useParams} from "react-router-dom";
-import {convertToAssignmentDto, convertToAssignmentDtoList} from "../utils/convertToAssignmentDto.ts";
-import EditableTextDetail from "./EditableTextDetail.tsx";
+import {convertToAssignmentDto, convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
+import EditableTextDetail from "../../../components/Shared/EditableTextDetail.tsx";
 
 type AssignmentPageProps = {
     assignments: Assignment[] | undefined,

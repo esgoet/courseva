@@ -1,8 +1,8 @@
 import {Link} from "react-router-dom";
-import DeleteDialog from "./DeleteDialog.tsx";
-import {Course} from "../types/courseTypes.ts";
+import DeleteDialog from "../Shared/DeleteDialog.tsx";
+import {Course} from "../../types/courseTypes.ts";
 import {useContext, useState} from "react";
-import {AuthContext} from "./AuthContext.tsx";
+import {AuthContext} from "../../context/AuthContext.ts";
 
 type CourseEntryProps = {
     course: Course,

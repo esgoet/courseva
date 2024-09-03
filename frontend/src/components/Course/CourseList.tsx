@@ -1,4 +1,4 @@
-import {Course} from "../types/courseTypes.ts";
+import {Course} from "../../types/courseTypes.ts";
 import CourseEntry from "./CourseEntry.tsx";
 
 type CourseListProps = {
