@@ -49,7 +49,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(a -> a
                         .requestMatchers(HttpMethod.POST,"/api/courses").hasAuthority(INSTRUCTOR_ROLE)
-                        .requestMatchers(HttpMethod.DELETE, "/api/course/**").hasAuthority(INSTRUCTOR_ROLE)
+                        .requestMatchers(HttpMethod.DELETE, "/api/courses/**").hasAuthority(INSTRUCTOR_ROLE)
                         .requestMatchers("/api/courses/**").authenticated()
                         .anyRequest().permitAll()
                 )
@@ -67,7 +67,6 @@ public class SecurityConfig {
         return request -> {
             OAuth2User oAuth2User = delegate.loadUser(request);
             String gitHubId = oAuth2User.getName();
-            System.out.println(gitHubId);
             String selectedRole = getSelectedRole(gitHubId);
 
             if (INSTRUCTOR_ROLE.equalsIgnoreCase(selectedRole)) {
@@ -82,6 +81,7 @@ public class SecurityConfig {
     }
 
     private String getSelectedRole(String gitHubId) {
+        //here get selectedRole from registration form, bc this does not work
         Object roleObj = httpServletRequest.getSession().getAttribute("selectedRole");
         if (roleObj != null) {
             return roleObj.toString();
