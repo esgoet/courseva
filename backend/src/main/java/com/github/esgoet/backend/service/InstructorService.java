@@ -1,10 +1,15 @@
 package com.github.esgoet.backend.service;
 
-import com.github.esgoet.backend.dto.NewUserDto;
+import com.github.esgoet.backend.dto.NewAppUserDto;
+import com.github.esgoet.backend.dto.InstructorResponseDto;
 import com.github.esgoet.backend.exception.UserNotFoundException;
 import com.github.esgoet.backend.model.Instructor;
 import com.github.esgoet.backend.repository.InstructorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,20 +19,31 @@ import java.util.List;
 public class InstructorService {
     private final InstructorRepository instructorRepository;
     private final IdService idService;
+    private final PasswordEncoder passwordEncoder;
 
-    public Instructor getInstructorByGitHubId(String githubId) {
-        return instructorRepository.findByGitHubId(githubId).orElseThrow(()-> new UserNotFoundException("No instructor found with GitHub Id: " + githubId));
-    }
-
-    public Instructor createInstructor(NewUserDto user) {
-        return instructorRepository.save(new Instructor(idService.randomId(), user.username(), user.email(), user.gitHubId(), List.of()));
+    public InstructorResponseDto createInstructor(NewAppUserDto user) {
+        Instructor instructor = new Instructor(idService.randomId(), user.username(), user.email(), passwordEncoder.encode(user.password()), List.of());
+        instructorRepository.save(instructor);
+        return new InstructorResponseDto(instructor.id(),instructor.username(), instructor.email(), instructor.courses());
     }
 
     public List<Instructor> getAllInstructors() {
         return instructorRepository.findAll();
     }
 
+
     public Instructor getInstructorById(String id) {
         return instructorRepository.findById(id).orElseThrow(()-> new UserNotFoundException("No instructor found with id: " + id));
     }
+
+    public Instructor getInstructorByUsername(String username) {
+        return instructorRepository.findInstructorByUsername(username).orElseThrow(()-> new UsernameNotFoundException("No instructor found with username: " + username));
+    }
+
+    public InstructorResponseDto getLoggedInInstructor() {
+        var principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Instructor instructor = getInstructorByUsername(principal.getUsername());
+        return new InstructorResponseDto(instructor.id(),instructor.username(), instructor.email(), instructor.courses());
+    }
+
 }

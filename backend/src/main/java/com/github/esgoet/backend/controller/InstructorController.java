@@ -1,6 +1,7 @@
 package com.github.esgoet.backend.controller;
 
-import com.github.esgoet.backend.dto.NewUserDto;
+import com.github.esgoet.backend.dto.InstructorResponseDto;
+import com.github.esgoet.backend.dto.NewAppUserDto;
 import com.github.esgoet.backend.model.Instructor;
 import com.github.esgoet.backend.service.InstructorService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class InstructorController {
     }
 
     @PostMapping
-    public Instructor createInstructor(@RequestBody NewUserDto user) {
+    public InstructorResponseDto createInstructor(@RequestBody NewAppUserDto user) {
         return instructorService.createInstructor(user);
     }
 }

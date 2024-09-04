@@ -9,7 +9,7 @@ public record Instructor(
         String id,
         String username,
         String email,
-        String gitHubId,
+        String password,
         List<String> courses
 ) {
 }

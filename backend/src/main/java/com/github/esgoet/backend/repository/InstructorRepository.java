@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface InstructorRepository extends MongoRepository<Instructor, String> {
-    Optional<Instructor> findByGitHubId(String gitHubId);
+    Optional<Instructor> findInstructorByUsername(String username);
 }

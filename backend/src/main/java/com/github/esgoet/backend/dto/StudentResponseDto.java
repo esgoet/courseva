@@ -1,16 +1,12 @@
-package com.github.esgoet.backend.model;
-
-import org.springframework.data.mongodb.core.mapping.Document;
+package com.github.esgoet.backend.dto;
 
 import java.util.List;
 import java.util.Map;
 
-@Document("students")
-public record Student(
+public record StudentResponseDto(
         String id,
         String username,
         String email,
-        String password,
         List<String> courses,
         Map<String,List<Integer>> grades
 ) {

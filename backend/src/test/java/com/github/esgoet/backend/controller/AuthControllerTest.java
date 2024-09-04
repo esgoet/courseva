@@ -30,7 +30,7 @@ class AuthControllerTest {
 
     @Test
     @DirtiesContext
-    void getUserTest() throws Exception {
+    void getLoggedInUserTest() throws Exception {
         //GIVEN
         studentRepository.save(new Student("1","esgoet","esgoet@fakeemail.com","123", List.of(),new HashMap<>()));
         //WHEN
@@ -44,7 +44,6 @@ class AuthControllerTest {
                       "id": "1",
                       "username": "esgoet",
                       "email": "esgoet@fakeemail.com",
-                      "gitHubId": "123",
                       "courses": [],
                       "grades": {}
                     }
@@ -53,7 +52,7 @@ class AuthControllerTest {
 
     @Test
     @DirtiesContext
-    void getUserTest_whenNoStudentButInstructorWithId() throws Exception {
+    void getLoggedInUserTest_whenNoStudentButInstructorWithId() throws Exception {
         //GIVEN
         instructorRepository.save(new Instructor("1","esgoet","esgoet@fakeemail.com","123", List.of()));
         //WHEN
@@ -67,7 +66,6 @@ class AuthControllerTest {
                       "id": "1",
                       "username": "esgoet",
                       "email": "esgoet@fakeemail.com",
-                      "gitHubId": "123",
                       "courses": []
                     }
                     """));
@@ -75,7 +73,7 @@ class AuthControllerTest {
 
     @Test
     @DirtiesContext
-    void getUserTest_whenNoUserWithId() throws Exception {
+    void getUserTest_whenNoLoggedInUserWithId() throws Exception {
        //WHEN
         mockMvc.perform(get("/api/auth/me")
                         .with(oidcLogin().idToken(token -> token.subject("123"))
@@ -84,7 +82,7 @@ class AuthControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().json("""
                     {
-                      "message": "No instructor found with GitHub Id: 123",
+                      "message": "No instructor found with username: esgoet",
                       "statusCode":404
                     }
                     """))

@@ -14,9 +14,9 @@ import LessonCreator from "./pages/CourseDetails/Lesson/LessonCreator.tsx";
 import AssignmentCreator from "./pages/CourseDetails/Assignment/AssignmentCreator.tsx";
 import SubmissionPage from "./pages/CourseDetails/Assignment/SubmissionPage.tsx";
 import {convertToCourse} from "./utils/convertToCourse.ts";
-import SignUpPage from "./pages/SignUpPage.tsx";
+import RegisterPage from "./pages/RegisterPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
-import {Instructor, Student} from "./types/userTypes.ts";
+import {Instructor, Student, UserLoginDto} from "./types/userTypes.ts";
 import ProtectedRoutes from "./components/Routes/ProtectedRoutes.tsx";
 import Header from "./components/Layout/Header.tsx";
 import ProtectedInstructorRoutes from "./components/Routes/ProtectedInstructorRoutes.tsx";
@@ -65,13 +65,13 @@ export default function App() {
     const fetchStudents = () => {
         axios.get("/api/students")
             .then((response : AxiosResponse<Student[]>) => setStudents(response.data))
-            .catch((error) => console.error(error));
+            .catch((error) => console.error(error.response.data));
     }
 
     const fetchInstructors = () => {
         axios.get("/api/instructors")
             .then((response : AxiosResponse<Instructor[]>) => setInstructors(response.data))
-            .catch((error) => console.error(error));
+            .catch((error) => console.error(error.response.data));
     }
 
     const updateCourse = (updatedProperty: string, updatedValue: string | string[] | LessonDto[] | AssignmentDto[]) => {
@@ -91,22 +91,12 @@ export default function App() {
             .catch((error)=> console.error(error.response.data))
     }
 
-    const handleLogin = () => {
-        const host = window.location.host === 'localhost:5173' ? 'http://localhost:8080': window.location.origin;
-        window.open(host + '/oauth2/authorization/github', '_self');
-    }
-
-    const handleLogout = () => {
-        const host = window.location.host === 'localhost:5173' ? 'http://localhost:8080': window.location.origin;
-        window.open(host + '/logout', '_self');
-
-    }
-
-    const loadUser = () => {
+    const fetchUser = () => {
         axios.get("/api/auth/me")
             .then((response) => {
                 setUser(response.data)
                 setIsInstructor(checkIsInstructor(response.data))
+                navigate("/")
             })
             .catch(error => {
                 console.error(error.response.data)
@@ -114,9 +104,35 @@ export default function App() {
             });
     }
 
+    const login = (user: UserLoginDto) => {
+        axios.post("/api/auth/login", {}, {
+            auth: {
+                username: user.username,
+                password: user.password
+            }
+        })
+            .then(()=> {
+                fetchUser();
+            })
+            .catch(error => {
+                setUser(null);
+                console.error(error.response.data)
+            })
+    }
+
+    const logout = () => {
+        axios.post("api/auth/logout")
+            .then(() => {
+                console.log('Logged out')
+                navigate("/login")
+            })
+            .catch((error) => console.error(error))
+            .finally(()=>setUser(null));
+    }
+
     useEffect(()=>{
         fetchCourses();
-        loadUser();
+        fetchUser();
         fetchStudents();
         fetchInstructors();
     }, []);
@@ -124,11 +140,11 @@ export default function App() {
 
     return (
         <AuthContext.Provider value={authContextValue}>
-            <Header handleLogout={handleLogout}/>
+            <Header logout={logout}/>
             <main>
                     <Routes>
-                        <Route path={"/signup"} element={<SignUpPage handleLogin={handleLogin}/>}/>
-                        <Route path={"/login"} element={<LoginPage handleLogin={handleLogin}/>}/>
+                        <Route path={"/register"} element={<RegisterPage />}/>
+                        <Route path={"/login"} element={<LoginPage login={login}/>}/>
                         <Route element={<ProtectedRoutes />}>
                                 <Route path={"/"} element={<Dashboard courses={courses} deleteCourse={deleteCourse}/>}/>
                                 <Route path={"/course/:courseId"} element={<CourseDetailsPage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse} deleteCourse={deleteCourse} students={students} instructors={instructors}/>}>

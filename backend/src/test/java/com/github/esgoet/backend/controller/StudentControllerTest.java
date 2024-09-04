@@ -50,7 +50,6 @@ class StudentControllerTest {
                           "id": "1",
                           "username": "esgoet",
                           "email": "esgoet@fakeemail.com",
-                          "gitHubId": "123",
                           "courses": []
                       }
                       """));
@@ -67,7 +66,7 @@ class StudentControllerTest {
                          {
                           "username": "esgoet",
                           "email": "esgoet@fakeemail.com",
-                          "gitHubId": "123"
+                          "role": "STUDENT"
                         }
                         """))
                 //THEN
@@ -76,7 +75,6 @@ class StudentControllerTest {
                         {
                           "username": "esgoet",
                           "email": "esgoet@fakeemail.com",
-                          "gitHubId": "123",
                           "courses": [],
                           "grades": {}
                         }

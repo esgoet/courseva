@@ -1,14 +1,15 @@
 package com.github.esgoet.backend.controller;
 
-import com.github.esgoet.backend.exception.UserNotFoundException;
+import com.github.esgoet.backend.dto.NewAppUserDto;
+import com.github.esgoet.backend.model.AppUserRole;
 import com.github.esgoet.backend.service.InstructorService;
 import com.github.esgoet.backend.service.StudentService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -18,12 +19,34 @@ public class AuthController {
     private final InstructorService instructorService;
 
     @GetMapping("/me")
-    public Object getUser(@AuthenticationPrincipal OAuth2User user) {
-        String gitHubId = user.getName();
+    public Object getLoggedInUser() {
         try {
-            return studentService.getStudentByGitHubId(gitHubId);
-        } catch (UserNotFoundException e) {
-            return instructorService.getInstructorByGitHubId(gitHubId);
+            return studentService.getLoggedInStudent();
+        } catch (UsernameNotFoundException e) {
+            return instructorService.getLoggedInInstructor();
         }
     }
+
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void login() {
+        // This method is only here to trigger the login process
+    }
+
+    @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Object register(@RequestBody NewAppUserDto userDto) {
+        if (userDto.role().equals(AppUserRole.STUDENT)) {
+            return studentService.createStudent(userDto);
+        }
+        return instructorService.createInstructor(userDto);
+    }
+
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void logout(HttpSession session) {
+        session.invalidate();
+        SecurityContextHolder.clearContext();
+    }
+
 }

@@ -14,3 +14,17 @@ export type Instructor = {
     gitHubId: string,
     courses: string[]
 }
+
+export type NewUserDto = {
+    username: string,
+    email: string,
+    password: string,
+    role: UserRole
+}
+
+export type UserLoginDto = {
+    username: string,
+    password: string
+}
+
+type UserRole = "STUDENT" | "INSTRUCTOR";

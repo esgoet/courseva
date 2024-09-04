@@ -1,6 +1,7 @@
 package com.github.esgoet.backend.controller;
 
-import com.github.esgoet.backend.dto.NewUserDto;
+import com.github.esgoet.backend.dto.NewAppUserDto;
+import com.github.esgoet.backend.dto.StudentResponseDto;
 import com.github.esgoet.backend.model.Student;
 import com.github.esgoet.backend.service.StudentService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class StudentController {
     }
 
     @PostMapping
-    public Student createStudent(@RequestBody NewUserDto user) {
+    public StudentResponseDto createStudent(@RequestBody NewAppUserDto user) {
         return studentService.createStudent(user);
     }
 }
