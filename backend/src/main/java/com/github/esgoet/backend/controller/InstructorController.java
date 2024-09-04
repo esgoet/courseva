@@ -2,7 +2,6 @@ package com.github.esgoet.backend.controller;
 
 import com.github.esgoet.backend.dto.InstructorResponseDto;
 import com.github.esgoet.backend.dto.NewAppUserDto;
-import com.github.esgoet.backend.model.Instructor;
 import com.github.esgoet.backend.service.InstructorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
