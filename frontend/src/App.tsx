@@ -132,7 +132,6 @@ export default function App() {
 
     useEffect(()=>{
         fetchCourses();
-        fetchUser();
         fetchStudents();
         fetchInstructors();
     }, []);
