@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -82,6 +83,8 @@ class CourseControllerTest {
     void createCourseTest() throws Exception {
         //WHEN
         mockMvc.perform(post("/api/courses")
+
+                        .with(csrf().asHeader())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(""" 
                     {
@@ -115,6 +118,7 @@ class CourseControllerTest {
         courseRepository.save(new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s1","s2"),  List.of("i1","i2"), startDate));
         //WHEN
         mockMvc.perform(put("/api/courses/1")
+                        .with(csrf().asHeader())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                    {
@@ -147,6 +151,8 @@ class CourseControllerTest {
     void updateCourseTest_whenCourseDoesNotExist() throws Exception {
         //WHEN
         mockMvc.perform(put("/api/courses/1")
+
+                        .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                    {
@@ -176,7 +182,8 @@ class CourseControllerTest {
         //GIVEN
         courseRepository.save(new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s1", "s2"), List.of("i1", "i2"), startDate));
         //WHEN
-        mockMvc.perform(delete("/api/courses/1"))
+        mockMvc.perform(delete("/api/courses/1")
+                        .with(csrf().asHeader()))
                 //THEN
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/courses"))

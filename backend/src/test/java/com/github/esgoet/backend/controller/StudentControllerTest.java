@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -61,6 +62,7 @@ class StudentControllerTest {
     void createStudentTest() throws Exception {
         //WHEN
         mockMvc.perform(post("/api/students")
+                        .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                          {

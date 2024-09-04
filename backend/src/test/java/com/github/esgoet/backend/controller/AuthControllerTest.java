@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -92,15 +93,17 @@ class AuthControllerTest {
     void registerTest_whenRoleIsStudent() throws Exception {
         //WHEN
         mockMvc.perform(post("/api/auth/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                    {
-                      "username": "esgoet",
-                      "email": "esgoet@fakeemail.com",
-                      "password": "123",
-                      "role": "STUDENT"
-                    }
-                    """))
+                        .with(csrf().asHeader())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                              "username": "esgoet",
+                              "email": "esgoet@fakeemail.com",
+                              "password": "123",
+                              "role": "STUDENT"
+                            }
+                            """))
+                //THEN
                 .andExpect(status().isCreated())
                 .andExpect(content().json("""
                     {
@@ -118,6 +121,7 @@ class AuthControllerTest {
     void registerTest_whenRoleIsInstructor() throws Exception {
         //WHEN
         mockMvc.perform(post("/api/auth/register")
+                        .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                     {
