@@ -1,38 +1,48 @@
-# Course Management System
+# 🎓 Learning Management System
 
-## Overview
+## 📋 Overview
 
-The Course Management System is a comprehensive web application tailored for managing educational courses, including lessons and assignments. The project integrates a React frontend with a Spring Boot backend, utilizing MongoDB for persistent storage.
+This Learning Management System is a comprehensive web application tailored for managing, providing and partaking in educational courses, including lessons and assignments. The project integrates a React frontend with a Spring Boot backend, utilizing MongoDB for persistent storage.
 
-## Table of Contents
+### Table of Contents
 - [Planned Features](#planned-features)
-- [Technologies](#technologies)
+- [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Frontend Setup](#frontend-setup)
-    - [Backend Setup](#backend-setup)
-- [Usage](#usage)
-- [License](#license)
 - [Contact](#contact)
+- [License](#license)
 
 [//]: # (- [API Documentation]&#40;#api-documentation&#41;)
 
-
-## Planned Features
+## 💡 Planned Features
 - **Course Management**: Full CRUD operations for courses.
 - **Lesson Management**: Organize and administer lessons within each course.
 - **Assignment Management**: Create, manage, and track assignments efficiently.
-- **User Authentication**: Secure authentication with BasicAuth Registration.
+    - **Quiz Hosting**: Create and manage quizzes that can be automatically or manually graded
+    - **Feedback**: Give feedback directly on the assignments
+- **User Authentication**: Secure authentication with custom registration
 - **Role-Based Access Control**: Customized access levels for students and instructors.
+- **Responsive Design**: Mobile-first user-friendly design 
 
-## Technologies
-- **Frontend**: React, React Router, Axios, Vite
-- **Backend**: Spring Boot, MongoDB, Maven
-- **Authentication**: GitHub OAuth2
-- **Continuous Integration/Continuous Deployment**: GitHub Actions
-- **Styling**: CSS Modules
+## 🖥️ Tech Stack
+### Frontend
+- **TypeScript**: A statically typed superset of JavaScript for maintainable high-quality code
+- **React**: JavaScript library for user interfaces in single-page applications with reusable and stateful UI components
+- **React Router**: React navigation library for dynamic routing in a single-page application
+- **Axios**: A promise-based HTTP client for the browser and Node.js
+- **Vite**: Modern frontend development tool for fast development with hot module replacement and optimised builds
 
-## Getting Started
+### Backend
+- **Java 22**: Latest Java version for optimal performance, security, and compatibility with modern Java libraries and frameworks
+- **Spring Boot**: Backend framework with a range of tools and configurations out of the box
+- **MongoDB**: Scalable NoSQL database with JSON-like document structure
+- **Maven**: Build automation tool to handle project dependencies, builds and deployments
+
+### CI/CD:
+- **GitHub Actions**: Automation of tests, builds and deployment
+- **docker**: Image creation, pushed to dockerhub
+- **Render**: Hosting target for automatic deployment
+
+## 🔨 Getting Started
 
 ### Prerequisites
 Ensure you have the following tools installed:
@@ -58,7 +68,7 @@ Ensure you have the following tools installed:
     ```bash
     npm run dev
     ```
-   The application will be served at [http://localhost:5173](http://localhost:7173) thanks to Vite's development server.
+   The application will be served at [http://localhost:5173](http://localhost:5173).
 
 ### Backend Setup
 
@@ -74,10 +84,7 @@ Ensure you have the following tools installed:
 
 3. **Configure MongoDB**:
     - Ensure MongoDB is running locally or update the `application.properties` file with your MongoDB connection string.
-    - Example configuration:
-      ```properties
-      spring.data.mongodb.uri=mongodb://localhost:27017/your-database-name
-      ```
+   
 
 4. **Start the Spring Boot application**:
     ```bash
@@ -85,9 +92,6 @@ Ensure you have the following tools installed:
     ```
    The backend will be accessible at [http://localhost:8080](http://localhost:8080).
 
-## Usage
-- **Frontend**: Navigate through the user interface to manage courses, lessons, and assignments. 
-- **Backend**: The RESTful API facilitates CRUD operations and user management, supporting comprehensive course management functionalities.
 
 [//]: # (## API Documentation)
 
@@ -95,13 +99,11 @@ Ensure you have the following tools installed:
 
 [//]: # (- [Swagger UI]&#40;http://localhost:8080/swagger-ui.html&#41;)
 
-## Continuous Integration and Deployment
-The project employs GitHub Actions for continuous testing and deployment, ensuring that changes are automatically tested and deployed with each push. This setup helps maintain high code quality and streamline the deployment process.
-
-## License
-This project is licensed under the MIT License.
-
-## Contact
+## 📬 Contact
 For any inquiries or feedback, please use:
 - [Contact Form](https://esgoet.github.io/#contact)
-- [GitHub Issues](https://github.com/your-username/your-project-name/issues)
+- [GitHub Issues](https://github.com/esgoet/learning-management-system/issues)
+
+## 📄 License
+This project is licensed under the MIT License.
+
