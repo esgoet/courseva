@@ -28,13 +28,14 @@ public class StudentService {
         return new StudentResponseDto(student.id(),student.username(), student.email(), student.courses(), student.grades());
     }
 
-    public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+    public List<StudentResponseDto> getAllStudents() {
+        List<Student> students = studentRepository.findAll();
+        return students.stream().map(this::convertToStudentResponseDto).toList();
     }
 
 
-    public Student getStudentById(String id) {
-        return studentRepository.findById(id).orElseThrow(()-> new UserNotFoundException("No student found with id: " + id));
+    public StudentResponseDto getStudentById(String id) {
+        return convertToStudentResponseDto(studentRepository.findById(id).orElseThrow(()-> new UserNotFoundException("No student found with id: " + id)));
     }
 
     public Student getStudentByUsername(String username) {
@@ -45,6 +46,10 @@ public class StudentService {
         var principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Student student = getStudentByUsername(principal.getUsername());
         return new StudentResponseDto(student.id(),student.username(), student.email(), student.courses(), student.grades());
+    }
+
+    public StudentResponseDto convertToStudentResponseDto (Student student) {
+        return new StudentResponseDto(student.id(),student.username(),student.email(),student.courses(),student.grades());
     }
 
 }

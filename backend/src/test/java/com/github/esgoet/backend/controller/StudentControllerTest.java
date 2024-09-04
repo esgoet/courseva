@@ -38,7 +38,7 @@ class StudentControllerTest {
     @Test
     @WithMockUser
     @DirtiesContext
-    void getStudentByIdTest() throws Exception {
+    void getStudentByIdByIdTest() throws Exception {
         //GIVEN
         studentRepository.save(new Student("1","esgoet","esgoet@fakeemail.com","123", List.of(), new HashMap<>()));
         //WHEN
@@ -66,6 +66,7 @@ class StudentControllerTest {
                          {
                           "username": "esgoet",
                           "email": "esgoet@fakeemail.com",
+                          "password": "123",
                           "role": "STUDENT"
                         }
                         """))

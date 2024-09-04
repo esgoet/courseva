@@ -16,12 +16,12 @@ public class InstructorController {
     private final InstructorService instructorService;
 
     @GetMapping
-    public List<Instructor> getAllInstructors() {
+    public List<InstructorResponseDto> getAllInstructors() {
         return instructorService.getAllInstructors();
     }
 
     @GetMapping("/{id}")
-    public Instructor getInstructorById(@PathVariable String id) {
+    public InstructorResponseDto getInstructorById(@PathVariable String id) {
         return instructorService.getInstructorById(id);
     }
 

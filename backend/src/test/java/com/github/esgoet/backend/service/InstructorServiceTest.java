@@ -27,9 +27,9 @@ class InstructorServiceTest {
         Instructor instructor = new Instructor("1","esgoet","esgoet@fakeemail.com","123", List.of());
         when(instructorRepository.findById("1")).thenReturn(Optional.of(instructor));
         //WHEN
-        Instructor actual = instructorService.getInstructorById("1");
+        InstructorResponseDto actual = instructorService.getInstructorById("1");
         //THEN
-        Instructor expected = new Instructor("1","esgoet","esgoet@fakeemail.com","123", List.of());
+        InstructorResponseDto expected = new InstructorResponseDto("1","esgoet","esgoet@fakeemail.com", List.of());
         verify(instructorRepository).findById("1");
         assertEquals(expected, actual);
     }
@@ -70,9 +70,9 @@ class InstructorServiceTest {
         List<Instructor> instructors = List.of(new Instructor("1","esgoet","esgoet@fakeemail.com","123", List.of()));
         when(instructorRepository.findAll()).thenReturn(instructors);
         //WHEN
-        List<Instructor> actual = instructorService.getAllInstructors();
+        List<InstructorResponseDto> actual = instructorService.getAllInstructors();
         //THEN
-        List<Instructor> expected = List.of(new Instructor("1","esgoet","esgoet@fakeemail.com","123", List.of()));
+        List<InstructorResponseDto> expected = List.of(new InstructorResponseDto("1","esgoet","esgoet@fakeemail.com", List.of()));
         verify(instructorRepository).findAll();
         assertEquals(expected, actual);
     }

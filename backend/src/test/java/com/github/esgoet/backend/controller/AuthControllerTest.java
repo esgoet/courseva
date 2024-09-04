@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -16,6 +18,7 @@ import java.util.List;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -30,14 +33,12 @@ class AuthControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser(username = "esgoet")
     void getLoggedInUserTest() throws Exception {
         //GIVEN
         studentRepository.save(new Student("1","esgoet","esgoet@fakeemail.com","123", List.of(),new HashMap<>()));
         //WHEN
-        mockMvc.perform(get("/api/auth/me")
-                .with(oidcLogin().idToken(token -> token.subject("123"))
-                        .userInfoToken(token -> token.claim("login", "esgoet"))))
-                //THEN
+        mockMvc.perform(get("/api/auth/me"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                     {
@@ -52,13 +53,12 @@ class AuthControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser(username = "esgoet")
     void getLoggedInUserTest_whenNoStudentButInstructorWithId() throws Exception {
         //GIVEN
         instructorRepository.save(new Instructor("1","esgoet","esgoet@fakeemail.com","123", List.of()));
         //WHEN
-        mockMvc.perform(get("/api/auth/me")
-                        .with(oidcLogin().idToken(token -> token.subject("123"))
-                                .userInfoToken(token -> token.claim("login", "esgoet"))))
+        mockMvc.perform(get("/api/auth/me"))
                 //THEN
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
@@ -73,11 +73,10 @@ class AuthControllerTest {
 
     @Test
     @DirtiesContext
-    void getUserTest_whenNoLoggedInUserWithId() throws Exception {
+    @WithMockUser(username = "esgoet")
+    void getLoggedInUserTest_whenNoLoggedInUserWithId() throws Exception {
        //WHEN
-        mockMvc.perform(get("/api/auth/me")
-                        .with(oidcLogin().idToken(token -> token.subject("123"))
-                                .userInfoToken(token -> token.claim("login", "esgoet"))))
+        mockMvc.perform(get("/api/auth/me"))
                 //THEN
                 .andExpect(status().isNotFound())
                 .andExpect(content().json("""
@@ -87,5 +86,56 @@ class AuthControllerTest {
                     }
                     """))
                 .andExpect(jsonPath("$.timestamp").exists());
+    }
+
+    @Test
+    @DirtiesContext
+    void registerTest_whenRoleIsStudent() throws Exception {
+        //WHEN
+        mockMvc.perform(post("/api/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {
+                      "username": "esgoet",
+                      "email": "esgoet@fakeemail.com",
+                      "password": "123",
+                      "role": "STUDENT"
+                    }
+                    """))
+                .andExpect(status().isCreated())
+                .andExpect(content().json("""
+                    {
+                      "username": "esgoet",
+                      "email": "esgoet@fakeemail.com",
+                      "courses": [],
+                      "grades": {}
+                    }
+                    """))
+                .andExpect(jsonPath("$.id").exists());
+    }
+
+    @Test
+    @DirtiesContext
+    void registerTest_whenRoleIsInstructor() throws Exception {
+        //WHEN
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                    {
+                      "username": "esgoet",
+                      "email": "esgoet@fakeemail.com",
+                      "password": "123",
+                      "role": "INSTRUCTOR"
+                    }
+                    """))
+                .andExpect(status().isCreated())
+                .andExpect(content().json("""
+                    {
+                      "username": "esgoet",
+                      "email": "esgoet@fakeemail.com",
+                      "courses": []
+                    }
+                    """))
+                .andExpect(jsonPath("$.id").exists());
     }
 }

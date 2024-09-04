@@ -27,13 +27,13 @@ public class InstructorService {
         return new InstructorResponseDto(instructor.id(),instructor.username(), instructor.email(), instructor.courses());
     }
 
-    public List<Instructor> getAllInstructors() {
-        return instructorRepository.findAll();
+    public List<InstructorResponseDto> getAllInstructors() {
+        return instructorRepository.findAll().stream().map(this::convertToInstructorResponseDto).toList();
     }
 
 
-    public Instructor getInstructorById(String id) {
-        return instructorRepository.findById(id).orElseThrow(()-> new UserNotFoundException("No instructor found with id: " + id));
+    public InstructorResponseDto getInstructorById(String id) {
+        return convertToInstructorResponseDto(instructorRepository.findById(id).orElseThrow(()-> new UserNotFoundException("No instructor found with id: " + id)));
     }
 
     public Instructor getInstructorByUsername(String username) {
@@ -44,6 +44,10 @@ public class InstructorService {
         var principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Instructor instructor = getInstructorByUsername(principal.getUsername());
         return new InstructorResponseDto(instructor.id(),instructor.username(), instructor.email(), instructor.courses());
+    }
+
+    public InstructorResponseDto convertToInstructorResponseDto (Instructor instructor) {
+        return new InstructorResponseDto(instructor.id(),instructor.username(),instructor.email(),instructor.courses());
     }
 
 }

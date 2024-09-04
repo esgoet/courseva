@@ -28,9 +28,9 @@ class StudentServiceTest {
         Student student = new Student("1","esgoet","esgoet@fakeemail.com","123", List.of(), new HashMap<>());
         when(studentRepository.findById("1")).thenReturn(Optional.of(student));
         //WHEN
-        Student actual = studentService.getStudentById("1");
+        StudentResponseDto actual = studentService.getStudentById("1");
         //THEN
-        Student expected = new Student("1","esgoet","esgoet@fakeemail.com","123", List.of(), new HashMap<>());
+        StudentResponseDto expected = new StudentResponseDto("1","esgoet","esgoet@fakeemail.com", List.of(), new HashMap<>());
         verify(studentRepository).findById("1");
         assertEquals(expected, actual);
     }
@@ -71,9 +71,9 @@ class StudentServiceTest {
         List<Student> students = List.of(new Student("1","esgoet","esgoet@fakeemail.com","123", List.of(), new HashMap<>()));
         when(studentRepository.findAll()).thenReturn(students);
         //WHEN
-        List<Student> actual = studentService.getAllStudents();
+        List<StudentResponseDto> actual = studentService.getAllStudents();
         //THEN
-        List<Student> expected = List.of(new Student("1","esgoet","esgoet@fakeemail.com","123", List.of(), new HashMap<>()));
+        List<StudentResponseDto> expected = List.of(new StudentResponseDto("1","esgoet","esgoet@fakeemail.com", List.of(), new HashMap<>()));
         verify(studentRepository).findAll();
         assertEquals(expected, actual);
     }
