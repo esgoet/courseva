@@ -60,6 +60,20 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
+    @WithMockUser(username = "esgoet")
+    void handleUsernameNotFoundExceptionTest_forInstructors() throws Exception {
+        mockMvc.perform(get("/api/auth/me"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().json("""
+                    {
+                      "message": "No instructor found with username: esgoet",
+                      "statusCode": 404
+                    }
+                    """))
+                .andExpect(jsonPath("$.timestamp").exists());
+    }
+
+    @Test
     @WithMockUser
     void handleExceptionTest() throws Exception {
         mockMvc.perform(get("/api/no-endpoint"))
