@@ -7,7 +7,7 @@ import {
     LessonDto,
     Submission,
     SubmissionDto
-} from "../types/types.ts";
+} from "../types/courseTypes.ts";
 import {formatDate} from "./formatDate.ts";
 
 export const convertToCourse = (courseDto: CourseDto): Course => ({

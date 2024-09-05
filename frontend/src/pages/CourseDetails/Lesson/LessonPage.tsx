@@ -1,8 +1,8 @@
-import {Lesson, LessonDto} from "../types/types.ts";
+import {Lesson, LessonDto} from "../../../types/courseTypes.ts";
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import EditableTextDetail from "./EditableTextDetail.tsx";
-import {convertToLessonDto, convertToLessonDtoList} from "../utils/convertToLessonDto.ts";
+import EditableTextDetail from "../../../components/Shared/EditableTextDetail.tsx";
+import {convertToLessonDto, convertToLessonDtoList} from "../../../utils/convertToLessonDto.ts";
 
 type LessonPageProps = {
     lessons: Lesson[] | undefined,

@@ -1,16 +1,19 @@
 import {FormEvent, useState} from "react";
-import {PLACEHOLDERS} from "../utils/constants.ts";
+import {Instructor, Student} from "../../types/userTypes.ts";
+import {useAuth} from "../../hooks/useAuth.ts";
 
 type EditableListDetailProps = {
     label: string,
     name: string,
     initialValue: string[],
-    updateCourse: (updatedProperty: string, updatedValue: string[]) => void;
+    updateCourse: (updatedProperty: string, updatedValue: string[]) => void,
+    options: Student[] | Instructor[]
 }
 
 export default function EditableListDetail(props: Readonly<EditableListDetailProps>){
     const [editable, setEditable] = useState<boolean>(false);
     const [input, setInput ] = useState<string[]>(props.initialValue);
+    const {isInstructor} = useAuth();
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -26,12 +29,9 @@ export default function EditableListDetail(props: Readonly<EditableListDetailPro
         <form onSubmit={handleSubmit}>
             <label htmlFor={props.name}>{props.label}</label>
             <select name={props.name} value={input} onChange={(e)=>setInput([...e.target.selectedOptions].map(option => option.value))} disabled={!editable} multiple>
-                {props.name === "students" ?
-                    PLACEHOLDERS.map((student) => <option key={`student-${student.id}`} value={student.id}>{student.name}</option>) :
-                    PLACEHOLDERS.map((instructor) => <option key={`instructor-${instructor.id}`} value={instructor.id}>{instructor.name}</option>)
-                }
+                {props.options.map((option) => <option key={`${option.id}`} value={option.id}>{option.username}</option>)}
             </select>
-            <button onClick={() => setEditable(!editable)}>{editable ? "Save" : "Edit"}</button>
+            {isInstructor && <button onClick={() => setEditable(!editable)}>{editable ? "Save" : "Edit"}</button>}
             {editable && <button type={"reset"} onClick={handleCancel}>Cancel</button>}
         </form>
     )

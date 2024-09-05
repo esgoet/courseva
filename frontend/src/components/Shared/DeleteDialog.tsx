@@ -1,5 +1,5 @@
 import {useEffect, useRef} from "react";
-import {Course} from "../types/types.ts";
+import {Course} from "../../types/courseTypes.ts";
 import {useNavigate} from "react-router-dom";
 
 type DeleteDialogProps = {
@@ -9,7 +9,7 @@ type DeleteDialogProps = {
     deleteCourse: (id: string) => void
 }
 
-export default function DeleteDialog({course, modal, closeModal, deleteCourse}:DeleteDialogProps) {
+export default function DeleteDialog({course, modal, closeModal, deleteCourse}: Readonly<DeleteDialogProps>) {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const navigate = useNavigate();
 

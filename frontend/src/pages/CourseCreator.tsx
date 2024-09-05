@@ -1,13 +1,15 @@
 import {ChangeEvent, FormEvent, useState} from "react";
-import {NewCourseDto} from "../types/types.ts";
+import {NewCourseDto} from "../types/courseTypes.ts";
 import {Link} from "react-router-dom";
-import {PLACEHOLDERS} from "../utils/constants.ts";
+import {Instructor, Student} from "../types/userTypes.ts";
 
 type CourseCreatorProps = {
-    createCourse: (course: NewCourseDto) => void;
+    createCourse: (course: NewCourseDto) => void,
+    students: Student[],
+    instructors: Instructor[]
 }
 
-export default function CourseCreator({createCourse}: Readonly<CourseCreatorProps>) {
+export default function CourseCreator({createCourse, students, instructors}: Readonly<CourseCreatorProps>) {
     const [course, setCourse] = useState<NewCourseDto>({title:"", description:"", students:[], instructors:[], startDate: ""})
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -16,7 +18,6 @@ export default function CourseCreator({createCourse}: Readonly<CourseCreatorProp
     const handleMultipleSelect = (e: ChangeEvent<HTMLSelectElement>) => {
         setCourse({...course,[e.target.name]: [...e.target.selectedOptions].map(option => option.value)})
     }
-
 
     const handleSubmit = (e : FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -42,11 +43,11 @@ export default function CourseCreator({createCourse}: Readonly<CourseCreatorProp
                     <legend>Optional</legend>
                     <label htmlFor={"students"}>Students</label>
                     <select name={"students"} value={course.students} multiple onChange={handleMultipleSelect}>
-                        {PLACEHOLDERS.map((student) => <option key={`student-${student.id}`} value={student.id}>{student.name}</option>)}
+                        {students.map((student) => <option key={`student-${student.id}`} value={student.id}>{student.username}</option>)}
                     </select>
                     <label htmlFor={"instructors"}>Instructors</label>
                     <select name={"instructors"} value={course.instructors} multiple onChange={handleMultipleSelect}>
-                        {PLACEHOLDERS.map((instructor) => <option key={`instructor-${instructor.id}`} value={instructor.id}>{instructor.name}</option>)}
+                        {instructors.map((instructor) => <option key={`instructor-${instructor.id}`} value={instructor.id}>{instructor.username}</option>)}
                     </select>
                 </fieldset>
                 <button type={"reset"}

@@ -1,6 +1,7 @@
-import {Assignment, AssignmentDto} from "../types/types.ts";
+import {Assignment, AssignmentDto} from "../../../types/courseTypes.ts";
 import {Link} from "react-router-dom";
-import {convertToAssignmentDtoList} from "../utils/convertToAssignmentDto.ts";
+import {convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
+import {useAuth} from "../../../hooks/useAuth.ts";
 
 type AssignmentOverviewProps = {
     assignments: Assignment[] | undefined,
@@ -8,6 +9,7 @@ type AssignmentOverviewProps = {
 }
 
 export default function AssignmentOverview({assignments, updateCourse}: Readonly<AssignmentOverviewProps>) {
+    const {isInstructor} = useAuth();
 
     const deleteAssignment = (assignmentId: string) => {
         if (assignments) {
@@ -21,14 +23,23 @@ export default function AssignmentOverview({assignments, updateCourse}: Readonly
             <h3>Assignments</h3>
             <Link to={"create"}>Create New Assignment</Link>
             <ul>
-                {assignments?.filter(assignment => new Date(assignment.whenPublic).valueOf() < Date.now()).map(assignment => (
+                {isInstructor ? assignments?.toSorted((a, b) => a?.whenPublic.getTime() - b?.whenPublic.getTime()).map(assignment => (
                     <li key={`assignment-${assignment.id}`}>
                         <Link to={`${assignment.id}`}>
                             <h4>{assignment.title}</h4>
                         </Link>
+                        {assignment.whenPublic.valueOf() > Date.now() && <p>Unpublished</p>}
                         <button onClick={() => deleteAssignment(assignment.id)}>Delete</button>
                     </li>
-                ))}
+                )) :
+                    assignments?.filter(assignment => assignment.whenPublic.valueOf() < Date.now()).toSorted((a, b) => a?.whenPublic.getTime() - b?.whenPublic.getTime()).map(assignment => (
+                        <li key={`assignment-${assignment.id}`}>
+                            <Link to={`${assignment.id}`}>
+                                <h4>{assignment.title}</h4>
+                            </Link>
+                        </li>
+                    ))
+                }
             </ul>
         </>
     )
