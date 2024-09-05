@@ -34,15 +34,33 @@ export default function App() {
 
     const authContextValue = useMemo(() => ({ user, isInstructor }), [user, isInstructor]);
 
+    const axiosInstance = axios.create();
+    axiosInstance.interceptors.request.use(
+        async function (config) {
+            if (config.method && ['POST', 'PUT', 'DELETE', 'PATCH'].includes(config.method.toUpperCase())) {
+                try {
+                    const csrfResponse = await axios.get("/api/auth/csrf");
+                    config.headers["X-CSRF-TOKEN"] = csrfResponse.data.token;
+                } catch (error) {
+                    console.error("Failed to fetch CSRF token:", error);
+                    return Promise.reject(error);
+                }
+            }
+            return config;
+        },
+        function (error) {
+            return Promise.reject(error);
+        }
+    );
 
     const fetchCourses = () => {
-        axios.get("/api/courses")
+        axiosInstance.get("/api/courses")
             .then((response : AxiosResponse<CourseDto[]>) => setCourses(response.data.map(convertToCourse)))
             .catch((error) => console.error(error))
     }
 
     const createCourse = (course : NewCourseDto)  => {
-        axios.post("/api/courses", course)
+        axiosInstance.post("/api/courses", course)
             .then((response : AxiosResponse<Course>) => {
                 if (response.status === 200) {
                     fetchCourses();
@@ -52,7 +70,7 @@ export default function App() {
             .catch((error) => console.error(error.response.data));
     }
     const fetchCourse = (id: string) => {
-        axios.get(`/api/courses/${id}`)
+        axiosInstance.get(`/api/courses/${id}`)
             .then((response) => {
                 setCurrentCourse(convertToCourse(response.data));
             })
@@ -63,19 +81,19 @@ export default function App() {
     }
 
     const fetchStudents = () => {
-        axios.get("/api/students")
+        axiosInstance.get("/api/students")
             .then((response : AxiosResponse<Student[]>) => setStudents(response.data))
             .catch((error) => console.error(error.response.data));
     }
 
     const fetchInstructors = () => {
-        axios.get("/api/instructors")
+        axiosInstance.get("/api/instructors")
             .then((response : AxiosResponse<Instructor[]>) => setInstructors(response.data))
             .catch((error) => console.error(error.response.data));
     }
 
     const updateCourse = (updatedProperty: string, updatedValue: string | string[] | LessonDto[] | AssignmentDto[]) => {
-        axios.put(`/api/courses/${currentCourse?.id}`, {...currentCourse, [updatedProperty]: updatedValue})
+        axiosInstance.put(`/api/courses/${currentCourse?.id}`, {...currentCourse, [updatedProperty]: updatedValue})
             .then((response) => {
                 if (response.status === 200) {
                     if (currentCourse?.id) fetchCourse(currentCourse.id);
@@ -86,13 +104,13 @@ export default function App() {
     }
 
     const deleteCourse = (courseId: string) => {
-        axios.delete(`/api/courses/${courseId}`)
+        axiosInstance.delete(`/api/courses/${courseId}`)
             .then((response)=> response.status === 200 && fetchCourses())
             .catch((error)=> console.error(error.response.data))
     }
 
     async function fetchUser() : Promise<void> {
-        return axios.get("/api/auth/me")
+        return axiosInstance.get("/api/auth/me")
             .then((response) => {
                 setUser(response.data)
                 setIsInstructor(checkIsInstructor(response.data))
@@ -104,7 +122,6 @@ export default function App() {
     }
 
     const login = (user: UserLoginDto) => {
-
         axios.post("/api/auth/login", {}, {
             auth: {
                 username: user.username,

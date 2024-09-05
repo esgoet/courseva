@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -47,6 +48,11 @@ public class AuthController {
     public void logout(HttpSession session) {
         session.invalidate();
         SecurityContextHolder.clearContext();
+    }
+
+    @GetMapping("/csrf")
+    public CsrfToken getCsrfToken(CsrfToken csrfToken){
+        return csrfToken;
     }
 
 }

@@ -28,12 +28,12 @@ public class AppUserDetailsService implements UserDetailsService {
             Student student = studentService.getStudentByUsername(username);
             name = student.username();
             password = student.password();
-            role = "ROLE_" + AppUserRole.STUDENT;
+            role = AppUserRole.STUDENT.name();
         } catch (UsernameNotFoundException e) {
             Instructor instructor = instructorService.getInstructorByUsername(username);
             name = instructor.username();
             password = instructor.password();
-            role = "ROLE_" + AppUserRole.INSTRUCTOR;
+            role = AppUserRole.INSTRUCTOR.name();
         }
         return new User(
                 name,
