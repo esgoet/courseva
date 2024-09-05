@@ -8,6 +8,7 @@ type LoginPageProps = {
 
 export default function LoginPage({login}:Readonly<LoginPageProps>) {
     const [user, setUser] = useState<UserLoginDto>({username:"", password:""});
+
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setUser({...user,[e.target.name]: e.target.value});
     }

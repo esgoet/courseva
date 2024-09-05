@@ -91,12 +91,11 @@ export default function App() {
             .catch((error)=> console.error(error.response.data))
     }
 
-    const fetchUser = () => {
-        axios.get("/api/auth/me")
+    async function fetchUser() : Promise<void> {
+        return axios.get("/api/auth/me")
             .then((response) => {
                 setUser(response.data)
                 setIsInstructor(checkIsInstructor(response.data))
-                navigate("/")
             })
             .catch(error => {
                 console.error(error.response.data)
@@ -105,6 +104,7 @@ export default function App() {
     }
 
     const login = (user: UserLoginDto) => {
+
         axios.post("/api/auth/login", {}, {
             auth: {
                 username: user.username,
@@ -112,7 +112,8 @@ export default function App() {
             }
         })
             .then(()=> {
-                fetchUser();
+                fetchUser()
+                    .then(()=>navigate("/"));
             })
             .catch(error => {
                 setUser(null);
@@ -131,11 +132,13 @@ export default function App() {
     }
 
     useEffect(()=>{
-        fetchCourses();
-        fetchStudents();
-        fetchInstructors();
+        fetchUser()
+            .then(()=> {
+                fetchCourses();
+                fetchStudents();
+                fetchInstructors();
+            })
     }, []);
-
 
     return (
         <AuthContext.Provider value={authContextValue}>
