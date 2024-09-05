@@ -2,6 +2,7 @@ package com.github.esgoet.backend.controller;
 
 import com.github.esgoet.backend.dto.NewAppUserDto;
 import com.github.esgoet.backend.dto.StudentResponseDto;
+import com.github.esgoet.backend.dto.StudentUpdateDto;
 import com.github.esgoet.backend.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -27,5 +28,10 @@ public class StudentController {
     @PostMapping
     public StudentResponseDto createStudent(@RequestBody NewAppUserDto user) {
         return studentService.createStudent(user);
+    }
+
+    @PutMapping("/{id}")
+    public StudentResponseDto updateStudent(@PathVariable String id, @RequestBody StudentUpdateDto updatedStudent) {
+        return studentService.updateStudent(id, updatedStudent);
     }
 }
