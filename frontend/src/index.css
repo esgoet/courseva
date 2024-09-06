@@ -1,8 +1,14 @@
 :root {
+  --bg: #141414ff;
+  --bg-accent: #303030ff;
+  --layout: #4c83f5;
+  --accent-1: #fb0e39ff;
+  --accent-2: #ff9933ff;
+  --text: #ffffffff;
   color-scheme: light dark;
-  color: #ffffff;
-  background-color: #242424;
-
+  color: var(--text);
+  background-color: var(--bg);
+  font-family: "Roboto", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -11,11 +17,64 @@
 
 * {
   box-sizing: border-box;
+  margin: 0;
+}
+
+h1 {
+  font-family: "Playwrite DE LA", cursive;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+.editable-detail {
+  flex-direction: row;
+}
+
+button {
+  background-color: var(--accent-1);
+  border: 1px solid transparent;
+  font-size: medium;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: var(--accent-2);
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+main {
+  margin: 0 20px;
+}
+
+header {
+  background-color: var(--layout);
+}
+
+h2 {
+  color: var(--layout);
+}
+
+input {
+  padding: 10px 12px;
+  font-size: medium;
+  border-radius: 6px;
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #242424;
-    background-color: #ffffff;
+    --bg: #ffffffff;
+    --bg-accent: #fceadeff;
+    --accent-1: #fc2d53ff;
+    --textcolor: #101010ff;
   }
 }

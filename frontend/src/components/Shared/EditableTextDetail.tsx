@@ -25,7 +25,7 @@ export default function EditableTextDetail(props: Readonly<EditableTextDetailPro
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className={"editable-detail"}>
             <label htmlFor={props.name}>{props.label}</label>
             {props.inputType !== "textarea" ?
                 <input type={props.inputType} name={props.name} value={input} onChange={(e)=>setInput(e.target.value)} disabled={!editable}/> :

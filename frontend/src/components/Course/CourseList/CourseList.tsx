@@ -1,5 +1,5 @@
-import {Course} from "../../types/courseTypes.ts";
-import CourseEntry from "./CourseEntry.tsx";
+import {Course} from "../../../types/courseTypes.ts";
+import CourseEntry from "../CourseEntry.tsx";
 
 type CourseListProps = {
     courses: Course[],
@@ -11,7 +11,7 @@ type CourseListProps = {
 export default function CourseList({courses, deleteCourse, updateUser, updateCourse}: Readonly<CourseListProps>) {
 
     return (
-        <section>
+        <section className={"course-list"}>
             <h2>Courses</h2>
             <ul>
                 {courses.map((course) => (

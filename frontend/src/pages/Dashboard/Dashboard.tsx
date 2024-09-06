@@ -1,7 +1,7 @@
-import CourseList from "../components/Course/CourseList.tsx";
-import {Course} from "../types/courseTypes.ts";
+import CourseList from "../../components/Course/CourseList/CourseList.tsx";
+import {Course} from "../../types/courseTypes.ts";
 import {Link} from "react-router-dom";
-import {useAuth} from "../hooks/useAuth.ts";
+import {useAuth} from "../../hooks/useAuth.ts";
 
 type DashboardProps = {
     courses: Course[],

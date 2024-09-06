@@ -34,16 +34,22 @@ export default function RegisterPage() {
         <>
             <h2>Sign Up</h2>
             <form onSubmit={handleSubmit}>
-                <input type={"radio"} id={"student"} name={"role"} value={"STUDENT"} checked={user.role === "STUDENT"}
-                       onChange={handleChange}/>
-                <label htmlFor={"student"}>Student</label>
-                <input type={"radio"} id={"instructor"} name={"role"} value={"INSTRUCTOR"}
-                       checked={user.role === "INSTRUCTOR"} onChange={handleChange}/>
-                <label htmlFor={"instructor"}>Instructor</label>
+                <fieldset>
+                    <legend>How are you using the platform? As a</legend>
+                    <input type={"radio"} id={"student"} name={"role"} value={"STUDENT"}
+                           checked={user.role === "STUDENT"}
+                           onChange={handleChange}/>
+                    <label htmlFor={"student"}>Student</label>
+                    <input type={"radio"} id={"instructor"} name={"role"} value={"INSTRUCTOR"}
+                           checked={user.role === "INSTRUCTOR"} onChange={handleChange}/>
+                    <label htmlFor={"instructor"}>Instructor</label>
+                </fieldset>
                 <label htmlFor={"username"}>Username</label>
-                <input type={"text"} name={"username"} value={user.username} placeholder={"Enter your username"} onChange={handleChange} required/>
+                <input type={"text"} name={"username"} value={user.username} placeholder={"Enter your username"}
+                       onChange={handleChange} required/>
                 <label htmlFor={"password"}>Password</label>
-                <input type={"password"} name={"password"} value={user.password} placeholder={"Enter your password"} onChange={handleChange} required/>
+                <input type={"password"} name={"password"} value={user.password} placeholder={"Enter your password"}
+                       onChange={handleChange} required/>
                 <button>Register</button>
             </form>
             <Link to={"/login"}>Login instead</Link>

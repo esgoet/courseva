@@ -26,7 +26,7 @@ export default function EditableListDetail(props: Readonly<EditableListDetailPro
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className={"editable-detail"}>
             <label htmlFor={props.name}>{props.label}</label>
             <select name={props.name} value={input} onChange={(e)=>setInput([...e.target.selectedOptions].map(option => option.value))} disabled={!editable} multiple>
                 {props.options.map((option) => <option key={`${option.id}`} value={option.id}>{option.username}</option>)}
