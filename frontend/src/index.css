@@ -27,6 +27,7 @@ h1 {
 form {
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 
 .editable-detail {
@@ -68,6 +69,8 @@ input {
   padding: 10px 12px;
   font-size: medium;
   border-radius: 6px;
+  background: none;
+  border: 1px solid var(--layout);
 }
 
 @media (prefers-color-scheme: light) {

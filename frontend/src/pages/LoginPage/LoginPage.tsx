@@ -1,6 +1,7 @@
 import {Link} from "react-router-dom";
 import {ChangeEvent, FormEvent, useState} from "react";
-import {UserLoginDto} from "../types/userTypes.ts";
+import {UserLoginDto} from "../../types/userTypes.ts";
+import "./LoginPage.css";
 
 type LoginPageProps = {
     login: (user : UserLoginDto) => void;
@@ -8,6 +9,7 @@ type LoginPageProps = {
 
 export default function LoginPage({login}:Readonly<LoginPageProps>) {
     const [user, setUser] = useState<UserLoginDto>({username:"", password:""});
+    const [showPassword, setShowPassword] = useState<boolean>();
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setUser({...user,[e.target.name]: e.target.value});
@@ -28,8 +30,15 @@ export default function LoginPage({login}:Readonly<LoginPageProps>) {
                 <input type={"text"} name={"username"} value={user.username} placeholder={"Enter your username"}
                        onChange={handleChange} required/>
                 <label htmlFor={"password"}>Password</label>
-                <input type={"password"} name={"password"} value={user.password} placeholder={"Enter your password"}
-                       onChange={handleChange} required/>
+                <div className={"input-w-btn"}>
+                    <input type={showPassword ? "text" : "password"} name={"password"} value={user.password}
+                           placeholder={"Enter your password"}
+                           onChange={handleChange} required/>
+                    <button type={"button"} onClick={() => setShowPassword(!showPassword)} className={"password-btn"}>
+                    <span className="material-symbols-outlined">
+                    {showPassword ? "visibility_off" : "visibility"}
+                    </span></button>
+                </div>
                 <button>Login</button>
             </form>
             <p>First time here? <Link to={"/register"}>Register</Link> instead.</p>
