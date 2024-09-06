@@ -144,7 +144,7 @@ class StudentControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"STUDENT"})
     @DirtiesContext
     void deleteStudentTest() throws Exception {
         studentRepository.save(new Student("1","esgoet","esgoet@fakeemail.com","123", List.of(), new HashMap<>()));

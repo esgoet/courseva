@@ -38,6 +38,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/courses/**").hasAuthority(AppUserRole.INSTRUCTOR.name())
                         .requestMatchers(HttpMethod.DELETE, "/api/instructors/**").hasAuthority(AppUserRole.INSTRUCTOR.name())
                         .requestMatchers(HttpMethod.PUT, "/api/instructors/**").hasAuthority(AppUserRole.INSTRUCTOR.name())
+                        .requestMatchers(HttpMethod.DELETE, "/api/students/**").hasAuthority(AppUserRole.STUDENT.name())
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
