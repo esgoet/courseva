@@ -10,13 +10,14 @@ type DashboardProps = {
     updateCourse: (updatedProperty: string, updatedValue: string[], course: Course) => void,
 }
 export default function Dashboard({courses, deleteCourse, updateUser, updateCourse}: Readonly<DashboardProps>) {
-    const {user} = useAuth();
+    const {user, isInstructor} = useAuth();
     return (
         <>
         {user &&
             <>
                 <p>Hello {user.username}</p>
-                <Link to={"/course/create"}>Create a Course</Link>
+                <Link to={"/account"}>Your Account</Link>
+                {isInstructor && <Link to={"/course/create"}>Create a Course</Link>}
                 <CourseList
                     courses={courses
                         .filter(course => course.students.includes(user.id) || course.instructors.includes(user.id))

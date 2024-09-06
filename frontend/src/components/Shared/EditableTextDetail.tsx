@@ -1,23 +1,21 @@
 import {FormEvent, useState} from "react";
-import {useAuth} from "../../hooks/useAuth.ts";
-
 
 type EditableTextDetailProps = {
     inputType : string,
     label: string,
     name: string,
     initialValue: string,
-    updateCourse: (updatedProperty: string, updatedValue: string) => void;
+    updateFunction: (updatedProperty: string, updatedValue: string) => void,
+    allowedToEdit: boolean
 }
 
 export default function EditableTextDetail(props: Readonly<EditableTextDetailProps>){
     const [editable, setEditable] = useState<boolean>(false);
     const [input, setInput ] = useState<string>(props.initialValue);
-    const {isInstructor} = useAuth();
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        props.updateCourse(props.name, input);
+        props.updateFunction(props.name, input);
         setEditable(false);
     }
 
@@ -33,7 +31,7 @@ export default function EditableTextDetail(props: Readonly<EditableTextDetailPro
                 <input type={props.inputType} name={props.name} value={input} onChange={(e)=>setInput(e.target.value)} disabled={!editable}/> :
                 <textarea name={props.name} value={input} onChange={(e)=>setInput(e.target.value)} disabled={!editable} />}
             {editable && <button type={"submit"}>Save</button>}
-            {!editable && isInstructor && <button type={"button"} onClick={()=>setEditable(true)}>Edit</button>}
+            {!editable && props.allowedToEdit && <button type={"button"} onClick={()=>setEditable(true)}>Edit</button>}
 
             {editable && <button type={"reset"} onClick={handleCancel}>Cancel</button>}
         </form>

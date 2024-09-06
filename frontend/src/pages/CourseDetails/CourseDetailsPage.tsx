@@ -3,7 +3,7 @@ import {Course} from "../../types/courseTypes.ts";
 import {useEffect, useState} from "react";
 import EditableTextDetail from "../../components/Shared/EditableTextDetail.tsx";
 import EditableListDetail from "../../components/Shared/EditableListDetail.tsx";
-import DeleteDialog from "../../components/Shared/DeleteDialog.tsx";
+import ConfirmDialog from "../../components/Shared/ConfirmDialog.tsx";
 import {Instructor, Student} from "../../types/userTypes.ts";
 import {useAuth} from "../../hooks/useAuth.ts";
 import JoinOrLeaveCourse from "../../components/Shared/JoinOrLeaveCourse.tsx";
@@ -33,20 +33,20 @@ export default function CourseDetailsPage({updateCourse, course, fetchCourse, de
             {course ?
             <>
                 <h3>
-                    <EditableTextDetail inputType={"text"} label={"Title"} name={"title"} initialValue={course.title} updateCourse={updateCourse}/>
+                    <EditableTextDetail inputType={"text"} label={"Title"} name={"title"} initialValue={course.title} updateFunction={updateCourse} allowedToEdit={isInstructor}/>
                 </h3>
                 <p>{course.id}</p>
                 <JoinOrLeaveCourse course={course} updateUser={updateUser} updateCourse={updateCourse}/>
                 {isInstructor &&
                     <>
                         <button onClick={() => setConfirmDelete(true)}>Delete Course</button>
-                        <DeleteDialog course={course} modal={confirmDelete} closeModal={() => setConfirmDelete(false)}
-                                      deleteCourse={deleteCourse}/>
+                        <ConfirmDialog toConfirmId={course.id} toConfirmName={course.title} modal={confirmDelete} closeModal={() => setConfirmDelete(false)}
+                                       toConfirmFunction={deleteCourse} toConfirmAction={"delete"}/>
                     </>
                 }
                 <EditableTextDetail inputType={"textarea"} label={"Description"} name={"description"}
-                                    initialValue={course.description} updateCourse={updateCourse}/>
-                <EditableTextDetail inputType={"date"} label={"Start Date"} name={"startDate"} initialValue={course.startDate.toISOString()} updateCourse={updateCourse}/>
+                                    initialValue={course.description} updateFunction={updateCourse} allowedToEdit={isInstructor}/>
+                <EditableTextDetail inputType={"date"} label={"Start Date"} name={"startDate"} initialValue={course.startDate.toISOString()} updateFunction={updateCourse} allowedToEdit={isInstructor}/>
                 <h3>Students</h3>
                 <EditableListDetail label={"Students"} name={"students"} initialValue={course.students} updateCourse={updateCourse} options={students}/>
                 <h3>Instructors</h3>

@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import DeleteDialog from "../Shared/DeleteDialog.tsx";
+import ConfirmDialog from "../Shared/ConfirmDialog.tsx";
 import {Course} from "../../types/courseTypes.ts";
 import {useState} from "react";
 import {useAuth} from "../../hooks/useAuth.ts";
@@ -26,8 +26,8 @@ export default function CourseEntry({course, deleteCourse, updateUser, updateCou
             {isInstructor &&
                 <>
                     <button onClick={() => setConfirmDelete(true)}>Delete</button>
-                    <DeleteDialog course={course} modal={confirmDelete} closeModal={() => setConfirmDelete(false)}
-                                  deleteCourse={deleteCourse}/>
+                    <ConfirmDialog toConfirmId={course.id} toConfirmName={course.title} toConfirmAction={"delete"} modal={confirmDelete} closeModal={() => setConfirmDelete(false)}
+                                   toConfirmFunction={deleteCourse}/>
                 </>
             }
         </li>

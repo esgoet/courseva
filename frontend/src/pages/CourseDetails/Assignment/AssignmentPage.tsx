@@ -52,14 +52,14 @@ export default function AssignmentPage({assignments, updateCourse}: Readonly<Ass
                 <>
                     <h3>
                         <EditableTextDetail inputType={"text"} label={"Assignment Title"} name={"title"}
-                                            initialValue={assignment.title} updateCourse={handleUpdate}/>
+                                            initialValue={assignment.title} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
                     </h3>
                     <EditableTextDetail inputType={"datetime-local"} label={"Assignment Release"} name={"whenPublic"}
-                                        initialValue={assignment.whenPublic} updateCourse={handleUpdate}/>
+                                        initialValue={assignment.whenPublic} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
                     <EditableTextDetail inputType={"datetime-local"} label={"Assignment Deadline"} name={"deadline"}
-                                        initialValue={assignment.deadline} updateCourse={handleUpdate}/>
+                                        initialValue={assignment.deadline} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
                     <EditableTextDetail inputType={"textarea"} label={"Assignment Content"} name={"content"}
-                                        initialValue={assignment.description} updateCourse={handleUpdate}/>
+                                        initialValue={assignment.description} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
                     {!isInstructor && user &&
                         <>
                             <h4>Submit Your Assignment</h4>

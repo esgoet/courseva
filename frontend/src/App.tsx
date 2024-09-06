@@ -22,6 +22,7 @@ import Header from "./components/Layout/Header.tsx";
 import ProtectedInstructorRoutes from "./components/Routes/ProtectedInstructorRoutes.tsx";
 import {checkIsInstructor} from "./utils/checkIsInstructor.ts";
 import {AuthContext} from "./context/AuthContext.ts";
+import UserAccountPage from "./pages/UserAccountPage.tsx";
 
 export default function App() {
     const [courses, setCourses] = useState<Course[]>([]);
@@ -151,10 +152,22 @@ export default function App() {
 
     const updateUser = (updatedProperty: string, updatedValue: string | string[] | Grade[]) => {
         const baseUrl : string = isInstructor ? "/api/instructors" : "/api/students";
-        if (user) axiosInstance.put(`${baseUrl}${user.id}`, {...user, [updatedProperty]: updatedValue})
+        if (user) axiosInstance.put(`${baseUrl}/${user.id}`, {...user, [updatedProperty]: updatedValue})
             .then((response) => {
                 if (response.status === 200) {
                     fetchUser()
+                }
+            })
+            .catch((error)=>console.error(error.response.data));
+    }
+
+    const deleteUser = (id: string) => {
+        const baseUrl : string = isInstructor ? "/api/instructors" : "/api/students";
+        axiosInstance.delete(`${baseUrl}/${id}`)
+            .then((response) =>  {
+                if (response.status === 200) {
+                    console.log("user deleted");
+                    logout();
                 }
             })
             .catch((error)=>console.error(error.response.data));
@@ -177,21 +190,22 @@ export default function App() {
                         <Route path={"/register"} element={<RegisterPage />}/>
                         <Route path={"/login"} element={<LoginPage login={login}/>}/>
                         <Route element={<ProtectedRoutes />}>
-                                <Route path={"/"} element={<Dashboard courses={courses} deleteCourse={deleteCourse} updateUser={updateUser} updateCourse={updateCourse}/>}/>
-                                <Route path={"/course/:courseId"} element={<CourseDetailsPage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse} deleteCourse={deleteCourse} students={students} instructors={instructors} updateUser={updateUser}/>}>
-                                    <Route path={"lessons"} element={<LessonOverview lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
-                                    <Route path={"lessons/:lessonId"} element={<LessonPage lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
-                                    <Route path={"assignments"} element={<AssignmentOverview assignments={currentCourse?.assignments} updateCourse={updateCourse}/>}/>
-                                    <Route path={"assignments/:assignmentId"} element={<AssignmentPage assignments={currentCourse?.assignments} updateCourse={updateCourse}/>}/>
-                                    <Route path={"assignments/:assignmentId/submission/:submissionId"} element={<SubmissionPage assignments={currentCourse?.assignments}/>}/>
-                                    <Route element={<ProtectedInstructorRoutes />}>
-                                        <Route path={"lessons/create"} element={<LessonCreator updateCourse={updateCourse} lessons={currentCourse?.lessons}/>}/>
-                                        <Route path={"assignments/create"} element={<AssignmentCreator assignments={currentCourse?.assignments} updateCourse={updateCourse} />}/>
-                                    </Route>
+                            <Route path={"/"} element={<Dashboard courses={courses} deleteCourse={deleteCourse} updateUser={updateUser} updateCourse={updateCourse}/>}/>
+                            <Route path={"/account"} element={<UserAccountPage updateUser={updateUser} deleteUser={deleteUser}/>}/>
+                            <Route path={"/course/:courseId"} element={<CourseDetailsPage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse} deleteCourse={deleteCourse} students={students} instructors={instructors} updateUser={updateUser}/>}>
+                                <Route path={"lessons"} element={<LessonOverview lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
+                                <Route path={"lessons/:lessonId"} element={<LessonPage lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
+                                <Route path={"assignments"} element={<AssignmentOverview assignments={currentCourse?.assignments} updateCourse={updateCourse}/>}/>
+                                <Route path={"assignments/:assignmentId"} element={<AssignmentPage assignments={currentCourse?.assignments} updateCourse={updateCourse}/>}/>
+                                <Route path={"assignments/:assignmentId/submission/:submissionId"} element={<SubmissionPage assignments={currentCourse?.assignments}/>}/>
+                                <Route element={<ProtectedInstructorRoutes />}>
+                                    <Route path={"lessons/create"} element={<LessonCreator updateCourse={updateCourse} lessons={currentCourse?.lessons}/>}/>
+                                    <Route path={"assignments/create"} element={<AssignmentCreator assignments={currentCourse?.assignments} updateCourse={updateCourse} />}/>
                                 </Route>
-                                <Route element={<ProtectedInstructorRoutes/>}>
-                                    <Route path={"/course/create"} element={<CourseCreator createCourse={createCourse} students={students} instructors={instructors}/>}/>
-                                </Route>
+                            </Route>
+                            <Route element={<ProtectedInstructorRoutes/>}>
+                                <Route path={"/course/create"} element={<CourseCreator createCourse={createCourse} students={students} instructors={instructors}/>}/>
+                            </Route>
                         </Route>
                     </Routes>
             </main>
