@@ -197,4 +197,14 @@ class InstructorServiceTest {
                 () -> instructorService.getInstructorByUsername("esgoet"));
         assertEquals("No instructor found with username: esgoet", thrown.getMessage());
     }
+
+    @Test
+    void deleteInstructorTest() {
+        //GIVEN
+        doNothing().when(instructorRepository).deleteById("1");
+        //WHEN
+        instructorService.deleteInstructor("1");
+        //THEN
+        verify(instructorRepository).deleteById("1");
+    }
 }

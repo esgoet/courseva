@@ -84,7 +84,7 @@ class InstructorControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"INSTRUCTOR"})
     @DirtiesContext
     void updateInstructorTest() throws Exception {
         //GIVEN
@@ -113,7 +113,7 @@ class InstructorControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"INSTRUCTOR"})
     @DirtiesContext
     void updateInstructorTest_whenInstructorDoesNotExist() throws Exception {
         //WHEN
@@ -136,5 +136,21 @@ class InstructorControllerTest {
                         }
                         """))
                 .andExpect(jsonPath("$.timestamp").exists());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"INSTRUCTOR"})
+    @DirtiesContext
+    void deleteInstructorTest() throws Exception {
+        instructorRepository.save(new Instructor("1","esgoet","esgoet@fakeemail.com","123", List.of()));
+        //WHEN
+        mockMvc.perform(delete("/api/instructors/1").with(csrf().asHeader()))
+                //THEN
+                .andExpect(status().isOk());
+        //THEN
+        mockMvc.perform(get("/api/instructors"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
+
     }
 }

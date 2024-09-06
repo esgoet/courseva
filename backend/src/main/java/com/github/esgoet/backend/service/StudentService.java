@@ -61,4 +61,8 @@ public class StudentService {
                 .withGrades(updatedStudent.grades());
         return convertToStudentResponseDto(studentRepository.save(student));
     }
+
+    public void deleteStudent(String id) {
+        studentRepository.deleteById(id);
+    }
 }

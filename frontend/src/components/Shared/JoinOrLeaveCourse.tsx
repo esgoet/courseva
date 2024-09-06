@@ -1,5 +1,7 @@
 import {Course} from "../../types/courseTypes.ts";
 import {useAuth} from "../../hooks/useAuth.ts";
+import ConfirmDialog from "./ConfirmDialog.tsx";
+import {useState} from "react";
 
 type JoinOrLeaveCourseProps = {
     course: Course,
@@ -9,6 +11,7 @@ type JoinOrLeaveCourseProps = {
 
 export default function JoinOrLeaveCourse({course, updateUser, updateCourse}: Readonly<JoinOrLeaveCourseProps>) {
     const {user, isInstructor} = useAuth();
+    const [confirmLeave, setConfirmLeave] = useState<boolean>(false);
     const handleJoin = () => {
         if (user) {
             updateUser("courses", [...user.courses, course.id]);
@@ -27,7 +30,13 @@ export default function JoinOrLeaveCourse({course, updateUser, updateCourse}: Re
         <>
             {user && !course.students.includes(user.id) && !course.instructors.includes(user.id) ?
                 <button onClick={handleJoin}>Join Course</button>
-                : <button onClick={handleLeave}>Leave Course</button> }
-        </>
-    );
+                :
+                <>
+                    <button onClick={() => setConfirmLeave(true)}>Leave Course</button>
+                    <ConfirmDialog toConfirmId={course.id} toConfirmName={course.title} modal={confirmLeave} closeModal={() => setConfirmLeave(false)} toConfirmFunction={handleLeave} toConfirmAction={"leave"}/>
+                </>
+}
+</>
+)
+    ;
 };

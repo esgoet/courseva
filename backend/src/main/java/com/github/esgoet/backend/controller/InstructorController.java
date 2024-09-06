@@ -34,4 +34,9 @@ public class InstructorController {
     public InstructorResponseDto updateInstructor(@PathVariable String id, @RequestBody InstructorUpdateDto updatedInstructor) {
         return instructorService.updateInstructor(id, updatedInstructor);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteInstructor(@PathVariable String id) {
+        instructorService.deleteInstructor(id);
+    }
 }

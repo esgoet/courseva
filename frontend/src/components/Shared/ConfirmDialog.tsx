@@ -1,15 +1,16 @@
 import {useEffect, useRef} from "react";
-import {Course} from "../../types/courseTypes.ts";
 import {useNavigate} from "react-router-dom";
 
 type DeleteDialogProps = {
-    course: Course,
+    toConfirmId: string,
+    toConfirmName: string,
+    toConfirmAction: string,
     modal: boolean,
     closeModal: () => void,
-    deleteCourse: (id: string) => void
+    toConfirmFunction: (id: string) => void
 }
 
-export default function DeleteDialog({course, modal, closeModal, deleteCourse}: Readonly<DeleteDialogProps>) {
+export default function ConfirmDialog({toConfirmId, toConfirmName, toConfirmAction, modal, closeModal, toConfirmFunction}: Readonly<DeleteDialogProps>) {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const navigate = useNavigate();
 
@@ -21,18 +22,17 @@ export default function DeleteDialog({course, modal, closeModal, deleteCourse}: 
         }
     }, [modal]);
 
-    const handleDelete = () => {
-        deleteCourse(course.id);
+    const handleConfirm = () => {
+        toConfirmFunction(toConfirmId);
         closeModal();
         navigate("/");
     }
 
     return (
         <dialog autoFocus={true} ref={dialogRef} onCancel={closeModal}>
-            <p>Are you sure you want to delete this course?</p>
-            <p>{course.title} starting on {course.startDate.toDateString()}</p>
+            <p>Are you sure you want to {toConfirmAction.toLowerCase()} {toConfirmName}? This action is irreversible.</p>
             <button onClick={closeModal}>Cancel</button>
-            <button onClick={handleDelete}>Delete</button>
+            <button onClick={handleConfirm}>{toConfirmAction.toUpperCase()}</button>
         </dialog>
     )
 }

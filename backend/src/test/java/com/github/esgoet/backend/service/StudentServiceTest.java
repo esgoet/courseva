@@ -199,5 +199,14 @@ class StudentServiceTest {
         assertEquals("No student found with username: esgoet", thrown.getMessage());
     }
 
+    @Test
+    void deleteStudentTest() {
+        //GIVEN
+        doNothing().when(studentRepository).deleteById("1");
+        //WHEN
+        studentService.deleteStudent("1");
+        //THEN
+        verify(studentRepository).deleteById("1");
+    }
 
 }

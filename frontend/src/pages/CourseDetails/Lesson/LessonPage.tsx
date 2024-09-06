@@ -3,6 +3,7 @@ import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import EditableTextDetail from "../../../components/Shared/EditableTextDetail.tsx";
 import {convertToLessonDto, convertToLessonDtoList} from "../../../utils/convertToLessonDto.ts";
+import {useAuth} from "../../../hooks/useAuth.ts";
 
 type LessonPageProps = {
     lessons: Lesson[] | undefined,
@@ -12,6 +13,7 @@ type LessonPageProps = {
 export default function LessonPage({lessons, updateCourse}: Readonly<LessonPageProps>) {
     const [lesson, setLesson] = useState<LessonDto | undefined>();
     const {lessonId} = useParams();
+    const {isInstructor} = useAuth();
 
     useEffect(()=>{
         if (lessons) {
@@ -36,12 +38,12 @@ export default function LessonPage({lessons, updateCourse}: Readonly<LessonPageP
                 <>
                     <h3>
                         <EditableTextDetail inputType={"text"} label={"Lesson Title"} name={"title"}
-                                            initialValue={lesson.title} updateCourse={handleUpdate}/>
+                                            initialValue={lesson.title} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
                     </h3>
                     <EditableTextDetail inputType={"datetime-local"} label={"Lesson Release"} name={"whenPublic"}
-                                        initialValue={lesson.whenPublic} updateCourse={handleUpdate}/>
+                                        initialValue={lesson.whenPublic} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
                     <EditableTextDetail inputType={"textarea"} label={"Lesson Content"} name={"content"}
-                                        initialValue={lesson.content} updateCourse={handleUpdate}/>
+                                        initialValue={lesson.content} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
 
                 </>
             }
