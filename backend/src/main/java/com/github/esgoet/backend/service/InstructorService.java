@@ -59,4 +59,7 @@ public class InstructorService {
         return convertToInstructorResponseDto(instructorRepository.save(instructor));
     }
 
+    public void deleteInstructor(String id) {
+        instructorRepository.deleteById(id);
+    }
 }
