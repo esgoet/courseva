@@ -150,8 +150,8 @@ export default function App() {
     }
 
     const updateUser = (updatedProperty: string, updatedValue: string | string[] | Grade[]) => {
-        // const baseUrl : string = isInstructor ? "/api/instructors" : "/api/students";
-        if (user) axiosInstance.put(`/api/students/${user.id}`, {...user, [updatedProperty]: updatedValue})
+        const baseUrl : string = isInstructor ? "/api/instructors" : "/api/students";
+        if (user) axiosInstance.put(`${baseUrl}${user.id}`, {...user, [updatedProperty]: updatedValue})
             .then((response) => {
                 if (response.status === 200) {
                     fetchUser()
