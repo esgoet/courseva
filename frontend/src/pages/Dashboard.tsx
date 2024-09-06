@@ -5,9 +5,11 @@ import {useAuth} from "../hooks/useAuth.ts";
 
 type DashboardProps = {
     courses: Course[],
-    deleteCourse: (courseId: string) => void
+    deleteCourse: (courseId: string) => void,
+    updateUser: (updatedProperty: string, updatedValue: string[]) => void,
+    updateCourse: (updatedProperty: string, updatedValue: string[], course: Course) => void,
 }
-export default function Dashboard({courses, deleteCourse}: Readonly<DashboardProps>) {
+export default function Dashboard({courses, deleteCourse, updateUser, updateCourse}: Readonly<DashboardProps>) {
     const {user} = useAuth();
     return (
         <>
@@ -19,10 +21,10 @@ export default function Dashboard({courses, deleteCourse}: Readonly<DashboardPro
                     courses={courses
                         .filter(course => course.students.includes(user.id) || course.instructors.includes(user.id))
                         .toSorted((a, b) => a?.startDate.getTime() - b?.startDate.getTime())}
-                    deleteCourse={deleteCourse}/>
+                    deleteCourse={deleteCourse} updateUser={updateUser} updateCourse={updateCourse}/>
                 <h3>All Courses</h3>
                 <CourseList courses={courses.toSorted((a, b) => a?.startDate.getTime() - b?.startDate.getTime())}
-                            deleteCourse={deleteCourse}/>
+                            deleteCourse={deleteCourse} updateUser={updateUser} updateCourse={updateCourse}/>
             </>
         }
         </>

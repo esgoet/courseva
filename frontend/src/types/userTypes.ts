@@ -3,7 +3,12 @@ export type Student = {
     username: string,
     email: string,
     courses: string[],
-    grades: {courseId: string, courseGrades: number[]}[]
+    grades: Grade[]
+}
+
+export type Grade = {
+    courseId: string,
+    courseGrades: number[]
 }
 
 export type Instructor = {
