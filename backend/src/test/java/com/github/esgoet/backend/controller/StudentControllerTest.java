@@ -1,6 +1,5 @@
 package com.github.esgoet.backend.controller;
 
-import com.github.esgoet.backend.dto.StudentUpdateDto;
 import com.github.esgoet.backend.model.Student;
 import com.github.esgoet.backend.repository.StudentRepository;
 import org.junit.jupiter.api.Test;
