@@ -6,6 +6,7 @@ import EditableListDetail from "../../components/Shared/EditableListDetail.tsx";
 import DeleteDialog from "../../components/Shared/DeleteDialog.tsx";
 import {Instructor, Student} from "../../types/userTypes.ts";
 import {useAuth} from "../../hooks/useAuth.ts";
+import JoinOrLeaveCourse from "../../components/Shared/JoinOrLeaveCourse.tsx";
 
 type CoursePageProps = {
     updateCourse: (updatedProperty: string, updatedValue: string | string[]) => void,
@@ -13,10 +14,11 @@ type CoursePageProps = {
     fetchCourse: (courseId: string) => void,
     deleteCourse: (courseId: string) => void,
     students: Student[],
-    instructors: Instructor[]
+    instructors: Instructor[],
+    updateUser: (updatedProperty: string, updatedValue: string[]) => void
 }
 
-export default function CourseDetailsPage({updateCourse, course, fetchCourse, deleteCourse, students, instructors}: Readonly<CoursePageProps>) {
+export default function CourseDetailsPage({updateCourse, course, fetchCourse, deleteCourse, students, instructors, updateUser}: Readonly<CoursePageProps>) {
     const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
     const { courseId } = useParams();
     const {isInstructor} = useAuth();
@@ -34,6 +36,7 @@ export default function CourseDetailsPage({updateCourse, course, fetchCourse, de
                     <EditableTextDetail inputType={"text"} label={"Title"} name={"title"} initialValue={course.title} updateCourse={updateCourse}/>
                 </h3>
                 <p>{course.id}</p>
+                <JoinOrLeaveCourse course={course} updateUser={updateUser} updateCourse={updateCourse}/>
                 {isInstructor &&
                     <>
                         <button onClick={() => setConfirmDelete(true)}>Delete Course</button>
