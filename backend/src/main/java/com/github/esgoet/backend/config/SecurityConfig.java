@@ -36,6 +36,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/courses").hasAuthority(AppUserRole.INSTRUCTOR.name())
                         .requestMatchers(HttpMethod.DELETE, "/api/courses/**").hasAuthority(AppUserRole.INSTRUCTOR.name())
+                        .requestMatchers(HttpMethod.DELETE, "/api/instructors/**").hasAuthority(AppUserRole.INSTRUCTOR.name())
+                        .requestMatchers(HttpMethod.PUT, "/api/instructors/**").hasAuthority(AppUserRole.INSTRUCTOR.name())
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))

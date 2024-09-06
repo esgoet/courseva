@@ -84,7 +84,7 @@ class InstructorControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"INSTRUCTOR"})
     @DirtiesContext
     void updateInstructorTest() throws Exception {
         //GIVEN
@@ -113,7 +113,7 @@ class InstructorControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"INSTRUCTOR"})
     @DirtiesContext
     void updateInstructorTest_whenInstructorDoesNotExist() throws Exception {
         //WHEN
@@ -139,7 +139,7 @@ class InstructorControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"INSTRUCTOR"})
     @DirtiesContext
     void deleteInstructorTest() throws Exception {
         instructorRepository.save(new Instructor("1","esgoet","esgoet@fakeemail.com","123", List.of()));
