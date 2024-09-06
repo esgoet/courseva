@@ -147,17 +147,15 @@ class StudentServiceTest {
     void updateStudentTest_whenUserExists() {
         //GIVEN
         Student existingStudent = new Student("1", "esgoet", "esgoet@fakeemail.com", "123", List.of("couseId-1"), new HashMap<>());
-        StudentUpdateDto updatedStudentDto = new StudentUpdateDto("esgoet", "esgoet@fakeemail.com", "123", List.of("courseId-1"), new HashMap<>());
-        Student updatedStudent = new Student("1", "esgoet", "esgoet@fakeemail.com", "encoded-password", List.of("courseId-1"), new HashMap<>());
+        StudentUpdateDto updatedStudentDto = new StudentUpdateDto("esgoet", "esgoet@fakeemail.com",  List.of("courseId-1"), new HashMap<>());
+        Student updatedStudent = new Student("1", "esgoet", "esgoet@fakeemail.com", "123", List.of("courseId-1"), new HashMap<>());
         when(studentRepository.findById("1")).thenReturn(Optional.of(existingStudent));
-        when(passwordEncoder.encode("123")).thenReturn("encoded-password");
         when(studentRepository.save(updatedStudent)).thenReturn(updatedStudent);
         //WHEN
         StudentResponseDto actual = studentService.updateStudent("1", updatedStudentDto);
         // THEN
         StudentResponseDto expected = new StudentResponseDto("1", "esgoet", "esgoet@fakeemail.com",List.of("courseId-1"), new HashMap<>());
         verify(studentRepository).findById("1");
-        verify(passwordEncoder).encode("123");
         verify(studentRepository).save(updatedStudent);
         assertEquals(expected, actual);
     }
@@ -166,14 +164,13 @@ class StudentServiceTest {
     @Test
     void updateStudentTest_whenUserIsNotFound() {
         //GIVEN
-        StudentUpdateDto updatedStudentDto = new StudentUpdateDto("esgoet", "esgoet@fakeemail.com", "123", List.of("courseId-1"), new HashMap<>());
+        StudentUpdateDto updatedStudentDto = new StudentUpdateDto("esgoet", "esgoet@fakeemail.com", List.of("courseId-1"), new HashMap<>());
         when(studentRepository.findById("1")).thenReturn(Optional.empty());
         // THEN
         UserNotFoundException thrown = assertThrows(UserNotFoundException.class,
                 //WHEN
                 () -> studentService.updateStudent("1",updatedStudentDto));
         verify(studentRepository).findById("1");
-        verify(passwordEncoder,never()).encode("123");
         verify(studentRepository, never()).save(any());
         assertEquals("No student found with id: 1", thrown.getMessage());
     }

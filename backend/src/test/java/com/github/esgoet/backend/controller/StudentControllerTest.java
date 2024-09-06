@@ -100,7 +100,6 @@ class StudentControllerTest {
                             {
                               "username": "esgoet",
                               "email": "esgoet@fakeemail.com",
-                              "password": "123",
                               "courses": ["courseId-1"],
                               "grades": {}
                             }
@@ -130,7 +129,6 @@ class StudentControllerTest {
                             {
                               "username": "esgoet",
                               "email": "esgoet@fakeemail.com",
-                              "password": "123",
                               "courses": ["courseId-1"],
                               "grades": {}
                             }

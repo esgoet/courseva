@@ -56,7 +56,6 @@ public class StudentService {
     public StudentResponseDto updateStudent(String id, StudentUpdateDto updatedStudent) {
         Student student = studentRepository.findById(id).orElseThrow(()-> new UserNotFoundException("No student found with id: " + id))
                 .withUsername(updatedStudent.username())
-                .withPassword(passwordEncoder.encode(updatedStudent.password()))
                 .withEmail(updatedStudent.email())
                 .withCourses(updatedStudent.courses())
                 .withGrades(updatedStudent.grades());
