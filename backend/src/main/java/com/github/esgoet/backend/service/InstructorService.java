@@ -2,6 +2,7 @@ package com.github.esgoet.backend.service;
 
 import com.github.esgoet.backend.dto.NewAppUserDto;
 import com.github.esgoet.backend.dto.InstructorResponseDto;
+import com.github.esgoet.backend.dto.InstructorUpdateDto;
 import com.github.esgoet.backend.exception.UserNotFoundException;
 import com.github.esgoet.backend.model.Instructor;
 import com.github.esgoet.backend.repository.InstructorRepository;
@@ -48,6 +49,14 @@ public class InstructorService {
 
     public InstructorResponseDto convertToInstructorResponseDto (Instructor instructor) {
         return new InstructorResponseDto(instructor.id(),instructor.username(),instructor.email(),instructor.courses());
+    }
+
+    public InstructorResponseDto updateInstructor(String id, InstructorUpdateDto updatedInstructor) {
+        Instructor instructor = instructorRepository.findById(id).orElseThrow(()-> new UserNotFoundException("No instructor found with id: " + id))
+                .withUsername(updatedInstructor.username())
+                .withEmail(updatedInstructor.email())
+                .withCourses(updatedInstructor.courses());
+        return convertToInstructorResponseDto(instructorRepository.save(instructor));
     }
 
 }

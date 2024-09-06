@@ -2,11 +2,17 @@ package com.github.esgoet.backend.service;
 
 import com.github.esgoet.backend.dto.NewAppUserDto;
 import com.github.esgoet.backend.dto.StudentResponseDto;
+import com.github.esgoet.backend.dto.StudentUpdateDto;
 import com.github.esgoet.backend.exception.UserNotFoundException;
 import com.github.esgoet.backend.model.Student;
 import com.github.esgoet.backend.model.AppUserRole;
 import com.github.esgoet.backend.repository.StudentRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashMap;
@@ -77,4 +83,121 @@ class StudentServiceTest {
         verify(studentRepository).findAll();
         assertEquals(expected, actual);
     }
+
+    @Test
+    void getLoggedInStudentTest() {
+        //GIVEN
+        User user = new User("esgoet", "123", List.of());
+        Authentication authentication = mock(Authentication.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
+
+        when(authentication.getPrincipal()).thenReturn(user);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        Student student = new Student("1", "esgoet", "esgoet@fakeemail.com", "123", List.of(), new HashMap<>());
+        when(studentRepository.findStudentByUsername("esgoet")).thenReturn(Optional.of(student));
+
+        //WHEN
+        StudentResponseDto actual = studentService.getLoggedInStudent();
+
+        // THEN
+        StudentResponseDto expected = new StudentResponseDto("1", "esgoet", "esgoet@fakeemail.com",List.of(), new HashMap<>());
+        verify(authentication).getPrincipal();
+        verify(securityContext).getAuthentication();
+        verify(studentRepository).findStudentByUsername("esgoet");
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void getLoggedInStudentTest_whenUserNotKnown() {
+        //GIVEN
+        User user = new User("esgoet", "123", List.of());
+        Authentication authentication = mock(Authentication.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
+
+        when(authentication.getPrincipal()).thenReturn(user);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(studentRepository.findStudentByUsername("esgoet")).thenReturn(Optional.empty());
+
+        // THEN
+        assertThrows(UsernameNotFoundException.class,
+                //WHEN
+                () -> studentService.getLoggedInStudent());
+        verify(authentication).getPrincipal();
+        verify(securityContext).getAuthentication();
+        verify(studentRepository).findStudentByUsername("esgoet");
+    }
+
+
+    @Test
+    void convertToStudentResponseDtoTest() {
+        //GIVEN
+        Student student = new Student("1", "esgoet", "esgoet@fakeemail.com", "123", List.of(), new HashMap<>());
+        //WHEN
+        StudentResponseDto actual = studentService.convertToStudentResponseDto(student);
+        // THEN
+        StudentResponseDto expected = new StudentResponseDto("1", "esgoet", "esgoet@fakeemail.com",List.of(), new HashMap<>());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void updateStudentTest_whenUserExists() {
+        //GIVEN
+        Student existingStudent = new Student("1", "esgoet", "esgoet@fakeemail.com", "123", List.of("couseId-1"), new HashMap<>());
+        StudentUpdateDto updatedStudentDto = new StudentUpdateDto("esgoet", "esgoet@fakeemail.com",  List.of("courseId-1"), new HashMap<>());
+        Student updatedStudent = new Student("1", "esgoet", "esgoet@fakeemail.com", "123", List.of("courseId-1"), new HashMap<>());
+        when(studentRepository.findById("1")).thenReturn(Optional.of(existingStudent));
+        when(studentRepository.save(updatedStudent)).thenReturn(updatedStudent);
+        //WHEN
+        StudentResponseDto actual = studentService.updateStudent("1", updatedStudentDto);
+        // THEN
+        StudentResponseDto expected = new StudentResponseDto("1", "esgoet", "esgoet@fakeemail.com",List.of("courseId-1"), new HashMap<>());
+        verify(studentRepository).findById("1");
+        verify(studentRepository).save(updatedStudent);
+        assertEquals(expected, actual);
+    }
+
+
+    @Test
+    void updateStudentTest_whenUserIsNotFound() {
+        //GIVEN
+        StudentUpdateDto updatedStudentDto = new StudentUpdateDto("esgoet", "esgoet@fakeemail.com", List.of("courseId-1"), new HashMap<>());
+        when(studentRepository.findById("1")).thenReturn(Optional.empty());
+        // THEN
+        UserNotFoundException thrown = assertThrows(UserNotFoundException.class,
+                //WHEN
+                () -> studentService.updateStudent("1",updatedStudentDto));
+        verify(studentRepository).findById("1");
+        verify(studentRepository, never()).save(any());
+        assertEquals("No student found with id: 1", thrown.getMessage());
+    }
+
+    @Test
+    void getStudentByUsernameTest() {
+        //GIVEN
+        Student student = new Student("1","esgoet","esgoet@fakeemail.com","123", List.of(), new HashMap<>());
+        when(studentRepository.findStudentByUsername("esgoet")).thenReturn(Optional.of(student));
+        //WHEN
+        Student actual = studentService.getStudentByUsername("esgoet");
+        //THEN
+        Student expected = new Student("1","esgoet","esgoet@fakeemail.com", "123", List.of(), new HashMap<>());
+        verify(studentRepository).findStudentByUsername("esgoet");
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void getStudentByUsernameTest_whenUserNotFound() {
+        //GIVEN
+        when(studentRepository.findStudentByUsername("esgoet")).thenReturn(Optional.empty());
+        //THEN
+        UsernameNotFoundException thrown = assertThrows(UsernameNotFoundException.class,
+                //WHEN
+                () -> studentService.getStudentByUsername("esgoet"));
+        assertEquals("No student found with username: esgoet", thrown.getMessage());
+    }
+
+
 }

@@ -2,11 +2,17 @@ package com.github.esgoet.backend.service;
 
 import com.github.esgoet.backend.dto.InstructorResponseDto;
 import com.github.esgoet.backend.dto.NewAppUserDto;
+import com.github.esgoet.backend.dto.InstructorUpdateDto;
 import com.github.esgoet.backend.exception.UserNotFoundException;
 import com.github.esgoet.backend.model.Instructor;
 import com.github.esgoet.backend.model.AppUserRole;
 import com.github.esgoet.backend.repository.InstructorRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
@@ -75,5 +81,120 @@ class InstructorServiceTest {
         List<InstructorResponseDto> expected = List.of(new InstructorResponseDto("1","esgoet","esgoet@fakeemail.com", List.of()));
         verify(instructorRepository).findAll();
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void getLoggedInInstructorTest() {
+        //GIVEN
+        User user = new User("esgoet", "123", List.of());
+        Authentication authentication = mock(Authentication.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
+
+        when(authentication.getPrincipal()).thenReturn(user);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        Instructor instructor = new Instructor("1", "esgoet", "esgoet@fakeemail.com", "123", List.of());
+        when(instructorRepository.findInstructorByUsername("esgoet")).thenReturn(Optional.of(instructor));
+
+        //WHEN
+        InstructorResponseDto actual = instructorService.getLoggedInInstructor();
+
+        // THEN
+        InstructorResponseDto expected = new InstructorResponseDto("1", "esgoet", "esgoet@fakeemail.com",List.of());
+        verify(authentication).getPrincipal();
+        verify(securityContext).getAuthentication();
+        verify(instructorRepository).findInstructorByUsername("esgoet");
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void getLoggedInInstructorTest_whenUserNotKnown() {
+        //GIVEN
+        User user = new User("esgoet", "123", List.of());
+        Authentication authentication = mock(Authentication.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
+
+        when(authentication.getPrincipal()).thenReturn(user);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(instructorRepository.findInstructorByUsername("esgoet")).thenReturn(Optional.empty());
+
+        // THEN
+        assertThrows(UsernameNotFoundException.class,
+                //WHEN
+                () -> instructorService.getLoggedInInstructor());
+        verify(authentication).getPrincipal();
+        verify(securityContext).getAuthentication();
+        verify(instructorRepository).findInstructorByUsername("esgoet");
+    }
+
+
+    @Test
+    void convertToInstructorResponseDtoTest() {
+        //GIVEN
+        Instructor instructor = new Instructor("1", "esgoet", "esgoet@fakeemail.com", "123", List.of());
+        //WHEN
+        InstructorResponseDto actual = instructorService.convertToInstructorResponseDto(instructor);
+        // THEN
+        InstructorResponseDto expected = new InstructorResponseDto("1", "esgoet", "esgoet@fakeemail.com",List.of());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void updateInstructorTest_whenUserExists() {
+        //GIVEN
+        Instructor existingInstructor = new Instructor("1", "esgoet", "esgoet@fakeemail.com", "123", List.of("couseId-1"));
+        InstructorUpdateDto updatedInstructorDto = new InstructorUpdateDto("esgoet", "esgoet@fakeemail.com",  List.of("courseId-1"));
+        Instructor updatedInstructor = new Instructor("1", "esgoet", "esgoet@fakeemail.com", "123", List.of("courseId-1"));
+        when(instructorRepository.findById("1")).thenReturn(Optional.of(existingInstructor));
+        when(instructorRepository.save(updatedInstructor)).thenReturn(updatedInstructor);
+        //WHEN
+        InstructorResponseDto actual = instructorService.updateInstructor("1", updatedInstructorDto);
+        // THEN
+        InstructorResponseDto expected = new InstructorResponseDto("1", "esgoet", "esgoet@fakeemail.com",List.of("courseId-1"));
+        verify(instructorRepository).findById("1");
+        verify(instructorRepository).save(updatedInstructor);
+        assertEquals(expected, actual);
+    }
+
+
+    @Test
+    void updateInstructorTest_whenUserIsNotFound() {
+        //GIVEN
+        InstructorUpdateDto updatedInstructorDto = new InstructorUpdateDto("esgoet", "esgoet@fakeemail.com", List.of("courseId-1"));
+        when(instructorRepository.findById("1")).thenReturn(Optional.empty());
+        // THEN
+        UserNotFoundException thrown = assertThrows(UserNotFoundException.class,
+                //WHEN
+                () -> instructorService.updateInstructor("1",updatedInstructorDto));
+        verify(instructorRepository).findById("1");
+        verify(instructorRepository, never()).save(any());
+        assertEquals("No instructor found with id: 1", thrown.getMessage());
+    }
+
+    @Test
+    void getInstructorByUsernameTest() {
+        //GIVEN
+        Instructor instructor = new Instructor("1","esgoet","esgoet@fakeemail.com","123", List.of());
+        when(instructorRepository.findInstructorByUsername("esgoet")).thenReturn(Optional.of(instructor));
+        //WHEN
+        Instructor actual = instructorService.getInstructorByUsername("esgoet");
+        //THEN
+        Instructor expected = new Instructor("1","esgoet","esgoet@fakeemail.com", "123", List.of());
+        verify(instructorRepository).findInstructorByUsername("esgoet");
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void getInstructorByUsernameTest_whenUserNotFound() {
+        //GIVEN
+        when(instructorRepository.findInstructorByUsername("esgoet")).thenReturn(Optional.empty());
+        //THEN
+        UsernameNotFoundException thrown = assertThrows(UsernameNotFoundException.class,
+                //WHEN
+                () -> instructorService.getInstructorByUsername("esgoet"));
+        assertEquals("No instructor found with username: esgoet", thrown.getMessage());
     }
 }

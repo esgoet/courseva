@@ -82,4 +82,59 @@ class InstructorControllerTest {
                 """))
                 .andExpect(jsonPath("$.id").exists());
     }
+
+    @Test
+    @WithMockUser
+    @DirtiesContext
+    void updateInstructorTest() throws Exception {
+        //GIVEN
+        instructorRepository.save(new Instructor("1","esgoet","esgoet@fakeemail.com","123", List.of()));
+        //WHEN
+        mockMvc.perform(put("/api/instructors/1")
+                        .with(csrf().asHeader())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                              "username": "esgoet",
+                              "email": "esgoet@fakeemail.com",
+                              "courses": ["courseId-1"]
+                            }
+                            """))
+                //THEN
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        {
+                          "id": "1",
+                          "username": "esgoet",
+                          "email": "esgoet@fakeemail.com",
+                          "courses": ["courseId-1"]
+                        }
+                """));
+    }
+
+    @Test
+    @WithMockUser
+    @DirtiesContext
+    void updateInstructorTest_whenInstructorDoesNotExist() throws Exception {
+        //WHEN
+        mockMvc.perform(put("/api/instructors/1")
+                        .with(csrf().asHeader())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                              "username": "esgoet",
+                              "email": "esgoet@fakeemail.com",
+                              "courses": ["courseId-1"]
+                            }
+                            """))
+                //THEN
+                .andExpect(status().isNotFound())
+                .andExpect(content().json("""
+                        {
+                          "message": "No instructor found with id: 1",
+                           "statusCode": 404
+                        }
+                        """))
+                .andExpect(jsonPath("$.timestamp").exists());
+    }
 }

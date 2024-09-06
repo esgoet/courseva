@@ -2,6 +2,7 @@ package com.github.esgoet.backend.service;
 
 import com.github.esgoet.backend.dto.NewAppUserDto;
 import com.github.esgoet.backend.dto.StudentResponseDto;
+import com.github.esgoet.backend.dto.StudentUpdateDto;
 import com.github.esgoet.backend.exception.UserNotFoundException;
 import com.github.esgoet.backend.model.Student;
 import com.github.esgoet.backend.repository.StudentRepository;
@@ -52,4 +53,12 @@ public class StudentService {
         return new StudentResponseDto(student.id(),student.username(),student.email(),student.courses(),student.grades());
     }
 
+    public StudentResponseDto updateStudent(String id, StudentUpdateDto updatedStudent) {
+        Student student = studentRepository.findById(id).orElseThrow(()-> new UserNotFoundException("No student found with id: " + id))
+                .withUsername(updatedStudent.username())
+                .withEmail(updatedStudent.email())
+                .withCourses(updatedStudent.courses())
+                .withGrades(updatedStudent.grades());
+        return convertToStudentResponseDto(studentRepository.save(student));
+    }
 }

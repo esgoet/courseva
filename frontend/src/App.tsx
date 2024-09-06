@@ -16,7 +16,7 @@ import SubmissionPage from "./pages/CourseDetails/Assignment/SubmissionPage.tsx"
 import {convertToCourse} from "./utils/convertToCourse.ts";
 import RegisterPage from "./pages/RegisterPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
-import {Instructor, Student, UserLoginDto} from "./types/userTypes.ts";
+import {Grade, Instructor, Student, UserLoginDto} from "./types/userTypes.ts";
 import ProtectedRoutes from "./components/Routes/ProtectedRoutes.tsx";
 import Header from "./components/Layout/Header.tsx";
 import ProtectedInstructorRoutes from "./components/Routes/ProtectedInstructorRoutes.tsx";
@@ -32,7 +32,7 @@ export default function App() {
     const [isInstructor, setIsInstructor] = useState<boolean>(false);
     const navigate = useNavigate();
 
-    const authContextValue = useMemo(() => ({ user, isInstructor }), [user, isInstructor]);
+    const authContextValue = useMemo(() => ({ user, isInstructor}), [user, isInstructor]);
 
     const axiosInstance = axios.create();
     axiosInstance.interceptors.request.use(
@@ -92,8 +92,8 @@ export default function App() {
             .catch((error) => console.error(error.response.data));
     }
 
-    const updateCourse = (updatedProperty: string, updatedValue: string | string[] | LessonDto[] | AssignmentDto[]) => {
-        axiosInstance.put(`/api/courses/${currentCourse?.id}`, {...currentCourse, [updatedProperty]: updatedValue})
+    const updateCourse = (updatedProperty: string, updatedValue: string | string[] | LessonDto[] | AssignmentDto[], course = currentCourse) => {
+        axiosInstance.put(`/api/courses/${course?.id}`, {...course, [updatedProperty]: updatedValue})
             .then((response) => {
                 if (response.status === 200) {
                     if (currentCourse?.id) fetchCourse(currentCourse.id);
@@ -102,6 +102,7 @@ export default function App() {
             })
             .catch((error)=>console.error(error.response.data));
     }
+
 
     const deleteCourse = (courseId: string) => {
         axiosInstance.delete(`/api/courses/${courseId}`)
@@ -148,6 +149,17 @@ export default function App() {
             .finally(()=>setUser(null));
     }
 
+    const updateUser = (updatedProperty: string, updatedValue: string | string[] | Grade[]) => {
+        const baseUrl : string = isInstructor ? "/api/instructors" : "/api/students";
+        if (user) axiosInstance.put(`${baseUrl}${user.id}`, {...user, [updatedProperty]: updatedValue})
+            .then((response) => {
+                if (response.status === 200) {
+                    fetchUser()
+                }
+            })
+            .catch((error)=>console.error(error.response.data));
+    }
+
     useEffect(()=>{
         fetchUser()
             .then(()=> {
@@ -165,8 +177,8 @@ export default function App() {
                         <Route path={"/register"} element={<RegisterPage />}/>
                         <Route path={"/login"} element={<LoginPage login={login}/>}/>
                         <Route element={<ProtectedRoutes />}>
-                                <Route path={"/"} element={<Dashboard courses={courses} deleteCourse={deleteCourse}/>}/>
-                                <Route path={"/course/:courseId"} element={<CourseDetailsPage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse} deleteCourse={deleteCourse} students={students} instructors={instructors}/>}>
+                                <Route path={"/"} element={<Dashboard courses={courses} deleteCourse={deleteCourse} updateUser={updateUser} updateCourse={updateCourse}/>}/>
+                                <Route path={"/course/:courseId"} element={<CourseDetailsPage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse} deleteCourse={deleteCourse} students={students} instructors={instructors} updateUser={updateUser}/>}>
                                     <Route path={"lessons"} element={<LessonOverview lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
                                     <Route path={"lessons/:lessonId"} element={<LessonPage lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
                                     <Route path={"assignments"} element={<AssignmentOverview assignments={currentCourse?.assignments} updateCourse={updateCourse}/>}/>
