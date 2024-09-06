@@ -137,4 +137,20 @@ class InstructorControllerTest {
                         """))
                 .andExpect(jsonPath("$.timestamp").exists());
     }
+
+    @Test
+    @WithMockUser
+    @DirtiesContext
+    void deleteInstructorTest() throws Exception {
+        instructorRepository.save(new Instructor("1","esgoet","esgoet@fakeemail.com","123", List.of()));
+        //WHEN
+        mockMvc.perform(delete("/api/instructors/1").with(csrf().asHeader()))
+                //THEN
+                .andExpect(status().isOk());
+        //THEN
+        mockMvc.perform(get("/api/instructors"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
+
+    }
 }
