@@ -2,6 +2,7 @@ import {Assignment, AssignmentDto} from "../../../types/courseTypes.ts";
 import {Link} from "react-router-dom";
 import {convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
 import {useAuth} from "../../../hooks/useAuth.ts";
+import {Button} from "@mui/material";
 
 type AssignmentOverviewProps = {
     assignments: Assignment[] | undefined,
@@ -29,7 +30,7 @@ export default function AssignmentOverview({assignments, updateCourse}: Readonly
                             <h4>{assignment.title}</h4>
                         </Link>
                         {assignment.whenPublic.valueOf() > Date.now() && <p>Unpublished</p>}
-                        <button onClick={() => deleteAssignment(assignment.id)}>Delete</button>
+                        <Button onClick={() => deleteAssignment(assignment.id)}>Delete</Button>
                     </li>
                 )) :
                     assignments?.filter(assignment => assignment.whenPublic.valueOf() < Date.now()).toSorted((a, b) => a?.whenPublic.getTime() - b?.whenPublic.getTime()).map(assignment => (

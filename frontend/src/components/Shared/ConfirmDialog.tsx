@@ -1,5 +1,6 @@
 import {useEffect, useRef} from "react";
 import {useNavigate} from "react-router-dom";
+import {Button} from "@mui/material";
 
 type DeleteDialogProps = {
     toConfirmId: string,
@@ -31,8 +32,8 @@ export default function ConfirmDialog({toConfirmId, toConfirmName, toConfirmActi
     return (
         <dialog autoFocus={true} ref={dialogRef} onCancel={closeModal}>
             <p>Are you sure you want to {toConfirmAction.toLowerCase()} {toConfirmName}? This action is irreversible.</p>
-            <button onClick={closeModal}>Cancel</button>
-            <button onClick={handleConfirm}>{toConfirmAction.toUpperCase()}</button>
+            <Button onClick={closeModal}>Cancel</Button>
+            <Button onClick={handleConfirm}>{toConfirmAction.toUpperCase()}</Button>
         </dialog>
     )
 }

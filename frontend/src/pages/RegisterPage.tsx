@@ -2,6 +2,7 @@ import {ChangeEvent, FormEvent, useState} from "react";
 import {NewUserDto} from "../types/userTypes.ts";
 import axios from "axios";
 import {Link, useNavigate} from "react-router-dom";
+import {Button} from "@mui/material";
 
 
 
@@ -58,7 +59,7 @@ export default function RegisterPage() {
                     {showPassword ? "visibility_off" : "visibility"}
                     </span></button>
                 </div>
-                <button>Register</button>
+                <Button>Register</Button>
             </form>
             <Link to={"/login"}>Login instead</Link>
 

@@ -2,6 +2,7 @@ import {Link} from "react-router-dom";
 import {ChangeEvent, FormEvent, useState} from "react";
 import {UserLoginDto} from "../../types/userTypes.ts";
 import "./LoginPage.css";
+import {Button} from "@mui/material";
 
 type LoginPageProps = {
     login: (user : UserLoginDto) => void;
@@ -39,7 +40,7 @@ export default function LoginPage({login}:Readonly<LoginPageProps>) {
                     {showPassword ? "visibility_off" : "visibility"}
                     </span></button>
                 </div>
-                <button>Login</button>
+                <Button>Login</Button>
             </form>
             <p>First time here? <Link to={"/register"}>Register</Link> instead.</p>
         </>

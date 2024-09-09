@@ -2,6 +2,7 @@ import {Lesson, LessonDto} from "../../../types/courseTypes.ts";
 import {ChangeEvent, FormEvent, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {convertToLessonDtoList} from "../../../utils/convertToLessonDto.ts";
+import { Button } from "@mui/material";
 
 type LessonCreatorProps = {
     updateCourse: (updatedProperty: string, updatedValue: LessonDto[]) => void,
@@ -45,12 +46,12 @@ export default function LessonCreator({updateCourse, lessons}:Readonly<LessonCre
                     <textarea name={"content"} value={lesson.content} onChange={handleChange}
                               placeholder={"Enter Lesson Content"} autoCapitalize={"on"}/>
                 </fieldset>
-                <button type={"reset"}
+                <Button type={"reset"}
                         onClick={() => setLesson({
                             id: "", title: "", content: "", whenPublic: new Date(Date.now()).toISOString().substring(0,19)
                         })}>Reset
-                </button>
-                <button type={"submit"}>Create Lesson</button>
+                </Button>
+                <Button type={"submit"}>Create Lesson</Button>
             </form>
         </>
     )

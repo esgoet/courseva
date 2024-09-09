@@ -1,6 +1,7 @@
 import {FormEvent, useState} from "react";
 import {Instructor, Student} from "../../types/userTypes.ts";
 import {useAuth} from "../../hooks/useAuth.ts";
+import {Button} from "@mui/material";
 
 type EditableListDetailProps = {
     label: string,
@@ -31,8 +32,8 @@ export default function EditableListDetail(props: Readonly<EditableListDetailPro
             <select name={props.name} value={input} onChange={(e)=>setInput([...e.target.selectedOptions].map(option => option.value))} disabled={!editable} multiple>
                 {props.options.map((option) => <option key={`${option.id}`} value={option.id}>{option.username}</option>)}
             </select>
-            {isInstructor && <button onClick={() => setEditable(!editable)}>{editable ? "Save" : "Edit"}</button>}
-            {editable && <button type={"reset"} onClick={handleCancel}>Cancel</button>}
+            {isInstructor && <Button onClick={() => setEditable(!editable)}>{editable ? "Save" : "Edit"}</Button>}
+            {editable && <Button type={"reset"} onClick={handleCancel}>Cancel</Button>}
         </form>
     )
 }

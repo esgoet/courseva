@@ -4,6 +4,7 @@ import {Link, useParams} from "react-router-dom";
 import {convertToAssignmentDto, convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
 import EditableTextDetail from "../../../components/Shared/EditableTextDetail.tsx";
 import { useAuth } from "../../../hooks/useAuth.ts";
+import {Button} from "@mui/material";
 
 type AssignmentPageProps = {
     assignments: Assignment[] | undefined,
@@ -65,7 +66,7 @@ export default function AssignmentPage({assignments, updateCourse}: Readonly<Ass
                             <h4>Submit Your Assignment</h4>
                             <form onSubmit={handleStudentSubmission}>
                                 <textarea name={"content"} value={submission.content} onChange={(e)=>setSubmission({...submission, content: e.target.value})}/>
-                                <button>Submit</button>
+                                <Button>Submit</Button>
                             </form>
                         </>
                     }

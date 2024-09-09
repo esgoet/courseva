@@ -2,6 +2,7 @@ import {Lesson, LessonDto} from "../../../types/courseTypes.ts";
 import {Link} from "react-router-dom";
 import { convertToLessonDtoList} from "../../../utils/convertToLessonDto.ts";
 import {useAuth} from "../../../hooks/useAuth.ts";
+import {Button} from "@mui/material";
 
 
 type LessonOverviewProps = {
@@ -28,7 +29,7 @@ export default function LessonOverview({lessons, updateCourse}: Readonly<LessonO
                             <h4>{lesson.title}</h4>
                             </Link>
                         {lesson.whenPublic.valueOf() > Date.now() && <p>Unpublished</p>}
-                        <button onClick={() => deleteLesson(lesson.id)}>Delete</button>
+                        <Button onClick={() => deleteLesson(lesson.id)}>Delete</Button>
                     </li>
                 )) :  lessons?.filter(lesson => lesson.whenPublic.valueOf() < Date.now()).toSorted((a, b) => a?.whenPublic.getTime() - b?.whenPublic.getTime()).map(lesson=> (
                     <li key={`lesson-${lesson.id}`}>

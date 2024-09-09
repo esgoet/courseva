@@ -1,4 +1,5 @@
 import {FormEvent, useState} from "react";
+import {Button} from "@mui/material";
 
 type EditableTextDetailProps = {
     inputType : string,
@@ -30,10 +31,10 @@ export default function EditableTextDetail(props: Readonly<EditableTextDetailPro
             {props.inputType !== "textarea" ?
                 <input type={props.inputType} name={props.name} value={input} onChange={(e)=>setInput(e.target.value)} disabled={!editable}/> :
                 <textarea name={props.name} value={input} onChange={(e)=>setInput(e.target.value)} disabled={!editable} />}
-            {editable && <button type={"submit"}>Save</button>}
-            {!editable && props.allowedToEdit && <button type={"button"} onClick={()=>setEditable(true)}>Edit</button>}
+            {editable && <Button type={"submit"}>Save</Button>}
+            {!editable && props.allowedToEdit && <Button type={"button"} onClick={()=>setEditable(true)}>Edit</Button>}
 
-            {editable && <button type={"reset"} onClick={handleCancel}>Cancel</button>}
+            {editable && <Button type={"reset"} onClick={handleCancel}>Cancel</Button>}
         </form>
     )
 }

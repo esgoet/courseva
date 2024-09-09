@@ -2,6 +2,7 @@ import {Assignment, AssignmentDto} from "../../../types/courseTypes.ts";
 import {ChangeEvent, FormEvent, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
+import {Button} from "@mui/material";
 
 type AssignmentCreatorProps = {
     updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void,
@@ -52,12 +53,12 @@ export default function AssignmentCreator({assignments, updateCourse}: Readonly<
                     <textarea name={"content"} value={assignment.description} onChange={handleChange}
                               placeholder={"Enter Assignment Content"} autoCapitalize={"on"}/>
                 </fieldset>
-                <button type={"reset"}
+                <Button type={"reset"}
                         onClick={() => setAssignment({
                             id: "", title: "", description: "", whenPublic: new Date(Date.now()).toISOString().substring(0,19), deadline: "", submissions:[]
                         })}>Reset
-                </button>
-                <button type={"submit"}>Create Assignment</button>
+                </Button>
+                <Button type={"submit"}>Create Assignment</Button>
             </form>
         </>
     )

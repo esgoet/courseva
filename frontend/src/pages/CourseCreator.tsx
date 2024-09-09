@@ -2,6 +2,7 @@ import {ChangeEvent, FormEvent, useState} from "react";
 import {NewCourseDto} from "../types/courseTypes.ts";
 import {Link} from "react-router-dom";
 import {Instructor, Student} from "../types/userTypes.ts";
+import {Button} from "@mui/material";
 
 type CourseCreatorProps = {
     createCourse: (course: NewCourseDto) => void,
@@ -50,10 +51,10 @@ export default function CourseCreator({createCourse, students, instructors}: Rea
                         {instructors.map((instructor) => <option key={`instructor-${instructor.id}`} value={instructor.id}>{instructor.username}</option>)}
                     </select>
                 </fieldset>
-                <button type={"reset"}
+                <Button type={"reset"}
                         onClick={() => setCourse({title: "", description: "", students: [], instructors: [], startDate: ""})}>Reset
-                </button>
-                <button type={"submit"}>Create Course</button>
+                </Button>
+                <Button type={"submit"}>Create Course</Button>
             </form>
         </>
     )
