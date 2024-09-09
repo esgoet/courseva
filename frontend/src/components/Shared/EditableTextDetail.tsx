@@ -1,5 +1,8 @@
 import {FormEvent, useState} from "react";
-import {Button} from "@mui/material";
+import {IconButton} from "@mui/material";
+import CheckIcon from "@mui/icons-material/Check";
+import EditIcon from "@mui/icons-material/Edit";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 type EditableTextDetailProps = {
     inputType : string,
@@ -31,10 +34,15 @@ export default function EditableTextDetail(props: Readonly<EditableTextDetailPro
             {props.inputType !== "textarea" ?
                 <input type={props.inputType} name={props.name} value={input} onChange={(e)=>setInput(e.target.value)} disabled={!editable}/> :
                 <textarea name={props.name} value={input} onChange={(e)=>setInput(e.target.value)} disabled={!editable} />}
-            {editable && <Button type={"submit"}>Save</Button>}
-            {!editable && props.allowedToEdit && <Button type={"button"} onClick={()=>setEditable(true)}>Edit</Button>}
-
-            {editable && <Button type={"reset"} onClick={handleCancel}>Cancel</Button>}
+            {editable && <IconButton type={"submit"}>
+                <CheckIcon/>
+            </IconButton>}
+            {!editable && props.allowedToEdit && <IconButton type={"button"} onClick={()=>setEditable(true)}>
+                <EditIcon/>
+            </IconButton>}
+            {editable && <IconButton type={"reset"} onClick={handleCancel}>
+                <CancelIcon/>
+            </IconButton>}
         </form>
     )
 }

@@ -2,10 +2,17 @@ import {Link, Outlet, useParams} from "react-router-dom";
 import {Course} from "../../types/courseTypes.ts";
 import {useEffect} from "react";
 import EditableTextDetail from "../../components/Shared/EditableTextDetail.tsx";
-import EditableListDetail from "../../components/Shared/EditableListDetail.tsx";
 import {Instructor, Student} from "../../types/userTypes.ts";
 import {useAuth} from "../../hooks/useAuth.ts";
 import CourseActions from "../../components/Course/CourseActions.tsx";
+import {
+    Breadcrumbs,
+    Grid2,
+    Typography, useMediaQuery, useTheme
+} from "@mui/material";
+import "./CourseDetailsPage.css";
+import CourseTabs from "../../components/Course/CourseTabs.tsx";
+import CourseTabsMobile from "../../components/Course/CourseTabsMobile.tsx";
 
 type CoursePageProps = {
     updateCourse: (updatedProperty: string, updatedValue: string | string[]) => void,
@@ -17,9 +24,12 @@ type CoursePageProps = {
     updateUser: (updatedProperty: string, updatedValue: string[]) => void
 }
 
-export default function CourseDetailsPage({updateCourse, course, fetchCourse, deleteCourse, students, instructors, updateUser}: Readonly<CoursePageProps>) {
+export default function CourseDetailsPage({updateCourse, course, fetchCourse, deleteCourse, updateUser}: Readonly<CoursePageProps>) {
+    const theme = useTheme();
+    const isMobile = !(useMediaQuery(theme.breakpoints.up('sm')));
     const { courseId } = useParams();
     const {isInstructor} = useAuth();
+
 
     useEffect(() =>{
         if (courseId) fetchCourse(courseId);
@@ -27,27 +37,45 @@ export default function CourseDetailsPage({updateCourse, course, fetchCourse, de
 
     return (
         <>
-            <Link to={"/"}>Back</Link>
-            {course ?
-            <>
-                <h3>
-                    <EditableTextDetail inputType={"text"} label={"Title"} name={"title"} initialValue={course.title} updateFunction={updateCourse} allowedToEdit={isInstructor}/>
-                </h3>
-                <p>{course.id}</p>
-                <CourseActions course={course} deleteCourse={deleteCourse} updateUser={updateUser} updateCourse={updateCourse}/>
-                <EditableTextDetail inputType={"textarea"} label={"Description"} name={"description"}
-                                    initialValue={course.description} updateFunction={updateCourse} allowedToEdit={isInstructor}/>
-                <EditableTextDetail inputType={"date"} label={"Start Date"} name={"startDate"} initialValue={course.startDate.toISOString()} updateFunction={updateCourse} allowedToEdit={isInstructor}/>
-                <h3>Students</h3>
-                <EditableListDetail label={"Students"} name={"students"} initialValue={course.students} updateCourse={updateCourse} options={students}/>
-                <h3>Instructors</h3>
-                <EditableListDetail label={"Instructors"} name={"instructors"} initialValue={course.instructors} updateCourse={updateCourse} options={instructors}/>
-                <Link to={"lessons"}>Lessons</Link>
-                <Link to={"assignments"}>Assignments</Link>
-                <Outlet />
-            </>
+        {course ?
+                <div className={"course-page"}>
+                    <Breadcrumbs aria-label={"breadcrumb"}>
+                        <Link to={"/"}>Dashboard</Link>
+                        <Typography>{course?.title}</Typography>
+                    </Breadcrumbs>
+                    <Grid2 container spacing={{xs:2,md:4}}>
+                        <Grid2 size={{xs:12,md:4}}>
+                            <h2>
+                                <EditableTextDetail inputType={"text"} label={"Title"} name={"title"}
+                                                    initialValue={course.title} updateFunction={updateCourse}
+                                                    allowedToEdit={isInstructor}/>
+                            </h2>
+                        </Grid2>
+                        <Grid2 size={{xs:12,md:4}}>
+                            <p>{course.id}</p>
+                        </Grid2>
+                        <Grid2 size={{xs:12,md:4}}>
+                            <CourseActions course={course} deleteCourse={deleteCourse} updateUser={updateUser}
+                                           updateCourse={updateCourse}/>
+                        </Grid2>
+                        <Grid2 size={{xs:12,md:8}}>
+                            <EditableTextDetail inputType={"textarea"} label={"Description"} name={"description"}
+                                                initialValue={course.description} updateFunction={updateCourse}
+                                                allowedToEdit={isInstructor}/>
+                        </Grid2>
+                        <Grid2 size={{xs:12,md:4}}>
+                            <EditableTextDetail inputType={"date"} label={"Start Date"} name={"startDate"}
+                                                initialValue={course.startDate.toISOString()} updateFunction={updateCourse}
+                                                allowedToEdit={isInstructor}/>
+                        </Grid2>
+                    </Grid2>
+                    {isMobile ? <CourseTabsMobile/> :
+                    <CourseTabs/>}
+                    <Outlet/>
+                </div>
             :
-            <p>No course found.</p>}
+            <p>No course found.</p>
+        }
         </>
     )
 }

@@ -40,7 +40,7 @@ export default function LoginPage({login}:Readonly<LoginPageProps>) {
                     {showPassword ? "visibility_off" : "visibility"}
                     </span></button>
                 </div>
-                <Button>Login</Button>
+                <Button type={"submit"}>Login</Button>
             </form>
             <p>First time here? <Link to={"/register"}>Register</Link> instead.</p>
         </>

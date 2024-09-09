@@ -1,7 +1,10 @@
 import {FormEvent, useState} from "react";
 import {Instructor, Student} from "../../types/userTypes.ts";
 import {useAuth} from "../../hooks/useAuth.ts";
-import {Button} from "@mui/material";
+import {IconButton} from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
+import CheckIcon from '@mui/icons-material/Check';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 type EditableListDetailProps = {
     label: string,
@@ -32,8 +35,13 @@ export default function EditableListDetail(props: Readonly<EditableListDetailPro
             <select name={props.name} value={input} onChange={(e)=>setInput([...e.target.selectedOptions].map(option => option.value))} disabled={!editable} multiple>
                 {props.options.map((option) => <option key={`${option.id}`} value={option.id}>{option.username}</option>)}
             </select>
-            {isInstructor && <Button onClick={() => setEditable(!editable)}>{editable ? "Save" : "Edit"}</Button>}
-            {editable && <Button type={"reset"} onClick={handleCancel}>Cancel</Button>}
+            {isInstructor &&
+                <IconButton onClick={() => setEditable(!editable)}>
+                    {editable ? <CheckIcon/> : <EditIcon/>}
+                </IconButton>}
+            {editable && <IconButton type={"reset"} onClick={handleCancel}>
+                <CancelIcon/>
+            </IconButton>}
         </form>
     )
 }

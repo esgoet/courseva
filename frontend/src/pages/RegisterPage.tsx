@@ -59,7 +59,7 @@ export default function RegisterPage() {
                     {showPassword ? "visibility_off" : "visibility"}
                     </span></button>
                 </div>
-                <Button>Register</Button>
+                <Button type={"submit"}>Register</Button>
             </form>
             <Link to={"/login"}>Login instead</Link>
 
