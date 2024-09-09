@@ -25,3 +25,14 @@ export const PLACEHOLDERS: {id: string, name: string}[] = [
         name: "Carlos Abbott"
     }
 ];
+
+export const pages : {title: string, url: string}[] = [
+    {
+        title:"Dashboard",
+        url:"/"
+    },
+    {
+        title: "Browse",
+        url:"/browse"
+    },
+]

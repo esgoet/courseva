@@ -189,7 +189,6 @@ export default function App() {
         <ThemeProvider theme={theme}>
             <AuthContext.Provider value={authContextValue}>
                 <Header logout={logout}/>
-                <section>Test</section>
                 <main>
                         <Routes>
                             <Route path={"/register"} element={<RegisterPage />}/>
