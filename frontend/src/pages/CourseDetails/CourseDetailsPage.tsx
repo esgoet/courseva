@@ -6,7 +6,7 @@ import EditableListDetail from "../../components/Shared/EditableListDetail.tsx";
 import ConfirmDialog from "../../components/Shared/ConfirmDialog.tsx";
 import {Instructor, Student} from "../../types/userTypes.ts";
 import {useAuth} from "../../hooks/useAuth.ts";
-import JoinOrLeaveCourse from "../../components/Shared/JoinOrLeaveCourse.tsx";
+import JoinOrLeaveCourse from "../../components/Course/JoinOrLeaveCourse.tsx";
 
 type CoursePageProps = {
     updateCourse: (updatedProperty: string, updatedValue: string | string[]) => void,

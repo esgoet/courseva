@@ -1,6 +1,6 @@
 import {Course} from "../../types/courseTypes.ts";
 import {useAuth} from "../../hooks/useAuth.ts";
-import ConfirmDialog from "./ConfirmDialog.tsx";
+import ConfirmDialog from "../Shared/ConfirmDialog.tsx";
 import {useState} from "react";
 
 type JoinOrLeaveCourseProps = {

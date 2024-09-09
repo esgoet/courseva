@@ -25,6 +25,7 @@ import {AuthContext} from "./context/AuthContext.ts";
 import UserAccountPage from "./pages/UserAccountPage.tsx";
 import {createTheme, ThemeProvider} from "@mui/material";
 import {themeOptions} from "./styles/themeOptions.ts";
+import CourseList from "./components/Course/CourseList/CourseList.tsx";
 
 export default function App() {
     const [courses, setCourses] = useState<Course[]>([]);
@@ -195,6 +196,7 @@ export default function App() {
                             <Route path={"/login"} element={<LoginPage login={login}/>}/>
                             <Route element={<ProtectedRoutes />}>
                                 <Route path={"/"} element={<Dashboard courses={courses} deleteCourse={deleteCourse} updateUser={updateUser} updateCourse={updateCourse}/>}/>
+                                <Route path={"/browse"} element={<CourseList courses={courses} deleteCourse={deleteCourse} updateUser={updateUser} updateCourse={updateCourse}/>}/>
                                 <Route path={"/account"} element={<UserAccountPage updateUser={updateUser} deleteUser={deleteUser}/>}/>
                                 <Route path={"/course/:courseId"} element={<CourseDetailsPage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse} deleteCourse={deleteCourse} students={students} instructors={instructors} updateUser={updateUser}/>}>
                                     <Route path={"lessons"} element={<LessonOverview lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>

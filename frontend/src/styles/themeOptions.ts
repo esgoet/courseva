@@ -11,7 +11,7 @@ export const themeOptions: ThemeOptions = {
         },
         info: {
             main: '#0288d1',
-        },
+        }
     },
     typography: {
         h1: {
