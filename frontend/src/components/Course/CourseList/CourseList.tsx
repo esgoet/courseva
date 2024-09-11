@@ -1,6 +1,6 @@
 import {Course} from "../../../types/courseTypes.ts";
 import CourseEntry from "../CourseEntry.tsx";
-import {Divider, List} from "@mui/material";
+import {List} from "@mui/material";
 
 type CourseListProps = {
     courses: Course[],
@@ -14,10 +14,7 @@ export default function CourseList({courses, deleteCourse, updateUser, updateCou
     return (
         <List>
             {courses.map((course) => (
-                <>
-                    <CourseEntry key={course.id} course={course} deleteCourse={deleteCourse} updateUser={updateUser} updateCourse={updateCourse}/>
-                    <Divider />
-                </>
+                <CourseEntry key={course.id} course={course} deleteCourse={deleteCourse} updateUser={updateUser} updateCourse={updateCourse}/>
             ))}
         </List>
     )
