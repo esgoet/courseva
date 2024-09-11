@@ -20,6 +20,13 @@
   margin: 0;
 }
 
+main {
+  margin: auto;
+  padding: 20px;
+  max-width: 900px;
+}
+
+
 h1 {
   font-family: "Playwrite DE LA", cursive;
 }
@@ -92,9 +99,6 @@ form {
   align-items: center;
 }
 
-main {
-  margin: 20px;
-}
 
 
 
