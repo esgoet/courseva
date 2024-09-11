@@ -4,7 +4,7 @@ import {coursePages} from "../../utils/constants.ts";
 
 export default function CourseTabs() {
     const routeMatch = useRouteMatch(['/course/:courseId/participants', '/course/:courseId/lessons', '/course/:courseId/assignments']);
-    const currentTab = routeMatch ? routeMatch : 0;
+    const currentTab = routeMatch || 0;
 
     function useRouteMatch(patterns: readonly string[]) {
         const { pathname } = useLocation();
@@ -19,7 +19,7 @@ export default function CourseTabs() {
     }
 
     return (
-        <Tabs value={currentTab} role={"navigation"}>
+        <Tabs value={currentTab} role={"navigation"} component={"nav"}>
             {coursePages.map(page => <Tab key={page.url} icon={<page.icon/>} iconPosition={"start"} label={page.title} to={page.url} component={Link}/>)}
         </Tabs>
     );

@@ -140,12 +140,12 @@ export default function Header({logout}:Readonly<HeaderProps>) {
                             </Menu>
                         </Box>
                         :
-                        <>
-                            <Grid2 container spacing={1}>
-                                <Button component={Link} to={"/login"} color={"primary"} variant={"contained"}>Login</Button>
-                                <Button component={Link} to={"/register"} color={"primary"} variant={"contained"}>Register</Button>
-                            </Grid2>
-                        </>
+
+                        <Grid2 container spacing={1}>
+                            <Button component={Link} to={"/login"} color={"primary"} variant={"contained"}>Login</Button>
+                            <Button component={Link} to={"/register"} color={"primary"} variant={"contained"}>Register</Button>
+                        </Grid2>
+
                     }
                 </Toolbar>
             </Container>

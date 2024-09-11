@@ -33,7 +33,6 @@ h1 {
 
 h2 {
   color: var(--layout);
-  /*font-weight: 300;*/
   text-align: center;
   margin-bottom: 10px;
   text-transform: uppercase;

@@ -25,7 +25,6 @@ import {AuthContext} from "./context/AuthContext.ts";
 import UserAccountPage from "./pages/UserAccountPage.tsx";
 import {createTheme, ThemeProvider} from "@mui/material";
 import {themeOptions} from "./styles/themeOptions.ts";
-import CourseList from "./components/Course/CourseList/CourseList.tsx";
 import ParticipantOverview from "./pages/CourseDetails/Participant/ParticipantOverview.tsx";
 import BrowsePage from "./pages/BrowsePage/BrowsePage.tsx";
 
