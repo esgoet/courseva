@@ -147,19 +147,8 @@ export default function Header({logout}:Readonly<HeaderProps>) {
                             </Grid2>
                         </>
                     }
-
                 </Toolbar>
             </Container>
-
         </AppBar>
-        // <header>
-        //     <h1>Learning Management System</h1>
-        //     {user ? <button onClick={logout}>Logout</button> :
-        //         <>
-        //             <Link to={"/register"}>Register</Link>
-        //             <Link to={"/login"}>Login</Link>
-        //         </>
-        //     }
-        // </header>
     );
 };
