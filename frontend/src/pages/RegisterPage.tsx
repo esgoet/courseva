@@ -6,19 +6,17 @@ import {
     Button,
     FormControl,
     FormControlLabel,
-    FormLabel, IconButton, InputAdornment,
-    InputLabel, OutlinedInput,
+    FormLabel,
     Radio,
     RadioGroup,
     TextField
 } from "@mui/material";
-import {Visibility, VisibilityOff} from "@mui/icons-material";
+import PasswordField from "../components/Shared/PasswordField.tsx";
 
 
 
 export default function RegisterPage() {
     const [user, setUser] = useState<NewUserDto>({username:"",email:"",password:"",role:"STUDENT"});
-    const [showPassword, setShowPassword] = useState<boolean>();
     const navigate = useNavigate();
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setUser({...user,[e.target.name]: e.target.value});
@@ -77,29 +75,7 @@ export default function RegisterPage() {
                     required
                     aria-required
                 />
-                <FormControl variant="outlined">
-                    <InputLabel htmlFor="password">Password</InputLabel>
-                    <OutlinedInput
-                        label="Password"
-                        name={"password"}
-                        value={user.password}
-                        onChange={handleChange}
-                        required
-                        aria-required
-                        type={showPassword ? 'text' : 'password'}
-                        endAdornment={
-                            <InputAdornment position="end">
-                                <IconButton
-                                    aria-label="toggle password visibility"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    edge="end"
-                                >
-                                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                                </IconButton>
-                            </InputAdornment>
-                        }
-                    />
-                </FormControl>
+                <PasswordField password={user.password} handleChange={handleChange}/>
                 <Button type={"submit"} variant={"outlined"} color={"secondary"}>Register</Button>
             </form>
             <p>Been here before? <Link to={"/login"}>Login</Link> instead.</p>

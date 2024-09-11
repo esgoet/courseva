@@ -1,8 +1,8 @@
 import {Link} from "react-router-dom";
 import {ChangeEvent, FormEvent, useState} from "react";
 import {UserLoginDto} from "../types/userTypes.ts";
-import {Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField} from "@mui/material";
-import {Visibility, VisibilityOff} from "@mui/icons-material";
+import {Button, TextField} from "@mui/material";
+import PasswordField from "../components/Shared/PasswordField.tsx";
 
 type LoginPageProps = {
     login: (user : UserLoginDto) => void;
@@ -10,7 +10,7 @@ type LoginPageProps = {
 
 export default function LoginPage({login}:Readonly<LoginPageProps>) {
     const [user, setUser] = useState<UserLoginDto>({username:"", password:""});
-    const [showPassword, setShowPassword] = useState<boolean>();
+
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setUser({...user,[e.target.name]: e.target.value});
@@ -35,29 +35,7 @@ export default function LoginPage({login}:Readonly<LoginPageProps>) {
                     required
                     aria-required
                 />
-                <FormControl variant="outlined">
-                    <InputLabel htmlFor="password">Password</InputLabel>
-                    <OutlinedInput
-                        label="Password"
-                        name={"password"}
-                        value={user.password}
-                        onChange={handleChange}
-                        required
-                        aria-required
-                        type={showPassword ? 'text' : 'password'}
-                        endAdornment={
-                            <InputAdornment position="end">
-                                <IconButton
-                                    aria-label="toggle password visibility"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    edge="end"
-                                >
-                                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                                </IconButton>
-                            </InputAdornment>
-                        }
-                    />
-                </FormControl>
+                <PasswordField password={user.password} handleChange={handleChange}/>
                 <Button type={"submit"} variant={"outlined"} color={"secondary"}>Login</Button>
             </form>
             <p>First time here? <Link to={"/register"}>Register</Link> instead.</p>
