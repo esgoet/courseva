@@ -3,7 +3,7 @@
   --bg-accent: #303030ff;
   --layout: #4c83f5;
   --accent-1: #fb0e39ff;
-  --accent-2: #ff9933ff;
+  --accent-2: #ffb300;
   --text: #ffffffff;
   color-scheme: light dark;
   color: var(--text);
@@ -24,6 +24,23 @@ h1 {
   font-family: "Playwrite DE LA", cursive;
 }
 
+h2 {
+  color: var(--layout);
+  /*font-weight: 300;*/
+  text-align: center;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+a {
+  color: var(--accent-1);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
 form {
   display: flex;
   flex-direction: column;
@@ -31,47 +48,55 @@ form {
 }
 
 .editable-detail {
+  display: flex;
   flex-direction: row;
+  gap: 5px;
+  align-items: flex-end;
 }
-
-button {
-  background-color: var(--accent-1);
-  border: 1px solid transparent;
+.multiselect label {
+  position: absolute;
+  top: -20px;
+}
+.multiselect select {
+  width: 100%;
   font-size: medium;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: border-color 0.25s;
+  background: none;
+  border: none;
+  height: 300px;
+}
+.multiselect select:disabled {
+  height: auto;
+}
+.multiselect select option:checked {
+  background: none;
+  font-weight: bolder;
+  color: var(--accent-2)
+}
+.multiselect select:disabled option:not(:checked) {
+  display: none;
+}
+ .multiselect {
+  align-items: flex-start;
+  position: relative;
+  top: 20px;
+}
+.multiline {
+  align-items: flex-start;
 }
 
-button:hover {
-  border-color: var(--accent-2);
+.multiline button {
+  margin-top: 12px;
 }
 
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.editable {
+  align-items: center;
 }
 
 main {
   margin: 20px;
 }
 
-header {
-  background-color: var(--layout);
-}
 
-h2 {
-  color: var(--layout);
-}
-
-input {
-  padding: 10px 12px;
-  font-size: medium;
-  border-radius: 6px;
-  background: none;
-  border: 1px solid var(--layout);
-}
 
 @media (prefers-color-scheme: light) {
   :root {

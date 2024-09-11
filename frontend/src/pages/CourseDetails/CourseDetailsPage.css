@@ -4,15 +4,3 @@
     gap: 10px;
 
 }
-.course-tab {
-    text-decoration: none;
-    padding: 6px;
-    border: 1px var(--accent-2) solid;
-    border-bottom: none;
-}
-
-.course-tabs {
-    display: flex;
-    gap: 4px;
-    justify-content: flex-start;
-}

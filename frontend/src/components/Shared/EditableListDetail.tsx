@@ -5,6 +5,7 @@ import {IconButton} from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import CancelIcon from '@mui/icons-material/Cancel';
+import UserCheckList from "./UserCheckList.tsx";
 
 type EditableListDetailProps = {
     label: string,
@@ -30,17 +31,15 @@ export default function EditableListDetail(props: Readonly<EditableListDetailPro
     }
 
     return (
-        <form onSubmit={handleSubmit} className={"editable-detail"}>
+        <form onSubmit={handleSubmit} className={`editable-detail multiselect  ${editable && "editable"}`}>
             <label htmlFor={props.name}>{props.label}</label>
-            <select name={props.name} value={input} onChange={(e)=>setInput([...e.target.selectedOptions].map(option => option.value))} disabled={!editable} multiple>
-                {props.options.map((option) => <option key={`${option.id}`} value={option.id}>{option.username}</option>)}
-            </select>
+            <UserCheckList editable={editable} options={props.options} currentOptions={input} setCurrentOptions={setInput}/>
             {isInstructor &&
                 <IconButton onClick={() => setEditable(!editable)}>
-                    {editable ? <CheckIcon/> : <EditIcon/>}
+                    {editable ? <CheckIcon fontSize={"small"} color={"secondary"}/> : <EditIcon fontSize={"small"} color={"secondary"}/>}
                 </IconButton>}
             {editable && <IconButton type={"reset"} onClick={handleCancel}>
-                <CancelIcon/>
+                <CancelIcon fontSize={"small"} color={"secondary"}/>
             </IconButton>}
         </form>
     )

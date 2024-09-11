@@ -1,5 +1,6 @@
 import { ThemeOptions } from '@mui/material/styles';
 
+
 export const themeOptions: ThemeOptions = {
     palette: {
         mode: 'dark',
@@ -19,4 +20,22 @@ export const themeOptions: ThemeOptions = {
             fontSize: '5rem',
         },
     },
+    components: {
+        MuiInput: {
+            styleOverrides: {
+                root: {
+                    '&::before, &::after': {
+                        borderBottom: '1px solid transparent'
+                    }
+                }
+            }
+        },
+        MuiListItemSecondaryAction: {
+            styleOverrides: {
+                root: {
+
+                }
+            }
+        }
+    }
 };

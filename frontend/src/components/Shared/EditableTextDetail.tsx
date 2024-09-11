@@ -1,5 +1,5 @@
 import {FormEvent, useState} from "react";
-import {IconButton} from "@mui/material";
+import {IconButton, TextField} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -29,19 +29,42 @@ export default function EditableTextDetail(props: Readonly<EditableTextDetailPro
     }
 
     return (
-        <form onSubmit={handleSubmit} className={"editable-detail"}>
-            <label htmlFor={props.name}>{props.label}</label>
-            {props.inputType !== "textarea" ?
-                <input type={props.inputType} name={props.name} value={input} onChange={(e)=>setInput(e.target.value)} disabled={!editable}/> :
-                <textarea name={props.name} value={input} onChange={(e)=>setInput(e.target.value)} disabled={!editable} />}
+        <form onSubmit={handleSubmit} className={`editable-detail ${props.inputType === "textarea" && "multiline"} ${editable && "editable"}`}>
+            <TextField
+                name={props.name}
+                label={props.label}
+                type={props.inputType}
+                value={props.initialValue}
+                onChange={(e)=>setInput(e.target.value)}
+                disabled={!editable}
+                autoFocus={editable}
+                multiline={props.inputType === "textarea"}
+                fullWidth={props.inputType === "textarea"}
+                minRows={4}
+                variant={editable ? "outlined" : "standard"}
+                sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                        color: props.name==="title" ? '#4c83f5' : '#fff',
+                        fontWeight: props.name==="title" ? '700' : '400',
+                        WebkitTextFillColor: props.name==="title" ? '#4c83f5' : '#fff',
+                        fontSize: props.name==="title" ? '20px' : '16px',
+                        width: props.name==="title" ? props.initialValue.length+'ch' : 'auto',
+                        height: "auto"
+                    },
+                    "& .MuiInputBase-input": {
+                        width: props.name==="title" ? (props.initialValue.length+7)+'ch' : 'auto',
+                        height: "auto"
+                    },
+                }}
+            />
             {editable && <IconButton type={"submit"}>
-                <CheckIcon/>
+                <CheckIcon fontSize={"small"} color={"secondary"}/>
             </IconButton>}
             {!editable && props.allowedToEdit && <IconButton type={"button"} onClick={()=>setEditable(true)}>
-                <EditIcon/>
+                <EditIcon fontSize={"small"} color={"secondary"}/>
             </IconButton>}
             {editable && <IconButton type={"reset"} onClick={handleCancel}>
-                <CancelIcon/>
+                <CancelIcon fontSize={"small"} color={"secondary"}/>
             </IconButton>}
         </form>
     )

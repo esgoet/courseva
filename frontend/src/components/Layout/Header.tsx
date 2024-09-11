@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 import {AuthContext} from "../../context/AuthContext.ts";
 import {useContext, useState} from "react";
-import {AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar} from "@mui/material";
+import {AppBar, Box, Button, Container, Grid2, IconButton, Menu, MenuItem, Toolbar, Tooltip} from "@mui/material";
 import {AccountCircle} from "@mui/icons-material";
 import MenuIcon from '@mui/icons-material/Menu';
 import {pages} from "../../utils/constants.ts";
@@ -41,9 +41,7 @@ export default function Header({logout}:Readonly<HeaderProps>) {
             <Container maxWidth={"xl"}>
                 <Toolbar disableGutters>
                     <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
-                        <Link to={"/"}>
                             <h1>C&Learn</h1>
-                        </Link>
                     </Box>
                     <Box sx={{ flexGrow: 1, display: {xs: 'flex', md: 'none'} }}>
                         <IconButton
@@ -73,8 +71,8 @@ export default function Header({logout}:Readonly<HeaderProps>) {
                             sx={{ display: { xs: 'block', md: 'none' } }}
                         >
                             {pages.map((page) => (
-                                <MenuItem key={page.title} onClick={handleCloseNavMenu}>
-                                    <Link to={page.url}>{page.title}</Link>
+                                <MenuItem key={page.title} onClick={handleCloseNavMenu} component={Link} to={page.url}>
+                                    {page.title}
                                 </MenuItem>
                             ))}
                         </Menu>
@@ -90,25 +88,26 @@ export default function Header({logout}:Readonly<HeaderProps>) {
                         {pages.map((page) => (
                             <Button
                                 key={page.title}
+                                component={Link}
+                                to={page.url}
                                 onClick={handleCloseNavMenu}
                                 sx={{ my: 2, color: 'white', display: 'block' }}
-                            >
-                                <Link to={page.url}>{page.title}</Link>
-                            </Button>
+                            >{page.title}</Button>
                         ))}
                     </Box>
                     {user ?
-                        <Box sx={{ flexGrow: 0 }}>
-                            <IconButton
-                                size="large"
-                                aria-label="account of current user"
-                                aria-controls="settings-appbar"
-                                aria-haspopup="true"
-                                onClick={handleOpenUserMenu}
-                                color="inherit"
-                            >
-                                <AccountCircle/>
-                            </IconButton>
+                        <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }} >
+                            <Tooltip title={"Open Account Settings"}>
+                                <IconButton
+                                    size="large"
+                                    aria-label="account of current user"
+                                    aria-controls="settings-appbar"
+                                    aria-haspopup="true"
+                                    onClick={handleOpenUserMenu}
+                                >
+                                    <AccountCircle/>
+                                </IconButton>
+                            </Tooltip>
                             <Menu
                                 id="settings-appbar"
                                 sx={{ mt: '45px' }}
@@ -125,17 +124,27 @@ export default function Header({logout}:Readonly<HeaderProps>) {
                                 open={Boolean(anchorElUser)}
                                 onClose={handleCloseUserMenu}
                             >
-
-                                <MenuItem onClick={handleCloseUserMenu}>
-                                    <Link to={"/account"}>My Account</Link>
+                                <MenuItem divider
+                                          sx={{
+                                              cursor:'default',
+                                              ":hover": {
+                                                  background: 'none'
+                                              }}}
+                                          disableRipple>
+                                    {user.username}
+                                </MenuItem>
+                                <MenuItem onClick={handleCloseUserMenu} component={Link} to={"/account"}>
+                                    My Account
                                 </MenuItem>
                                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
                             </Menu>
                         </Box>
                         :
                         <>
-                            <Link to={"/register"}>Register</Link>
-                            <Link to={"/login"}>Login</Link>
+                            <Grid2 container spacing={1}>
+                                <Button component={Link} to={"/login"} color={"primary"} variant={"contained"}>Login</Button>
+                                <Button component={Link} to={"/register"} color={"primary"} variant={"contained"}>Register</Button>
+                            </Grid2>
                         </>
                     }
 

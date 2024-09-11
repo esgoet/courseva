@@ -1,10 +1,7 @@
 import JoinOrLeaveCourse from "./JoinOrLeaveCourse.tsx";
-import {IconButton} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import ConfirmDialog from "../Shared/ConfirmDialog.tsx";
 import {Course} from "../../types/courseTypes.ts";
 import {useAuth} from "../../hooks/useAuth.ts";
-import {useState} from "react";
+import ConfirmedDeleteIconButton from "../Shared/ConfirmedDeleteIconButton.tsx";
 
 type CourseActionsProps = {
     course: Course,
@@ -14,19 +11,12 @@ type CourseActionsProps = {
 };
 
 export default function CourseActions({course, deleteCourse, updateUser, updateCourse}: Readonly<CourseActionsProps>) {
-    const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
     const {isInstructor} = useAuth();
 
     return (
         <>
-            <>
-                <JoinOrLeaveCourse course={course} updateUser={updateUser} updateCourse={updateCourse}/>
-                {isInstructor && <IconButton edge={"end"} aria-label={"delete"} onClick={() => setConfirmDelete(true)}>
-                    <DeleteIcon/>
-                </IconButton>}
-                <ConfirmDialog toConfirmId={course.id} toConfirmName={course.title} toConfirmAction={"delete"} modal={confirmDelete} closeModal={() => setConfirmDelete(false)}
-                               toConfirmFunction={deleteCourse}/>
-            </>
+            <JoinOrLeaveCourse course={course} updateUser={updateUser} updateCourse={updateCourse}/>
+            {isInstructor && <ConfirmedDeleteIconButton toConfirmId={course.id} toConfirmName={course.title} toConfirmFunction={deleteCourse}/>}
         </>
     );
 };

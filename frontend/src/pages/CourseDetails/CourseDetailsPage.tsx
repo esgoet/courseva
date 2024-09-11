@@ -7,7 +7,7 @@ import {useAuth} from "../../hooks/useAuth.ts";
 import CourseActions from "../../components/Course/CourseActions.tsx";
 import {
     Breadcrumbs,
-    Grid2,
+    Grid2, ListItem, ListItemText, Paper,
     Typography, useMediaQuery, useTheme
 } from "@mui/material";
 import "./CourseDetailsPage.css";
@@ -43,32 +43,35 @@ export default function CourseDetailsPage({updateCourse, course, fetchCourse, de
                         <Link to={"/"}>Dashboard</Link>
                         <Typography>{course?.title}</Typography>
                     </Breadcrumbs>
-                    <Grid2 container spacing={{xs:2,md:4}}>
-                        <Grid2 size={{xs:12,md:4}}>
+                    <ListItem
+                        sx={{bgcolor:'background.paper'}}
+                        secondaryAction={<CourseActions course={course} deleteCourse={deleteCourse} updateUser={updateUser} updateCourse={updateCourse}/>}
+                        disablePadding
+                        component={"div"}
+                        divider
+                    >
+                        <ListItemText secondary={course.id}>
                             <h2>
                                 <EditableTextDetail inputType={"text"} label={"Title"} name={"title"}
-                                                    initialValue={course.title} updateFunction={updateCourse}
-                                                    allowedToEdit={isInstructor}/>
+                                                      initialValue={course.title} updateFunction={updateCourse}
+                                                      allowedToEdit={isInstructor}/>
                             </h2>
+                        </ListItemText>
+                    </ListItem>
+                    <Paper sx={{p:'10px'}}>
+                        <Grid2 container spacing={{xs:2,sm:4}} direction={{xs:'column-reverse', sm: 'row'}} >
+                            <Grid2 size={{xs:12,sm:8}}>
+                                <EditableTextDetail inputType={"textarea"} label={"Description"} name={"description"}
+                                                    initialValue={course.description} updateFunction={updateCourse}
+                                                    allowedToEdit={isInstructor}/>
+                            </Grid2>
+                            <Grid2 size={{xs:12,sm:4}} display={"flex"} justifyContent={isMobile ? "flex-start" : "flex-end"} alignItems={"flex-start"}>
+                                <EditableTextDetail inputType={"date"} label={"Start Date"} name={"startDate"}
+                                                    initialValue={course.startDate.toISOString().substring(0,10)} updateFunction={updateCourse}
+                                                    allowedToEdit={isInstructor}/>
+                            </Grid2>
                         </Grid2>
-                        <Grid2 size={{xs:12,md:4}}>
-                            <p>{course.id}</p>
-                        </Grid2>
-                        <Grid2 size={{xs:12,md:4}}>
-                            <CourseActions course={course} deleteCourse={deleteCourse} updateUser={updateUser}
-                                           updateCourse={updateCourse}/>
-                        </Grid2>
-                        <Grid2 size={{xs:12,md:8}}>
-                            <EditableTextDetail inputType={"textarea"} label={"Description"} name={"description"}
-                                                initialValue={course.description} updateFunction={updateCourse}
-                                                allowedToEdit={isInstructor}/>
-                        </Grid2>
-                        <Grid2 size={{xs:12,md:4}}>
-                            <EditableTextDetail inputType={"date"} label={"Start Date"} name={"startDate"}
-                                                initialValue={course.startDate.toISOString()} updateFunction={updateCourse}
-                                                allowedToEdit={isInstructor}/>
-                        </Grid2>
-                    </Grid2>
+                    </Paper>
                     {isMobile ? <CourseTabsMobile/> :
                     <CourseTabs/>}
                     <Outlet/>

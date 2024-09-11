@@ -2,7 +2,17 @@ import {ChangeEvent, FormEvent, useState} from "react";
 import {NewUserDto} from "../types/userTypes.ts";
 import axios from "axios";
 import {Link, useNavigate} from "react-router-dom";
-import {Button} from "@mui/material";
+import {
+    Button,
+    FormControl,
+    FormControlLabel,
+    FormLabel, IconButton, InputAdornment,
+    InputLabel, OutlinedInput,
+    Radio,
+    RadioGroup,
+    TextField
+} from "@mui/material";
+import {Visibility, VisibilityOff} from "@mui/icons-material";
 
 
 
@@ -34,34 +44,65 @@ export default function RegisterPage() {
 
     return (
         <>
-            <h2>Sign Up</h2>
+            <h2>Register</h2>
             <form onSubmit={handleSubmit}>
-                <fieldset>
-                    <legend>I am a</legend>
-                    <input type={"radio"} id={"student"} name={"role"} value={"STUDENT"}
-                           checked={user.role === "STUDENT"}
-                           onChange={handleChange}/>
-                    <label htmlFor={"student"}>Student</label>
-                    <input type={"radio"} id={"instructor"} name={"role"} value={"INSTRUCTOR"}
-                           checked={user.role === "INSTRUCTOR"} onChange={handleChange}/>
-                    <label htmlFor={"instructor"}>Instructor</label>
-                </fieldset>
-                <label htmlFor={"username"}>Username</label>
-                <input type={"text"} name={"username"} value={user.username} placeholder={"Enter your username"}
-                       onChange={handleChange} required/>
-                <label htmlFor={"password"}>Password</label>
-                <div className={"input-w-btn"}>
-                    <input type={showPassword ? "text" : "password"} name={"password"} value={user.password}
-                           placeholder={"Enter your password"}
-                           onChange={handleChange} required/>
-                    <button type={"button"} onClick={() => setShowPassword(!showPassword)} className={"password-btn"}>
-                    <span className="material-symbols-outlined">
-                    {showPassword ? "visibility_off" : "visibility"}
-                    </span></button>
-                </div>
-                <Button type={"submit"}>Register</Button>
+                <FormControl>
+                    <FormLabel>I want to use the platform as</FormLabel>
+                    <RadioGroup
+                        row
+                        aria-labelledby="demo-row-radio-buttons-group-label"
+                        name="role"
+                        value={user.role}
+                        onChange={handleChange}
+                    >
+                        <FormControlLabel value="STUDENT" control={<Radio />} label="Student" />
+                        <FormControlLabel value="INSTRUCTOR" control={<Radio />} label="Instructor" />
+                    </RadioGroup>
+                </FormControl>
+                <TextField
+                    label={"Username"}
+                    type={"text"}
+                    name={"username"}
+                    value={user.username}
+                    onChange={handleChange}
+                    required
+                    aria-required
+                />
+                <TextField
+                    label={"Email"}
+                    type={"email"}
+                    name={"email"}
+                    value={user.email}
+                    onChange={handleChange}
+                    required
+                    aria-required
+                />
+                <FormControl variant="outlined">
+                    <InputLabel htmlFor="password">Password</InputLabel>
+                    <OutlinedInput
+                        label="Password"
+                        name={"password"}
+                        value={user.password}
+                        onChange={handleChange}
+                        required
+                        aria-required
+                        type={showPassword ? 'text' : 'password'}
+                        endAdornment={
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    edge="end"
+                                >
+                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                            </InputAdornment>
+                        }
+                    />
+                </FormControl>
+                <Button type={"submit"} variant={"outlined"} color={"secondary"}>Register</Button>
             </form>
-            <Link to={"/login"}>Login instead</Link>
+            <p>Been here before? <Link to={"/login"}>Login</Link> instead.</p>
 
         </>
     );

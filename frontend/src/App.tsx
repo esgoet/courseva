@@ -15,7 +15,7 @@ import AssignmentCreator from "./pages/CourseDetails/Assignment/AssignmentCreato
 import SubmissionPage from "./pages/CourseDetails/Assignment/SubmissionPage.tsx";
 import {convertToCourse} from "./utils/convertToCourse.ts";
 import RegisterPage from "./pages/RegisterPage.tsx";
-import LoginPage from "./pages/LoginPage/LoginPage.tsx";
+import LoginPage from "./pages/LoginPage.tsx";
 import {Grade, Instructor, Student, UserLoginDto} from "./types/userTypes.ts";
 import ProtectedRoutes from "./components/Routes/ProtectedRoutes.tsx";
 import Header from "./components/Layout/Header.tsx";
@@ -27,6 +27,7 @@ import {createTheme, ThemeProvider} from "@mui/material";
 import {themeOptions} from "./styles/themeOptions.ts";
 import CourseList from "./components/Course/CourseList/CourseList.tsx";
 import ParticipantOverview from "./pages/CourseDetails/Participant/ParticipantOverview.tsx";
+import BrowsePage from "./pages/BrowsePage/BrowsePage.tsx";
 
 export default function App() {
     const [courses, setCourses] = useState<Course[]>([]);
@@ -197,7 +198,7 @@ export default function App() {
                             <Route path={"/login"} element={<LoginPage login={login}/>}/>
                             <Route element={<ProtectedRoutes />}>
                                 <Route path={"/"} element={<Dashboard courses={courses} deleteCourse={deleteCourse} updateUser={updateUser} updateCourse={updateCourse}/>}/>
-                                <Route path={"/browse"} element={<CourseList courses={courses} deleteCourse={deleteCourse} updateUser={updateUser} updateCourse={updateCourse}/>}/>
+                                <Route path={"/browse"} element={<BrowsePage courses={courses} deleteCourse={deleteCourse} updateUser={updateUser} updateCourse={updateCourse}/>}/>
                                 <Route path={"/account"} element={<UserAccountPage updateUser={updateUser} deleteUser={deleteUser}/>}/>
                                 <Route path={"/course/:courseId"} element={<CourseDetailsPage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse} deleteCourse={deleteCourse} students={students} instructors={instructors} updateUser={updateUser}/>}>
                                     <Route path={"participants"} element={<ParticipantOverview currentStudents={currentCourse?.students || []} currentInstructors={currentCourse?.instructors || []} students={students} instructors={instructors} updateCourse={updateCourse}/>}/>

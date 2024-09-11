@@ -33,7 +33,7 @@ export default function JoinOrLeaveCourse({course, updateUser, updateCourse}: Re
                 <Button onClick={handleJoin}>Join Course</Button>
                 :
                 <>
-                    <Button onClick={() => setConfirmLeave(true)}>Leave Course</Button>
+                    <Button onClick={() => setConfirmLeave(true)}>Leave</Button>
                     <ConfirmDialog toConfirmId={course.id} toConfirmName={course.title} modal={confirmLeave} closeModal={() => setConfirmLeave(false)} toConfirmFunction={handleLeave} toConfirmAction={"leave"}/>
                 </>
 }
