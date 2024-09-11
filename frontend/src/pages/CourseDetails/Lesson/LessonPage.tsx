@@ -1,9 +1,10 @@
 import {Lesson, LessonDto} from "../../../types/courseTypes.ts";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import EditableTextDetail from "../../../components/Shared/EditableTextDetail.tsx";
 import {convertToLessonDto, convertToLessonDtoList} from "../../../utils/convertToLessonDto.ts";
 import {useAuth} from "../../../hooks/useAuth.ts";
+import {Button} from "@mui/material";
 
 type LessonPageProps = {
     lessons: Lesson[] | undefined,
@@ -34,6 +35,7 @@ export default function LessonPage({lessons, updateCourse}: Readonly<LessonPageP
     return (
 
         <>
+            <Button component={Link} to={".."} relative={"path"} variant={"outlined"}>Back to All Lessons</Button>
             {lesson &&
                 <>
                     <h3>

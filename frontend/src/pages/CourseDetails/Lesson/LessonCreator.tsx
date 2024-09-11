@@ -1,7 +1,8 @@
 import {Lesson, LessonDto} from "../../../types/courseTypes.ts";
 import {ChangeEvent, FormEvent, useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {convertToLessonDtoList} from "../../../utils/convertToLessonDto.ts";
+import {Button, Grid2, TextField} from "@mui/material";
 
 type LessonCreatorProps = {
     updateCourse: (updatedProperty: string, updatedValue: LessonDto[]) => void,
@@ -28,29 +29,57 @@ export default function LessonCreator({updateCourse, lessons}:Readonly<LessonCre
     
     return (
         <>
-            <h4>Create New Lesson</h4>
+            <Button component={Link} to={".."} relative={"path"} variant={"outlined"}>Back to All Lessons</Button>
+            <h3>Create New Lesson</h3>
             <form onSubmit={handleSubmit}>
-                <fieldset>
-                    <legend>Required Lesson Information</legend>
-                    <label htmlFor={"title"}>Lesson Title</label>
-                    <input type={"text"} name={"title"} value={lesson.title} onChange={handleChange}
-                           placeholder={"Enter Lesson Title"} autoCapitalize={"on"} required aria-required/>
-                    <label htmlFor={"whenPublic"}>Lesson Release</label>
-                    <input type={"datetime-local"} name={"whenPublic"} value={lesson.whenPublic} onChange={handleChange} required
-                           aria-required/>
-                </fieldset>
-                <fieldset>
-                    <legend>Optional</legend>
-                    <label htmlFor={"content"}>Lesson Content</label>
-                    <textarea name={"content"} value={lesson.content} onChange={handleChange}
-                              placeholder={"Enter Lesson Content"} autoCapitalize={"on"}/>
-                </fieldset>
-                <button type={"reset"}
-                        onClick={() => setLesson({
-                            id: "", title: "", content: "", whenPublic: new Date(Date.now()).toISOString().substring(0,19)
-                        })}>Reset
-                </button>
-                <button type={"submit"}>Create Lesson</button>
+                <TextField
+                    label={"Lesson Title"}
+                    type={"text"}
+                    name={"title"}
+                    value={lesson.title}
+                    onChange={handleChange}
+                    autoCapitalize={"on"}
+                    required
+                    aria-required
+                    autoFocus
+                />
+                <TextField
+                    label={"Lesson Release"}
+                    type={"datetime-local"}
+                    name={"whenPublic"}
+                    value={lesson.whenPublic}
+                    onChange={handleChange}
+                    slotProps={{
+                        inputLabel: {
+                            shrink: true,
+                        },
+                    }}
+                    required
+                    aria-required
+                />
+                <TextField
+                    label={"Content"}
+                    name={"content"}
+                    value={lesson.content}
+                    onChange={handleChange}
+                    autoCapitalize={"on"}
+                    multiline
+                    minRows={4}
+                />
+                <Grid2 container  spacing={2}>
+                    <Grid2 size={{xs:12,sm:6}}>
+                        <Button type={"reset"} variant={'outlined'} fullWidth
+                                onClick={() => setLesson({
+                                    id: "", title: "", content: "", whenPublic: new Date(Date.now()).toISOString().substring(0,19)
+                                })}>Reset
+                        </Button>
+                    </Grid2>
+                    <Grid2 size={{xs:12,sm:6}}>
+                        <Button type={"submit"} fullWidth variant={'outlined'} color={"secondary"}>Create Lesson</Button>
+                    </Grid2>
+
+                </Grid2>
+
             </form>
         </>
     )

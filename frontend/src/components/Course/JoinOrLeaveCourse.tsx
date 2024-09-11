@@ -1,7 +1,8 @@
 import {Course} from "../../types/courseTypes.ts";
 import {useAuth} from "../../hooks/useAuth.ts";
-import ConfirmDialog from "./ConfirmDialog.tsx";
+import ConfirmDialog from "../Shared/ConfirmDialog.tsx";
 import {useState} from "react";
+import {Button} from "@mui/material";
 
 type JoinOrLeaveCourseProps = {
     course: Course,
@@ -29,10 +30,10 @@ export default function JoinOrLeaveCourse({course, updateUser, updateCourse}: Re
     return (
         <>
             {user && !course.students.includes(user.id) && !course.instructors.includes(user.id) ?
-                <button onClick={handleJoin}>Join Course</button>
+                <Button onClick={handleJoin}>Join Course</Button>
                 :
                 <>
-                    <button onClick={() => setConfirmLeave(true)}>Leave Course</button>
+                    <Button onClick={() => setConfirmLeave(true)}>Leave</Button>
                     <ConfirmDialog toConfirmId={course.id} toConfirmName={course.title} modal={confirmLeave} closeModal={() => setConfirmLeave(false)} toConfirmFunction={handleLeave} toConfirmAction={"leave"}/>
                 </>
 }

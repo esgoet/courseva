@@ -4,6 +4,7 @@ import {Link, useParams} from "react-router-dom";
 import {convertToAssignmentDto, convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
 import EditableTextDetail from "../../../components/Shared/EditableTextDetail.tsx";
 import { useAuth } from "../../../hooks/useAuth.ts";
+import {Button, List, ListItem, ListItemButton, ListItemText} from "@mui/material";
 
 type AssignmentPageProps = {
     assignments: Assignment[] | undefined,
@@ -38,8 +39,8 @@ export default function AssignmentPage({assignments, updateCourse}: Readonly<Ass
 
     const handleStudentSubmission = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (assignment) {
-            const updatedSubmissions : SubmissionDto[] = [...assignment.submissions, {...submission, timestamp: new Date(Date.now()).toISOString().substring(0,19)}];
+        if (assignment && user) {
+            const updatedSubmissions : SubmissionDto[] = [...assignment.submissions, {...submission, timestamp: new Date(Date.now()).toISOString().substring(0,19), studentId: user.id}];
             handleUpdate("submissions", updatedSubmissions);
         }
     }
@@ -48,41 +49,63 @@ export default function AssignmentPage({assignments, updateCourse}: Readonly<Ass
 
     return (
         <>
+            <Button component={Link} to={".."} relative={"path"} variant={'outlined'}>Back to All Assignments</Button>
             {assignment &&
                 <>
                     <h3>
                         <EditableTextDetail inputType={"text"} label={"Assignment Title"} name={"title"}
                                             initialValue={assignment.title} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
                     </h3>
-                    <EditableTextDetail inputType={"datetime-local"} label={"Assignment Release"} name={"whenPublic"}
+                    <EditableTextDetail inputType={"datetime-local"} label={"Release"} name={"whenPublic"}
                                         initialValue={assignment.whenPublic} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
-                    <EditableTextDetail inputType={"datetime-local"} label={"Assignment Deadline"} name={"deadline"}
+                    <EditableTextDetail inputType={"datetime-local"} label={"Deadline"} name={"deadline"}
                                         initialValue={assignment.deadline} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
-                    <EditableTextDetail inputType={"textarea"} label={"Assignment Content"} name={"content"}
+                    <EditableTextDetail inputType={"textarea"} label={"Description"} name={"content"}
                                         initialValue={assignment.description} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
                     {!isInstructor && user &&
                         <>
-                            <h4>Submit Your Assignment</h4>
-                            <form onSubmit={handleStudentSubmission}>
-                                <textarea name={"content"} value={submission.content} onChange={(e)=>setSubmission({...submission, content: e.target.value})}/>
-                                <button>Submit</button>
-                            </form>
+                            {assignment.submissions.filter(submission => submission.studentId === user.id).length > 0 &&
+                                <>
+                                    <h4>Your Past Submissions</h4>
+                                    <List dense >
+                                        {assignment.submissions.filter(submission => submission.studentId === user.id).map(submission =>
+                                            (
+                                                <ListItem key={`submission-${submission.id}`} disablePadding>
+                                                    <ListItemButton component={Link} to={`submission/${submission.id}`}>
+                                                        <ListItemText primary={submission.studentId}
+                                                                      secondary={submission.timestamp}/>
+                                                    </ListItemButton>
+                                                </ListItem>
+                                            )
+                                        )}
+                                    </List>
+                                </>
+                            }
+                            {new Date(assignment.deadline).valueOf() > Date.now() &&
+                                <>
+                                    <h4>Submit Your Assignment</h4>
+                                    <form onSubmit={handleStudentSubmission}>
+                                        <textarea name={"content"} value={submission.content}
+                                          onChange={(e) => setSubmission({...submission, content: e.target.value})}/>
+                                        <Button type={"submit"}>Submit</Button>
+                                    </form>
+                                </>
+                            }
                         </>
                     }
                     {isInstructor &&
                         <>
                             <h4>Submissions</h4>
                             {assignment.submissions.length > 0 ?
-                                <ul>
+                                <List dense>
                                     {assignment.submissions.map(submission => (
-                                        <li key={`submission-${submission.id}`}>
-                                            <Link to={`submission/${submission.id}`}>
-                                                <p>{submission.studentId}</p>
-                                                <p>{submission.timestamp}</p>
-                                            </Link>
-                                        </li>
+                                        <ListItem key={`submission-${submission.id}`} disablePadding>
+                                            <ListItemButton component={Link} to={`submission/${submission.id}`}>
+                                                <ListItemText primary={submission.studentId} secondary={submission.timestamp}/>
+                                            </ListItemButton>
+                                        </ListItem>
                                     ))}
-                                </ul>
+                                </List>
                                 :
                                 <p>No submissions yet.</p>
                             }

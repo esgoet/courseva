@@ -2,11 +2,21 @@ import {ChangeEvent, FormEvent, useState} from "react";
 import {NewUserDto} from "../types/userTypes.ts";
 import axios from "axios";
 import {Link, useNavigate} from "react-router-dom";
+import {
+    Button,
+    FormControl,
+    FormControlLabel,
+    FormLabel,
+    Radio,
+    RadioGroup,
+    TextField
+} from "@mui/material";
+import PasswordField from "../components/Shared/PasswordField.tsx";
 
 
 
 export default function RegisterPage() {
-    const [user, setUser] = useState<NewUserDto>({username:"",email:"",password:"",role:"STUDENT"})
+    const [user, setUser] = useState<NewUserDto>({username:"",email:"",password:"",role:"STUDENT"});
     const navigate = useNavigate();
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setUser({...user,[e.target.name]: e.target.value});
@@ -32,21 +42,43 @@ export default function RegisterPage() {
 
     return (
         <>
-            <h2>Sign Up</h2>
+            <h2>Register</h2>
             <form onSubmit={handleSubmit}>
-                <input type={"radio"} id={"student"} name={"role"} value={"STUDENT"} checked={user.role === "STUDENT"}
-                       onChange={handleChange}/>
-                <label htmlFor={"student"}>Student</label>
-                <input type={"radio"} id={"instructor"} name={"role"} value={"INSTRUCTOR"}
-                       checked={user.role === "INSTRUCTOR"} onChange={handleChange}/>
-                <label htmlFor={"instructor"}>Instructor</label>
-                <label htmlFor={"username"}>Username</label>
-                <input type={"text"} name={"username"} value={user.username} placeholder={"Enter your username"} onChange={handleChange} required/>
-                <label htmlFor={"password"}>Password</label>
-                <input type={"password"} name={"password"} value={user.password} placeholder={"Enter your password"} onChange={handleChange} required/>
-                <button>Register</button>
+                <FormControl>
+                    <FormLabel>I want to use the platform as</FormLabel>
+                    <RadioGroup
+                        row
+                        aria-labelledby="demo-row-radio-buttons-group-label"
+                        name="role"
+                        value={user.role}
+                        onChange={handleChange}
+                    >
+                        <FormControlLabel value="STUDENT" control={<Radio />} label="Student" />
+                        <FormControlLabel value="INSTRUCTOR" control={<Radio />} label="Instructor" />
+                    </RadioGroup>
+                </FormControl>
+                <TextField
+                    label={"Username"}
+                    type={"text"}
+                    name={"username"}
+                    value={user.username}
+                    onChange={handleChange}
+                    required
+                    aria-required
+                />
+                <TextField
+                    label={"Email"}
+                    type={"email"}
+                    name={"email"}
+                    value={user.email}
+                    onChange={handleChange}
+                    required
+                    aria-required
+                />
+                <PasswordField password={user.password} handleChange={handleChange}/>
+                <Button type={"submit"} variant={"outlined"} color={"secondary"}>Register</Button>
             </form>
-            <Link to={"/login"}>Login instead</Link>
+            <p>Been here before? <Link to={"/login"}>Login</Link> instead.</p>
 
         </>
     );

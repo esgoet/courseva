@@ -1,7 +1,8 @@
 import {Assignment, AssignmentDto} from "../../../types/courseTypes.ts";
 import {ChangeEvent, FormEvent, useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
+import {Button, Grid2, TextField} from "@mui/material";
 
 type AssignmentCreatorProps = {
     updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void,
@@ -30,34 +31,69 @@ export default function AssignmentCreator({assignments, updateCourse}: Readonly<
 
     return (
         <>
+            <Button component={Link} to={".."} relative={"path"} variant={"outlined"}>Back to All Assignments</Button>
             <h4>Create New Assignment</h4>
             <form onSubmit={handleSubmit}>
-                <fieldset>
-                    <legend>Required Assignment Information</legend>
-                    <label htmlFor={"title"}>Assignment Title</label>
-                    <input type={"text"} name={"title"} value={assignment.title} onChange={handleChange}
-                           placeholder={"Enter Assignment Title"} autoCapitalize={"on"} required aria-required/>
-                    <label htmlFor={"whenPublic"}>Assignment Release</label>
-                    <input type={"datetime-local"} name={"whenPublic"} value={assignment.whenPublic}
-                           onChange={handleChange} required
-                           aria-required/>
-                    <label htmlFor={"deadline"}>Assignment Deadline</label>
-                    <input type={"datetime-local"} name={"deadline"} value={assignment.deadline}
-                           onChange={handleChange} required
-                           aria-required/>
-                </fieldset>
-                <fieldset>
-                    <legend>Optional</legend>
-                    <label htmlFor={"content"}>Assignment Description</label>
-                    <textarea name={"content"} value={assignment.description} onChange={handleChange}
-                              placeholder={"Enter Assignment Content"} autoCapitalize={"on"}/>
-                </fieldset>
-                <button type={"reset"}
-                        onClick={() => setAssignment({
-                            id: "", title: "", description: "", whenPublic: new Date(Date.now()).toISOString().substring(0,19), deadline: "", submissions:[]
-                        })}>Reset
-                </button>
-                <button type={"submit"}>Create Assignment</button>
+                <TextField
+                    label={"Assignment Title"}
+                    type={"text"}
+                    name={"title"}
+                    value={assignment.title}
+                    onChange={handleChange}
+                    autoCapitalize={"on"}
+                    required
+                    aria-required
+                    autoFocus
+                />
+                <TextField
+                    label={"Assignment Release"}
+                    type={"datetime-local"}
+                    name={"whenPublic"}
+                    value={assignment.whenPublic}
+                    onChange={handleChange}
+                    slotProps={{
+                        inputLabel: {
+                            shrink: true,
+                        },
+                    }}
+                    required
+                    aria-required
+                />
+                <TextField
+                    label={"Deadline"}
+                    type={"datetime-local"}
+                    name={"deadline"}
+                    value={assignment.deadline}
+                    onChange={handleChange}
+                    slotProps={{
+                        inputLabel: {
+                            shrink: true,
+                        },
+                    }}
+                    required
+                    aria-required
+                />
+                <TextField
+                    label={"Description"}
+                    name={"description"}
+                    value={assignment.description}
+                    onChange={handleChange}
+                    autoCapitalize={"on"}
+                    multiline
+                    minRows={4}
+                />
+                <Grid2 container  spacing={2}>
+                    <Grid2 size={{xs:12,sm:6}}>
+                        <Button type={"reset"} variant={'outlined'} fullWidth
+                                onClick={() => setAssignment({
+                                    id: "", title: "", description: "", whenPublic: new Date(Date.now()).toISOString().substring(0,19), deadline: "", submissions:[]
+                                })}>Reset
+                        </Button>
+                    </Grid2>
+                    <Grid2 size={{xs:12,sm:6}}>
+                        <Button type={"submit"} fullWidth variant={'outlined'} color={"secondary"}>Create Assignment</Button>
+                    </Grid2>
+                </Grid2>
             </form>
         </>
     )

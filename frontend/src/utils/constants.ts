@@ -1,27 +1,34 @@
-// placeholder until students and instructors database exists
-export const PLACEHOLDERS: {id: string, name: string}[] = [
+import {SvgIconTypeMap} from "@mui/material";
+import {OverridableComponent} from "@mui/material/OverridableComponent";
+import PeopleIcon from "@mui/icons-material/People";
+import SchoolIcon from "@mui/icons-material/School";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+
+export const pages : {title: string, url: string}[] = [
     {
-        id: "1",
-        name: 'Oliver Hansen'
+        title: "Dashboard",
+        url: "/"
     },
     {
-        id: "2",
-        name: "Van Henry"
+        title: "Browse",
+        url: "/browse"
+    },
+]
+
+export const coursePages : {title: string, url: string, icon:  OverridableComponent<SvgIconTypeMap> & {         muiName: string     }}[] = [
+    {
+        title: "Participants",
+        url: "participants",
+        icon: PeopleIcon
     },
     {
-        id: "3",
-        name: "April Tucker"
+        title: "Lessons",
+        url: "lessons",
+        icon: SchoolIcon
     },
     {
-        id: "4",
-        name: "Ralph Hubbard"
-    },
-    {
-        id: "5",
-        name: "Omar Alexander"
-    },
-    {
-        id: "6",
-        name: "Carlos Abbott"
+        title: "Assignments",
+        url: "assignments",
+        icon: AssignmentIcon
     }
-];
+]
