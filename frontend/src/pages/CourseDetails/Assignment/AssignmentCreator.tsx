@@ -1,15 +1,16 @@
-import {Assignment, AssignmentDto} from "../../../types/courseTypes.ts";
+import { AssignmentDto} from "../../../types/courseTypes.ts";
 import {ChangeEvent, FormEvent, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
 import {Button, Grid2, TextField} from "@mui/material";
+import {useCourse} from "../../../hooks/useCourse.ts";
 
 type AssignmentCreatorProps = {
-    updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void,
-    assignments: Assignment[] | undefined
+    updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void
 }
 
-export default function AssignmentCreator({assignments, updateCourse}: Readonly<AssignmentCreatorProps>) {
+export default function AssignmentCreator({ updateCourse}: Readonly<AssignmentCreatorProps>) {
+    const {course} = useCourse();
     const [assignment, setAssignment] = useState<AssignmentDto>({
         id: "",
         title: "",
@@ -25,7 +26,7 @@ export default function AssignmentCreator({assignments, updateCourse}: Readonly<
     }
     const handleSubmit = (e : FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (assignments) updateCourse("assignments", [assignment,...convertToAssignmentDtoList(assignments)])
+        if (course) updateCourse("assignments", [assignment,...convertToAssignmentDtoList(course.assignments)])
         navigate("..",{ relative: "path" });
     }
 
