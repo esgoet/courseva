@@ -44,7 +44,6 @@ export default function CourseDetailsPage({updateCourse, course, fetchCourse, de
                         <Typography>{course?.title}</Typography>
                     </Breadcrumbs>
                     <ListItem
-                        sx={{bgcolor:'background.paper'}}
                         secondaryAction={<CourseActions course={course} deleteCourse={deleteCourse} updateUser={updateUser} updateCourse={updateCourse}/>}
                         disablePadding
                         component={"div"}
@@ -72,9 +71,14 @@ export default function CourseDetailsPage({updateCourse, course, fetchCourse, de
                             </Grid2>
                         </Grid2>
                     </Paper>
-                    {isMobile ? <CourseTabsMobile/> :
-                    <CourseTabs/>}
-                    <Outlet context={{course} satisfies CourseContextType}/>
+                    <Container disableGutters >
+                        {isMobile ? <CourseTabsMobile/> :
+                            <CourseTabs/>}
+                        <Paper sx={{p:'20px', pb: '40px'}} component={'section'} square={false}>
+                            <Outlet context={{course} satisfies CourseContextType}/>
+
+                        </Paper>
+                    </Container>
                 </Container>
             :
             <p>No course found.</p>

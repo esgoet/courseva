@@ -1,18 +1,17 @@
-import { AssignmentDto} from "../../../types/courseTypes.ts";
+import {AssignmentDto, Course} from "../../../types/courseTypes.ts";
 import {ChangeEvent, FormEvent, useRef, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
 import {Button, Grid2, InputLabel, TextField} from "@mui/material";
-import {useCourse} from "../../../hooks/useCourse.ts";
 import CustomRichTextEditor from "../../../components/Shared/CustomRichTextEditor.tsx";
 import type {RichTextEditorRef} from "mui-tiptap";
 
 type AssignmentCreatorProps = {
-    updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void
+    updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void,
+    course: Course | undefined
 }
 
-export default function AssignmentCreator({ updateCourse}: Readonly<AssignmentCreatorProps>) {
-    const {course} = useCourse();
+export default function AssignmentCreator({course, updateCourse}: Readonly<AssignmentCreatorProps>) {
     const [assignment, setAssignment] = useState<AssignmentDto>({
         id: "",
         title: "",

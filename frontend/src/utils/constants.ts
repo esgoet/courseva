@@ -18,7 +18,7 @@ export const pages : {title: string, url: string}[] = [
 export const coursePages : {title: string, url: string, icon:  OverridableComponent<SvgIconTypeMap> & {         muiName: string     }}[] = [
     {
         title: "Participants",
-        url: "participants",
+        url: "",
         icon: PeopleIcon
     },
     {

@@ -1,5 +1,7 @@
 import {LessonDto} from "../../../types/courseTypes.ts";
 import {ChangeEvent, FormEvent, useRef, useState} from "react";
+import {Course, LessonDto} from "../../../types/courseTypes.ts";
+import {ChangeEvent, FormEvent, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {convertToLessonDtoList} from "../../../utils/convertToLessonDto.ts";
 import {Button, Grid2, InputLabel, TextField} from "@mui/material";
@@ -10,17 +12,17 @@ import {
 import CustomRichTextEditor from "../../../components/Shared/CustomRichTextEditor.tsx";
 
 type LessonCreatorProps = {
-    updateCourse: (updatedProperty: string, updatedValue: LessonDto[]) => void
+    updateCourse: (updatedProperty: string, updatedValue: LessonDto[]) => void,
+    course: Course | undefined
 }
 
-export default function LessonCreator({updateCourse}:Readonly<LessonCreatorProps>) {
-    const [lesson, setLesson] = useState<LessonDto>({
+export default function LessonCreator({course, updateCourse}:Readonly<LessonCreatorProps>) {
+   const [lesson, setLesson] = useState<LessonDto>({
         id:"",
         title:"",
         content:"",
         whenPublic: new Date(Date.now()).toISOString().substring(0,19)
     });
-    const {course} = useCourse();
     const navigate = useNavigate();
     const rteRef = useRef<RichTextEditorRef>(null);
 

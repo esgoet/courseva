@@ -30,12 +30,14 @@ export const themeOptions: ThemeOptions = {
                 }
             }
         },
-        MuiListItemSecondaryAction: {
+        MuiTab: {
             styleOverrides: {
                 root: {
-
+                    '&.Mui-focusVisible': {
+                        backgroundColor: 'rgba(76,131,245,0.2)',
+                    }
                 }
-            }
+        }
         }
     }
 };
