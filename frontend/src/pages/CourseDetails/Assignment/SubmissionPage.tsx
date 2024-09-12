@@ -3,24 +3,22 @@ import {Assignment, SubmissionDto} from "../../../types/courseTypes.ts";
 import {useEffect, useState} from "react";
 import {Button, Grid2, Typography} from "@mui/material";
 import {formatDate} from "../../../utils/formatDate.ts";
+import {useCourse} from "../../../hooks/useCourse.ts";
 
-type SubmissionPageProps = {
-    assignments: Assignment[] | undefined
-}
-
-export default function SubmissionPage({assignments}: Readonly<SubmissionPageProps>) {
+export default function SubmissionPage() {
     const {submissionId, assignmentId} = useParams();
+    const {course} = useCourse();
     const [submission, setSubmission] = useState<SubmissionDto | undefined>();
 
     useEffect(()=> {
-        if (assignments) {
-            const currentAssignment : Assignment | undefined = assignments.find(assignment => assignment.id === assignmentId);
+        if (course) {
+            const currentAssignment : Assignment | undefined = course.assignments.find(assignment => assignment.id === assignmentId);
             if (currentAssignment) {
                 const currentSubmission = currentAssignment.submissions.find(submission => submission.id === submissionId)
                 if (currentSubmission) setSubmission({...currentSubmission, timestamp: currentSubmission.timestamp.toString()})
             }
         }
-    },[assignments, assignmentId, submissionId]);
+    },[course, assignmentId, submissionId]);
 
     return (
         <>

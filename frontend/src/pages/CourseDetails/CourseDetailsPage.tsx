@@ -6,13 +6,13 @@ import {Instructor, Student} from "../../types/userTypes.ts";
 import {useAuth} from "../../hooks/useAuth.ts";
 import CourseActions from "../../components/Course/CourseActions.tsx";
 import {
-    Breadcrumbs,
+    Breadcrumbs, Container,
     Grid2, ListItem, ListItemText, Paper,
     Typography, useMediaQuery, useTheme
 } from "@mui/material";
-import "./CourseDetailsPage.css";
 import CourseTabs from "../../components/Course/CourseTabs.tsx";
 import CourseTabsMobile from "../../components/Course/CourseTabsMobile.tsx";
+import {CourseContextType} from "../../hooks/useCourse.ts";
 
 type CoursePageProps = {
     updateCourse: (updatedProperty: string, updatedValue: string | string[]) => void,
@@ -38,7 +38,7 @@ export default function CourseDetailsPage({updateCourse, course, fetchCourse, de
     return (
         <>
         {course ?
-                <div className={"course-page"}>
+                <Container>
                     <Breadcrumbs aria-label={"breadcrumb"}>
                         <Link to={"/"}>Dashboard</Link>
                         <Typography>{course?.title}</Typography>
@@ -74,8 +74,8 @@ export default function CourseDetailsPage({updateCourse, course, fetchCourse, de
                     </Paper>
                     {isMobile ? <CourseTabsMobile/> :
                     <CourseTabs/>}
-                    <Outlet/>
-                </div>
+                    <Outlet context={{course} satisfies CourseContextType}/>
+                </Container>
             :
             <p>No course found.</p>
         }

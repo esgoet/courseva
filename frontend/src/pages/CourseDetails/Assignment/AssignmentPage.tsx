@@ -5,12 +5,12 @@ import {convertToAssignmentDto, convertToAssignmentDtoList} from "../../../utils
 import EditableTextDetail from "../../../components/Shared/EditableTextDetail.tsx";
 import { useAuth } from "../../../hooks/useAuth.ts";
 import {Button, List, ListItem, ListItemButton, ListItemText} from "@mui/material";
+import {useCourse} from "../../../hooks/useCourse.ts";
 
 type AssignmentPageProps = {
-    assignments: Assignment[] | undefined,
     updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void
 }
-export default function AssignmentPage({assignments, updateCourse}: Readonly<AssignmentPageProps>) {
+export default function AssignmentPage({updateCourse}: Readonly<AssignmentPageProps>) {
     const [assignment, setAssignment] = useState<AssignmentDto|undefined>();
     const {assignmentId} = useParams();
     const [submission, setSubmission] = useState<SubmissionDto>({
@@ -19,20 +19,21 @@ export default function AssignmentPage({assignments, updateCourse}: Readonly<Ass
         content: "",
         timestamp: ""
     });
+    const {course} = useCourse();
     const {user, isInstructor} = useAuth();
 
     useEffect(()=> {
-        if (assignments) {
-            const currentAssignment : Assignment | undefined = assignments.find(assignment => assignment.id === assignmentId);
+        if (course) {
+            const currentAssignment : Assignment | undefined = course.assignments.find(assignment => assignment.id === assignmentId);
             if (currentAssignment) setAssignment(convertToAssignmentDto(currentAssignment))
         }
-    },[assignments, assignmentId])
+    },[course, assignmentId])
 
     const handleUpdate = (updatedProperty: string, updatedValue: string | SubmissionDto[]) => {
-        if (assignment && assignments) {
+        if (assignment && course) {
             const updatedAssignment = {...assignment,[updatedProperty]: updatedValue};
             setAssignment(updatedAssignment);
-            updateCourse("assignments", convertToAssignmentDtoList(assignments)
+            updateCourse("assignments", convertToAssignmentDtoList(course.assignments)
                 .map(assignment => assignment.id === assignmentId ? updatedAssignment : assignment));
         }
     }
