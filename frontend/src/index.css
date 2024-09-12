@@ -1,9 +1,10 @@
 :root {
   --bg: #121212ff;
   --bg-accent: #303030ff;
-  --layout: #4c83f5;
-  --accent-1: #ff537b;
-  --accent-2: #ffb300;
+  --accent-1: #4c83f5;
+  --accent-2: #72e1ff;
+  --accent-4: #ff537b;
+  --accent-3: #ffb300;
   --text: #ffffffff;
   color-scheme: light dark;
   color: var(--text);
@@ -32,22 +33,27 @@ h1 {
 }
 
 h2 {
-  color: var(--layout);
+  color: var(--accent-1);
   text-align: center;
   margin-bottom: 10px;
   text-transform: uppercase;
 }
 
 h3 {
-  color: var(--accent-1);
-  margin: 10px 0;
+  color: var(--accent-2);
+  margin: 20px 0;
   text-align: center;
   text-transform: uppercase;
 }
 
+h4 {
+  margin: 20px 0;
+  text-transform: uppercase;
+  color: var(--accent-1)
+}
 
 a {
-  color: var(--accent-1);
+  color: var(--accent-4);
   text-decoration: none;
 }
 
@@ -86,7 +92,7 @@ form {
 .multiselect select option:checked {
   background: none;
   font-weight: bolder;
-  color: var(--accent-2)
+  color: var(--accent-3)
 }
 .multiselect select:disabled option:not(:checked) {
   display: none;
@@ -119,7 +125,7 @@ form {
   :root {
     --bg: #ffffffff;
     --bg-accent: #fceadeff;
-    --accent-1: #fc2d53ff;
+    --accent-4: #fc2d53ff;
     --textcolor: #101010ff;
   }
 }

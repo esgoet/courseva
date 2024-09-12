@@ -70,7 +70,7 @@ export default function CourseDetailsPage({updateCourse, course, fetchCourse, de
                             </Grid2>
                         </Grid2>
                     </Paper>
-                    <Container disableGutters >
+                    <Container disableGutters sx={{mt: 2}}>
                         {isMobile ? <CourseTabsMobile/> :
                             <CourseTabs/>}
                         <Paper sx={{p:'20px', pb: '40px'}} component={'section'} square={false}>
