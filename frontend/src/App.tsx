@@ -137,7 +137,12 @@ export default function App() {
         })
             .then(()=> {
                 fetchUser()
-                    .then(()=>navigate("/"));
+                    .then(()=>{
+                        fetchCourses();
+                        fetchStudents();
+                        fetchInstructors();
+                        navigate("/")
+                    });
             })
             .catch(error => {
                 setUser(null);
@@ -146,7 +151,7 @@ export default function App() {
     }
 
     const logout = () => {
-        axios.post("api/auth/logout")
+        axiosInstance.post("/api/auth/logout")
             .then(() => {
                 console.log('Logged out')
                 navigate("/login")

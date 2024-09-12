@@ -1,6 +1,6 @@
 import {useNavigate} from "react-router-dom";
 import {Course} from "../../types/courseTypes.ts";
-import { ListItem, ListItemButton, ListItemText} from "@mui/material";
+import {Divider, ListItem, ListItemButton, ListItemText} from "@mui/material";
 import CourseActions from "./CourseActions.tsx";
 
 type CourseEntryProps = {
@@ -14,15 +14,19 @@ export default function CourseEntry({course, deleteCourse, updateUser, updateCou
     const navigate = useNavigate();
 
     return (
-        <ListItem
-            sx={{bgcolor:'background.paper'}}
-            secondaryAction={<CourseActions course={course} deleteCourse={deleteCourse} updateUser={updateUser} updateCourse={updateCourse}/>}
-            disablePadding
-        >
-            <ListItemButton onClick={()=>navigate(`/course/${course.id}`)} disableRipple>
-                <ListItemText primary={<h3>{course.title}</h3>} secondary={course.id}/>
+        <>
+            <ListItem
+                sx={{bgcolor:'background.paper'}}
+                secondaryAction={<CourseActions course={course} deleteCourse={deleteCourse} updateUser={updateUser} updateCourse={updateCourse}/>}
+                disablePadding
+            >
+                <ListItemButton onClick={()=>navigate(`/course/${course.id}`)} disableRipple>
+                    <ListItemText primary={<h3>{course.title}</h3>} secondary={course.id}/>
 
-            </ListItemButton>
-        </ListItem>
+                </ListItemButton>
+            </ListItem>
+            <Divider/>
+        </>
+
     )
 }
