@@ -205,15 +205,15 @@ export default function App() {
                                 <Route path={"/browse"} element={<BrowsePage courses={courses} deleteCourse={deleteCourse} updateUser={updateUser} updateCourse={updateCourse}/>}/>
                                 <Route path={"/account"} element={<UserAccountPage updateUser={updateUser} deleteUser={deleteUser}/>}/>
                                 <Route path={"/course/:courseId"} element={<CourseDetailsPage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse} deleteCourse={deleteCourse} students={students} instructors={instructors} updateUser={updateUser}/>}>
-                                    <Route path={"participants"} element={<ParticipantOverview currentStudents={currentCourse?.students || []} currentInstructors={currentCourse?.instructors || []} students={students} instructors={instructors} updateCourse={updateCourse}/>}/>
-                                    <Route path={"lessons"} element={<LessonOverview lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
-                                    <Route path={"lessons/:lessonId"} element={<LessonPage lessons={currentCourse?.lessons} updateCourse={updateCourse}/>}/>
-                                    <Route path={"assignments"} element={<AssignmentOverview assignments={currentCourse?.assignments} updateCourse={updateCourse}/>}/>
-                                    <Route path={"assignments/:assignmentId"} element={<AssignmentPage assignments={currentCourse?.assignments} updateCourse={updateCourse}/>}/>
-                                    <Route path={"assignments/:assignmentId/submission/:submissionId"} element={<SubmissionPage assignments={currentCourse?.assignments}/>}/>
+                                    <Route path={"participants"} element={<ParticipantOverview students={students} instructors={instructors} updateCourse={updateCourse}/>}/>
+                                    <Route path={"lessons"} element={<LessonOverview updateCourse={updateCourse}/>}/>
+                                    <Route path={"lessons/:lessonId"} element={<LessonPage updateCourse={updateCourse}/>}/>
+                                    <Route path={"assignments"} element={<AssignmentOverview updateCourse={updateCourse}/>}/>
+                                    <Route path={"assignments/:assignmentId"} element={<AssignmentPage updateCourse={updateCourse}/>}/>
+                                    <Route path={"assignments/:assignmentId/submission/:submissionId"} element={<SubmissionPage/>}/>
                                     <Route element={<ProtectedInstructorRoutes />}>
-                                        <Route path={"lessons/create"} element={<LessonCreator updateCourse={updateCourse} lessons={currentCourse?.lessons}/>}/>
-                                        <Route path={"assignments/create"} element={<AssignmentCreator assignments={currentCourse?.assignments} updateCourse={updateCourse} />}/>
+                                        <Route path={"lessons/create"} element={<LessonCreator updateCourse={updateCourse}/>}/>
+                                        <Route path={"assignments/create"} element={<AssignmentCreator updateCourse={updateCourse} />}/>
                                     </Route>
                                 </Route>
                                 <Route element={<ProtectedInstructorRoutes/>}>

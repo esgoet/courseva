@@ -5,29 +5,30 @@ import EditableTextDetail from "../../../components/Shared/EditableTextDetail.ts
 import {convertToLessonDto, convertToLessonDtoList} from "../../../utils/convertToLessonDto.ts";
 import {useAuth} from "../../../hooks/useAuth.ts";
 import {Button} from "@mui/material";
+import {useCourse} from "../../../hooks/useCourse.ts";
 
 type LessonPageProps = {
-    lessons: Lesson[] | undefined,
     updateCourse: (updatedProperty: string, updatedValue: LessonDto[]) => void,
 }
 
-export default function LessonPage({lessons, updateCourse}: Readonly<LessonPageProps>) {
+export default function LessonPage({updateCourse}: Readonly<LessonPageProps>) {
     const [lesson, setLesson] = useState<LessonDto | undefined>();
     const {lessonId} = useParams();
+    const {course} = useCourse();
     const {isInstructor} = useAuth();
 
     useEffect(()=>{
-        if (lessons) {
-            const currentLesson : Lesson | undefined = lessons.find(lesson => lesson.id === lessonId);
+        if (course) {
+            const currentLesson : Lesson | undefined = course.lessons.find(lesson => lesson.id === lessonId);
             if (currentLesson) setLesson(convertToLessonDto(currentLesson));
         }
-    },[lessons, lessonId])
+    },[course, lessonId])
 
     const handleUpdate = (updatedProperty: string, updatedValue: string) => {
-        if (lesson && lessons) {
+        if (lesson && course) {
             const updatedLesson = {...lesson,[updatedProperty]: updatedValue};
             setLesson(updatedLesson);
-            updateCourse("lessons", convertToLessonDtoList(lessons)
+            updateCourse("lessons", convertToLessonDtoList(course.lessons)
                .map(lesson => lesson.id === lessonId ? updatedLesson : lesson));
         }
     }

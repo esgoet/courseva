@@ -1,15 +1,16 @@
-import {Lesson, LessonDto} from "../../../types/courseTypes.ts";
+import {LessonDto} from "../../../types/courseTypes.ts";
 import {ChangeEvent, FormEvent, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {convertToLessonDtoList} from "../../../utils/convertToLessonDto.ts";
 import {Button, Grid2, TextField} from "@mui/material";
+import {useCourse} from "../../../hooks/useCourse.ts";
 
 type LessonCreatorProps = {
-    updateCourse: (updatedProperty: string, updatedValue: LessonDto[]) => void,
-    lessons: Lesson[] | undefined
+    updateCourse: (updatedProperty: string, updatedValue: LessonDto[]) => void
 }
 
-export default function LessonCreator({updateCourse, lessons}:Readonly<LessonCreatorProps>) {
+export default function LessonCreator({updateCourse}:Readonly<LessonCreatorProps>) {
+    const {course} = useCourse();
     const [lesson, setLesson] = useState<LessonDto>({
         id:"",
         title:"",
@@ -23,7 +24,7 @@ export default function LessonCreator({updateCourse, lessons}:Readonly<LessonCre
     }
     const handleSubmit = (e : FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (lessons) updateCourse("lessons", [lesson,...convertToLessonDtoList(lessons)])
+        if (course) updateCourse("lessons", [lesson,...convertToLessonDtoList(course.lessons)])
         navigate("..",{ relative: "path" });
     }
     

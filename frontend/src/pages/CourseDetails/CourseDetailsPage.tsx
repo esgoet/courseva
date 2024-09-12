@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import CourseTabs from "../../components/Course/CourseTabs.tsx";
 import CourseTabsMobile from "../../components/Course/CourseTabsMobile.tsx";
+import {CourseContextType} from "../../hooks/useCourse.ts";
 
 type CoursePageProps = {
     updateCourse: (updatedProperty: string, updatedValue: string | string[]) => void,
@@ -73,7 +74,7 @@ export default function CourseDetailsPage({updateCourse, course, fetchCourse, de
                     </Paper>
                     {isMobile ? <CourseTabsMobile/> :
                     <CourseTabs/>}
-                    <Outlet/>
+                    <Outlet context={{course} satisfies CourseContextType}/>
                 </Container>
             :
             <p>No course found.</p>
