@@ -1,13 +1,15 @@
-import {ChangeEvent, FormEvent, useState} from "react";
+import {ChangeEvent, FormEvent, useRef, useState} from "react";
 import {NewCourseDto} from "../types/courseTypes.ts";
 import {Link} from "react-router-dom";
 import {Instructor, Student} from "../types/userTypes.ts";
 import {
     Button,
-    Grid2,
+    Grid2, InputLabel,
     TextField
 } from "@mui/material";
 import UserCheckList from "../components/Shared/UserCheckList.tsx";
+import type {RichTextEditorRef} from "mui-tiptap";
+import CustomRichTextEditor from "../components/Shared/CustomRichTextEditor.tsx";
 
 type CourseCreatorProps = {
     createCourse: (course: NewCourseDto) => void,
@@ -19,6 +21,7 @@ export default function CourseCreator({createCourse, students, instructors}: Rea
     const [course, setCourse] = useState<NewCourseDto>({title:"", description:"", students:[], instructors:[], startDate: ""})
     const [courseStudents, setCourseStudents] = useState<string[]>([]);
     const [courseInstructors, setCourseInstructors] = useState<string[]>([]);
+    const rteRef = useRef<RichTextEditorRef>(null);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setCourse({...course,[e.target.name]: e.target.value})
@@ -26,7 +29,7 @@ export default function CourseCreator({createCourse, students, instructors}: Rea
 
     const handleSubmit = (e : FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const newCourse: NewCourseDto = {...course, students: courseStudents, instructors: courseInstructors};
+        const newCourse: NewCourseDto = {...course, students: courseStudents, instructors: courseInstructors, description: rteRef.current?.editor?.getHTML().toString() ?? ""};
         setCourse(newCourse);
         createCourse(newCourse);
     }
@@ -43,6 +46,7 @@ export default function CourseCreator({createCourse, students, instructors}: Rea
                     value={course.title}
                     onChange={handleChange}
                     autoCapitalize={"on"}
+                    autoFocus
                     required
                     aria-required
                 />
@@ -57,6 +61,10 @@ export default function CourseCreator({createCourse, students, instructors}: Rea
                     multiline
                     minRows={4}
                 />
+                <Grid2 size={12} id={"assignment-description"}>
+                    <InputLabel shrink htmlFor={"assignment-description"} required aria-required>Course Description</InputLabel>
+                    <CustomRichTextEditor initialValue={""} ref={rteRef} />
+                </Grid2>
                 <TextField
                     label={"Start Date"}
                     type={"date"}
