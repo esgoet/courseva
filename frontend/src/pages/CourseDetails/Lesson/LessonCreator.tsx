@@ -1,23 +1,34 @@
 import {LessonDto} from "../../../types/courseTypes.ts";
-import {ChangeEvent, FormEvent, useState} from "react";
+import {ChangeEvent, FormEvent, useRef, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {convertToLessonDtoList} from "../../../utils/convertToLessonDto.ts";
 import {Button, Grid2, TextField} from "@mui/material";
 import {useCourse} from "../../../hooks/useCourse.ts";
+import StarterKit from "@tiptap/starter-kit";
+import {
+    MenuButtonBold,
+    MenuButtonItalic,
+    MenuControlsContainer,
+    MenuDivider,
+    MenuSelectHeading,
+    RichTextEditor,
+    type RichTextEditorRef,
+} from "mui-tiptap";
 
 type LessonCreatorProps = {
     updateCourse: (updatedProperty: string, updatedValue: LessonDto[]) => void
 }
 
 export default function LessonCreator({updateCourse}:Readonly<LessonCreatorProps>) {
-    const {course} = useCourse();
     const [lesson, setLesson] = useState<LessonDto>({
         id:"",
         title:"",
         content:"",
         whenPublic: new Date(Date.now()).toISOString().substring(0,19)
     });
+    const {course} = useCourse();
     const navigate = useNavigate();
+    const rteRef = useRef<RichTextEditorRef>(null);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setLesson({...lesson,[e.target.name]: e.target.value})
@@ -27,7 +38,7 @@ export default function LessonCreator({updateCourse}:Readonly<LessonCreatorProps
         if (course) updateCourse("lessons", [lesson,...convertToLessonDtoList(course.lessons)])
         navigate("..",{ relative: "path" });
     }
-    
+
     return (
         <>
             <Button component={Link} to={".."} relative={"path"} variant={"outlined"}>Back to All Lessons</Button>
@@ -57,6 +68,19 @@ export default function LessonCreator({updateCourse}:Readonly<LessonCreatorProps
                     }}
                     required
                     aria-required
+                />
+                <RichTextEditor
+                    ref={rteRef}
+                    extensions={[StarterKit]}
+                    content={lesson.content}
+                    renderControls={() => (
+                        <MenuControlsContainer>
+                            <MenuSelectHeading />
+                            <MenuDivider />
+                            <MenuButtonBold />
+                            <MenuButtonItalic />
+                        </MenuControlsContainer>
+                    )}
                 />
                 <TextField
                     label={"Content"}
