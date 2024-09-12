@@ -6,7 +6,7 @@ import {Instructor, Student} from "../../types/userTypes.ts";
 import {useAuth} from "../../hooks/useAuth.ts";
 import CourseActions from "../../components/Course/CourseActions.tsx";
 import {
-    Breadcrumbs,
+    Breadcrumbs, Container,
     Grid2, ListItem, ListItemText, Paper,
     Typography, useMediaQuery, useTheme
 } from "@mui/material";
@@ -44,7 +44,6 @@ export default function CourseDetailsPage({updateCourse, course, fetchCourse, de
                         <Typography>{course?.title}</Typography>
                     </Breadcrumbs>
                     <ListItem
-                        sx={{bgcolor:'background.paper'}}
                         secondaryAction={<CourseActions course={course} deleteCourse={deleteCourse} updateUser={updateUser} updateCourse={updateCourse}/>}
                         disablePadding
                         component={"div"}
@@ -72,9 +71,13 @@ export default function CourseDetailsPage({updateCourse, course, fetchCourse, de
                             </Grid2>
                         </Grid2>
                     </Paper>
-                    {isMobile ? <CourseTabsMobile/> :
-                    <CourseTabs/>}
-                    <Outlet/>
+                    <Container disableGutters >
+                        {isMobile ? <CourseTabsMobile/> :
+                            <CourseTabs/>}
+                        <Paper sx={{p:'20px', pb: '40px'}} component={'section'} square={false}>
+                            <Outlet/>
+                        </Paper>
+                    </Container>
                 </div>
             :
             <p>No course found.</p>
