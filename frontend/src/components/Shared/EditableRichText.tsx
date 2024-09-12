@@ -4,7 +4,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import CancelIcon from "@mui/icons-material/Cancel";
 import {FormEvent, useRef, useState} from "react";
 import CustomRichTextEditor from "./CustomRichTextEditor.tsx";
-import {RichTextEditorRef, RichTextReadOnly} from "mui-tiptap";
+import {MenuButton, RichTextEditorRef, RichTextReadOnly} from "mui-tiptap";
 import useExtensions from "../../hooks/useExtensions.ts";
 
 type EditableRichTextProps = {
@@ -30,33 +30,42 @@ export default function EditableRichText(props: Readonly<EditableRichTextProps>)
         setEditable(false);
     }
     return (
-        <>
-            <form onSubmit={handleSubmit}
-                  className={`editable-detail multiline ${editable && "editable"}`}>
-                <Grid2 container >
-                    <InputLabel shrink disabled={!editable} htmlFor={props.name}>{props.label}</InputLabel>
+        <form onSubmit={handleSubmit}
+              className={`editable-detail multiline`}
+        >
+            <Grid2 container >
+                <InputLabel shrink disabled={!editable} htmlFor={props.name}>{props.label}</InputLabel>
 
-                    <Grid2 size={12} id={props.name}>
-                    {editable ?
-                            <CustomRichTextEditor initialValue={props.initialValue} ref={rteRef}/>
-                        :
-                            <RichTextReadOnly content={props.initialValue}
-                                          extensions={extensions}/>
-                    }
+                <Grid2 size={12} id={props.name}>
+                {editable ?
+                        <CustomRichTextEditor initialValue={props.initialValue} ref={rteRef} extraButtons={
+                            <div>
+                                <MenuButton
+                                    tooltipLabel={"Cancel Edit"}
+                                    IconComponent={CancelIcon}
+                                    onClick={handleCancel}
+                                    size={"small"}
+                                    color={"secondary"}
+                                />
+                                <MenuButton
+                                    tooltipLabel={"Save Edit"}
+                                    IconComponent={CheckIcon}
+                                    type={"submit"}
+                                    size={"small"}
+                                />
+                            </div>
+                        }/>
+                    :
+                        <RichTextReadOnly content={props.initialValue}
+                                      extensions={extensions}/>
+                }
 
-                    </Grid2>
                 </Grid2>
-                {editable && <IconButton type={"submit"}>
-                    <CheckIcon fontSize={"small"} color={"secondary"}/>
-                </IconButton>}
-                {!editable && props.allowedToEdit && <IconButton type={"button"} onClick={() => setEditable(true)}>
-                    <EditIcon fontSize={"small"} color={"secondary"}/>
-                </IconButton>}
-                {editable && <IconButton type={"reset"} onClick={handleCancel}>
-                    <CancelIcon fontSize={"small"} color={"secondary"}/>
-                </IconButton>}
+            </Grid2>
+            {!editable && props.allowedToEdit && <IconButton type={"button"} className={"edit-btn"} onClick={() => setEditable(true)}>
+                <EditIcon fontSize={"small"} color={"secondary"}/>
+            </IconButton>}
 
-            </form>
-        </>
+        </form>
     );
 };

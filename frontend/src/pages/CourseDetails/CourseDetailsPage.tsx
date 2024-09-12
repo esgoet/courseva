@@ -13,6 +13,7 @@ import {
 import CourseTabs from "../../components/Course/CourseTabs.tsx";
 import CourseTabsMobile from "../../components/Course/CourseTabsMobile.tsx";
 import {CourseContextType} from "../../hooks/useCourse.ts";
+import EditableRichText from "../../components/Shared/EditableRichText.tsx";
 
 type CoursePageProps = {
     updateCourse: (updatedProperty: string, updatedValue: string | string[]) => void,
@@ -57,12 +58,10 @@ export default function CourseDetailsPage({updateCourse, course, fetchCourse, de
                             </h2>
                         </ListItemText>
                     </ListItem>
-                    <Paper sx={{p:'10px'}}>
+                    <Paper sx={{p:'15px'}}>
                         <Grid2 container spacing={{xs:2,sm:4}} direction={{xs:'column-reverse', sm: 'row'}} >
                             <Grid2 size={{xs:12,sm:8}}>
-                                <EditableTextDetail inputType={"textarea"} label={"Description"} name={"description"}
-                                                    initialValue={course.description} updateFunction={updateCourse}
-                                                    allowedToEdit={isInstructor}/>
+                                <EditableRichText label={"Description"} name={"description"} allowedToEdit={isInstructor} initialValue={course.description} updateFunction={updateCourse}/>
                             </Grid2>
                             <Grid2 size={{xs:12,sm:4}} display={"flex"} justifyContent={isMobile ? "flex-start" : "flex-end"} alignItems={"flex-start"}>
                                 <EditableTextDetail inputType={"date"} label={"Start Date"} name={"startDate"}

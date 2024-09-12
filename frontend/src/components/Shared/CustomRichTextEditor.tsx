@@ -1,5 +1,5 @@
 import {
-    isTouchDevice, MenuButtonBlockquote,
+    isTouchDevice, MenuButton, MenuButtonBlockquote,
     MenuButtonBold,
     MenuButtonBulletedList, MenuButtonCode, MenuButtonCodeBlock,
     MenuButtonEditLink,
@@ -16,31 +16,67 @@ import {
     MenuSelectHeading,
     MenuSelectTextAlign, RichTextEditor, type RichTextEditorRef
 } from "mui-tiptap";
-import {useTheme} from "@mui/material";
-import {ForwardedRef, forwardRef} from "react";
+import {Stack, useTheme} from "@mui/material";
+import {ForwardedRef, forwardRef, ReactNode, useState} from "react";
 import useExtensions from "../../hooks/useExtensions.ts";
+import {TextFields} from "@mui/icons-material";
 
 type CustomRichTextEditorProps = {
     initialValue: string,
+    extraButtons?: ReactNode
 };
 
  const CustomRichTextEditor = forwardRef(function CustomRichTextEditor(props: Readonly<CustomRichTextEditorProps>, ref: ForwardedRef<RichTextEditorRef>) {
-    const theme = useTheme();
-    const extensions = useExtensions();
+     const [showControls, setShowControls] = useState<boolean>(false);
+     const theme = useTheme();
+     const extensions = useExtensions();
 
     return (
         <RichTextEditor
             ref={ref}
             extensions={extensions}
             content={props.initialValue}
+            RichTextFieldProps={{
+                variant:"outlined",
+                MenuBarProps: {
+                    hide: !showControls
+                },
+                footer: (
+                    <Stack
+                        direction={"row"}
+                        spacing={"2"}
+                        alignContent={"center"}
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
+                        sx={{
+                            borderTopStyle: "solid",
+                            borderTopWidth: 1,
+                            borderTopColor: (theme) => theme.palette.divider,
+                            px: 1.5,
+                            py: 1
+                        }}
+                    >
+                        <MenuButton
+                            value={'formatting'}
+                            tooltipLabel={`${!showControls ? "Show" : "Hide"} formatting controls`}
+                            size={'small'}
+                            onClick={()=>setShowControls(!showControls)}
+                            selected={showControls}
+                            IconComponent={TextFields}
+                        />
+                        {props.extraButtons}
+                    </Stack>
+
+                )
+            }}
             renderControls={() => (
                 <MenuControlsContainer>
-                    <MenuSelectHeading />
-                    <MenuDivider />
                     <MenuButtonBold />
                     <MenuButtonItalic />
-                    <MenuButtonUnderline />
+                <MenuButtonUnderline />
                     <MenuButtonStrikethrough />
+                    <MenuDivider />
+                    <MenuSelectHeading />
                     <MenuDivider />
                     <MenuButtonTextColor
                         defaultTextColor={theme.palette.text.primary}
@@ -88,7 +124,6 @@ type CustomRichTextEditorProps = {
                     <MenuButtonCodeBlock />
                     <MenuDivider />
                     <MenuButtonHorizontalRule />
-                    <MenuDivider />
                     <MenuDivider />
                     <MenuButtonUndo />
                     <MenuButtonRedo />

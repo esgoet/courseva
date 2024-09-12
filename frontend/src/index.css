@@ -67,10 +67,12 @@ form {
   gap: 5px;
   align-items: flex-end;
 }
+
 .multiselect label {
   position: absolute;
   top: -20px;
 }
+
 .multiselect select {
   width: 100%;
   font-size: medium;
@@ -98,7 +100,7 @@ form {
   align-items: flex-start;
 }
 
-.multiline button {
+.multiline .edit-btn {
   margin-top: 12px;
 }
 
