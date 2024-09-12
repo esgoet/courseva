@@ -1,16 +1,15 @@
-import {LessonDto} from "../../../types/courseTypes.ts";
+import {Course, LessonDto} from "../../../types/courseTypes.ts";
 import {ChangeEvent, FormEvent, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {convertToLessonDtoList} from "../../../utils/convertToLessonDto.ts";
 import {Button, Grid2, TextField} from "@mui/material";
-import {useCourse} from "../../../hooks/useCourse.ts";
 
 type LessonCreatorProps = {
-    updateCourse: (updatedProperty: string, updatedValue: LessonDto[]) => void
+    updateCourse: (updatedProperty: string, updatedValue: LessonDto[]) => void,
+    course: Course | undefined
 }
 
-export default function LessonCreator({updateCourse}:Readonly<LessonCreatorProps>) {
-    const {course} = useCourse();
+export default function LessonCreator({course, updateCourse}:Readonly<LessonCreatorProps>) {
     const [lesson, setLesson] = useState<LessonDto>({
         id:"",
         title:"",
