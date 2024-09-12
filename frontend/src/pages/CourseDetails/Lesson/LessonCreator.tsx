@@ -1,11 +1,8 @@
-import {LessonDto} from "../../../types/courseTypes.ts";
 import {ChangeEvent, FormEvent, useRef, useState} from "react";
 import {Course, LessonDto} from "../../../types/courseTypes.ts";
-import {ChangeEvent, FormEvent, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {convertToLessonDtoList} from "../../../utils/convertToLessonDto.ts";
 import {Button, Grid2, InputLabel, TextField} from "@mui/material";
-import {useCourse} from "../../../hooks/useCourse.ts";
 import {
     type RichTextEditorRef,
 } from "mui-tiptap";
