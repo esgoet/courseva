@@ -2,7 +2,7 @@
   --bg: #121212ff;
   --bg-accent: #303030ff;
   --layout: #4c83f5;
-  --accent-1: #fb0e39ff;
+  --accent-1: #ff537b;
   --accent-2: #ffb300;
   --text: #ffffffff;
   color-scheme: light dark;
@@ -37,6 +37,14 @@ h2 {
   margin-bottom: 10px;
   text-transform: uppercase;
 }
+
+h3 {
+  color: var(--accent-1);
+  margin: 10px 0;
+  text-align: center;
+  text-transform: uppercase;
+}
+
 
 a {
   color: var(--accent-1);

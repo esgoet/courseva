@@ -63,9 +63,9 @@ export default function LessonCreator({course, updateCourse}:Readonly<LessonCrea
                     required
                     aria-required
                 />
-                <Grid2 container  spacing={2}>
-                    <InputLabel shrink htmlFor={"lesson-content"}>Content</InputLabel>
+                <Grid2 container spacing={2}>
                     <Grid2 size={12} id={"lesson-content"}>
+                        <InputLabel shrink htmlFor={"lesson-content"}>Content</InputLabel>
                         <CustomRichTextEditor initialValue={""} ref={rteRef} />
                     </Grid2>
                     <Grid2 size={{xs:12,sm:6}}>

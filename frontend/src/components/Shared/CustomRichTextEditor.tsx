@@ -37,7 +37,6 @@ type CustomRichTextEditorProps = {
                 <MenuControlsContainer>
                     <MenuSelectHeading />
                     <MenuDivider />
-                    <MenuDivider />
                     <MenuButtonBold />
                     <MenuButtonItalic />
                     <MenuButtonUnderline />

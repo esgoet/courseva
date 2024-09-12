@@ -35,7 +35,7 @@ export default function AssignmentCreator({course, updateCourse}: Readonly<Assig
     return (
         <>
             <Button component={Link} to={".."} relative={"path"} variant={"outlined"}>Back to All Assignments</Button>
-            <h4>Create New Assignment</h4>
+            <h3>Create New Assignment</h3>
             <form onSubmit={handleSubmit}>
                 <TextField
                     label={"Assignment Title"}
@@ -78,8 +78,8 @@ export default function AssignmentCreator({course, updateCourse}: Readonly<Assig
                 />
 
                 <Grid2 container  spacing={2}>
-                    <InputLabel shrink htmlFor={"assignment-description"}>Description</InputLabel>
                     <Grid2 size={12} id={"assignment-description"}>
+                        <InputLabel shrink htmlFor={"assignment-description"}>Description</InputLabel>
                         <CustomRichTextEditor initialValue={""} ref={rteRef} />
                     </Grid2>
                     <Grid2 size={{xs:12,sm:6}}>
