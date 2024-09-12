@@ -33,7 +33,7 @@ export default function EditableRichText(props: Readonly<EditableRichTextProps>)
         <form onSubmit={handleSubmit}
               className={`editable-detail multiline`}
         >
-            <Grid2 container >
+            <Grid2 container size={12} >
                 <InputLabel shrink disabled={!editable} htmlFor={props.name}>{props.label}</InputLabel>
 
                 <Grid2 size={12} id={props.name}>
