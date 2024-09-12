@@ -4,11 +4,14 @@ import {useEffect, useState} from "react";
 import {Button, Grid2, Typography} from "@mui/material";
 import {formatDate} from "../../../utils/formatDate.ts";
 import {useCourse} from "../../../hooks/useCourse.ts";
+import {RichTextReadOnly} from "mui-tiptap";
+import useExtensions from "../../../hooks/useExtensions.ts";
 
 export default function SubmissionPage() {
     const {submissionId, assignmentId} = useParams();
     const {course} = useCourse();
     const [submission, setSubmission] = useState<SubmissionDto | undefined>();
+    const extensions = useExtensions();
 
     useEffect(()=> {
         if (course) {
@@ -45,7 +48,7 @@ export default function SubmissionPage() {
                             </Typography>
                         </Grid2>
                         <Grid2 size={12}>
-                            {submission.content}
+                            <RichTextReadOnly content={submission.content} extensions={extensions}/>
                         </Grid2>
                     </Grid2>
                 </>

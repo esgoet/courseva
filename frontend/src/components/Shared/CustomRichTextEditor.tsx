@@ -1,9 +1,3 @@
-import StarterKit from "@tiptap/starter-kit";
-import Highlight from "@tiptap/extension-highlight";
-import TextAlign from "@tiptap/extension-text-align";
-import TextStyle from "@tiptap/extension-text-style";
-import Underline from "@tiptap/extension-underline";
-import Color from "@tiptap/extension-color";
 import {
     isTouchDevice, MenuButtonBlockquote,
     MenuButtonBold,
@@ -24,6 +18,7 @@ import {
 } from "mui-tiptap";
 import {useTheme} from "@mui/material";
 import {ForwardedRef, forwardRef} from "react";
+import useExtensions from "../../hooks/useExtensions.ts";
 
 type CustomRichTextEditorProps = {
     initialValue: string,
@@ -31,11 +26,12 @@ type CustomRichTextEditorProps = {
 
  const CustomRichTextEditor = forwardRef(function CustomRichTextEditor(props: Readonly<CustomRichTextEditorProps>, ref: ForwardedRef<RichTextEditorRef>) {
     const theme = useTheme();
+    const extensions = useExtensions();
 
     return (
         <RichTextEditor
             ref={ref}
-            extensions={[StarterKit, Highlight, TextAlign, TextStyle, Underline, Color]}
+            extensions={extensions}
             content={props.initialValue}
             renderControls={() => (
                 <MenuControlsContainer>

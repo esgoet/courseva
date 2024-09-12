@@ -3,10 +3,9 @@ import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
 import CancelIcon from "@mui/icons-material/Cancel";
 import {FormEvent, useRef, useState} from "react";
-
-import StarterKit from "@tiptap/starter-kit";
 import CustomRichTextEditor from "./CustomRichTextEditor.tsx";
 import {RichTextEditorRef, RichTextReadOnly} from "mui-tiptap";
+import useExtensions from "../../hooks/useExtensions.ts";
 
 type EditableRichTextProps = {
     label: string,
@@ -19,6 +18,7 @@ type EditableRichTextProps = {
 export default function EditableRichText(props: Readonly<EditableRichTextProps>) {
     const rteRef = useRef<RichTextEditorRef>(null);
     const [editable, setEditable] = useState<boolean>(false);
+    const extensions = useExtensions();
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -41,7 +41,7 @@ export default function EditableRichText(props: Readonly<EditableRichTextProps>)
                             <CustomRichTextEditor initialValue={props.initialValue} ref={rteRef}/>
                         :
                             <RichTextReadOnly content={props.initialValue}
-                                          extensions={[StarterKit]}/>
+                                          extensions={extensions}/>
                     }
 
                     </Grid2>
