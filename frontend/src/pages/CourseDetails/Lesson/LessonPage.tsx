@@ -6,6 +6,7 @@ import {convertToLessonDto, convertToLessonDtoList} from "../../../utils/convert
 import {useAuth} from "../../../hooks/useAuth.ts";
 import {Button} from "@mui/material";
 import {useCourse} from "../../../hooks/useCourse.ts";
+import EditableRichText from "../../../components/Shared/EditableRichText.tsx";
 
 type LessonPageProps = {
     updateCourse: (updatedProperty: string, updatedValue: LessonDto[]) => void,
@@ -16,6 +17,7 @@ export default function LessonPage({updateCourse}: Readonly<LessonPageProps>) {
     const {lessonId} = useParams();
     const {course} = useCourse();
     const {isInstructor} = useAuth();
+
 
     useEffect(()=>{
         if (course) {
@@ -45,9 +47,7 @@ export default function LessonPage({updateCourse}: Readonly<LessonPageProps>) {
                     </h3>
                     <EditableTextDetail inputType={"datetime-local"} label={"Lesson Release"} name={"whenPublic"}
                                         initialValue={lesson.whenPublic} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
-                    <EditableTextDetail inputType={"textarea"} label={"Lesson Content"} name={"content"}
-                                        initialValue={lesson.content} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
-
+                    <EditableRichText label={"Content"} name={"content"} initialValue={lesson.content} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
                 </>
             }
         </>

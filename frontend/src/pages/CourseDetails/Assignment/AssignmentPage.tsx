@@ -1,11 +1,14 @@
 import {Assignment, AssignmentDto, SubmissionDto} from "../../../types/courseTypes.ts";
-import {FormEvent, useEffect, useState} from "react";
+import {FormEvent, useEffect, useRef, useState} from "react";
 import {Link, useParams} from "react-router-dom";
 import {convertToAssignmentDto, convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
 import EditableTextDetail from "../../../components/Shared/EditableTextDetail.tsx";
 import { useAuth } from "../../../hooks/useAuth.ts";
-import {Button, List, ListItem, ListItemButton, ListItemText} from "@mui/material";
+import {Button, List, ListItem, ListItemButton, ListItemText, Stack} from "@mui/material";
 import {useCourse} from "../../../hooks/useCourse.ts";
+import EditableRichText from "../../../components/Shared/EditableRichText.tsx";
+import CustomRichTextEditor from "../../../components/Shared/CustomRichTextEditor.tsx";
+import {RichTextEditorRef} from "mui-tiptap";
 
 type AssignmentPageProps = {
     updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void
@@ -13,14 +16,10 @@ type AssignmentPageProps = {
 export default function AssignmentPage({updateCourse}: Readonly<AssignmentPageProps>) {
     const [assignment, setAssignment] = useState<AssignmentDto|undefined>();
     const {assignmentId} = useParams();
-    const [submission, setSubmission] = useState<SubmissionDto>({
-        id: "",
-        studentId: "",
-        content: "",
-        timestamp: ""
-    });
     const {course} = useCourse();
     const {user, isInstructor} = useAuth();
+    const rteRef = useRef<RichTextEditorRef>(null);
+
 
     useEffect(()=> {
         if (course) {
@@ -41,7 +40,7 @@ export default function AssignmentPage({updateCourse}: Readonly<AssignmentPagePr
     const handleStudentSubmission = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (assignment && user) {
-            const updatedSubmissions : SubmissionDto[] = [...assignment.submissions, {...submission, timestamp: new Date(Date.now()).toISOString().substring(0,19), studentId: user.id}];
+            const updatedSubmissions : SubmissionDto[] = [...assignment.submissions, {id: "", studentId: user.id, timestamp: new Date(Date.now()).toISOString().substring(0,19), content: rteRef.current?.editor?.getHTML().toString() || ""}];
             handleUpdate("submissions", updatedSubmissions);
         }
     }
@@ -61,8 +60,7 @@ export default function AssignmentPage({updateCourse}: Readonly<AssignmentPagePr
                                         initialValue={assignment.whenPublic} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
                     <EditableTextDetail inputType={"datetime-local"} label={"Deadline"} name={"deadline"}
                                         initialValue={assignment.deadline} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
-                    <EditableTextDetail inputType={"textarea"} label={"Description"} name={"content"}
-                                        initialValue={assignment.description} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
+                    <EditableRichText label={"Description"} name={"description"} initialValue={assignment.description} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
                     {!isInstructor && user &&
                         <>
                             {assignment.submissions.filter(submission => submission.studentId === user.id).length > 0 &&
@@ -86,9 +84,10 @@ export default function AssignmentPage({updateCourse}: Readonly<AssignmentPagePr
                                 <>
                                     <h4>Submit Your Assignment</h4>
                                     <form onSubmit={handleStudentSubmission}>
-                                        <textarea name={"content"} value={submission.content}
-                                          onChange={(e) => setSubmission({...submission, content: e.target.value})}/>
-                                        <Button type={"submit"}>Submit</Button>
+                                        <Stack>
+                                            <CustomRichTextEditor initialValue={""} ref={rteRef}/>
+                                            <Button type={"submit"}>Submit</Button>
+                                        </Stack>
                                     </form>
                                 </>
                             }

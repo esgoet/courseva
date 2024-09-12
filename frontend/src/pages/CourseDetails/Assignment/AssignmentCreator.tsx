@@ -1,9 +1,11 @@
 import { AssignmentDto} from "../../../types/courseTypes.ts";
-import {ChangeEvent, FormEvent, useState} from "react";
+import {ChangeEvent, FormEvent, useRef, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
-import {Button, Grid2, TextField} from "@mui/material";
+import {Button, Grid2, InputLabel, TextField} from "@mui/material";
 import {useCourse} from "../../../hooks/useCourse.ts";
+import CustomRichTextEditor from "../../../components/Shared/CustomRichTextEditor.tsx";
+import type {RichTextEditorRef} from "mui-tiptap";
 
 type AssignmentCreatorProps = {
     updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void
@@ -20,6 +22,7 @@ export default function AssignmentCreator({ updateCourse}: Readonly<AssignmentCr
         submissions: []
     })
     const navigate = useNavigate();
+    const rteRef = useRef<RichTextEditorRef>(null);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setAssignment({...assignment,[e.target.name]: e.target.value})
@@ -74,16 +77,12 @@ export default function AssignmentCreator({ updateCourse}: Readonly<AssignmentCr
                     required
                     aria-required
                 />
-                <TextField
-                    label={"Description"}
-                    name={"description"}
-                    value={assignment.description}
-                    onChange={handleChange}
-                    autoCapitalize={"on"}
-                    multiline
-                    minRows={4}
-                />
+
                 <Grid2 container  spacing={2}>
+                    <InputLabel shrink htmlFor={"assignment-description"}>Description</InputLabel>
+                    <Grid2 size={12} id={"assignment-description"}>
+                        <CustomRichTextEditor initialValue={""} ref={rteRef} />
+                    </Grid2>
                     <Grid2 size={{xs:12,sm:6}}>
                         <Button type={"reset"} variant={'outlined'} fullWidth
                                 onClick={() => setAssignment({
