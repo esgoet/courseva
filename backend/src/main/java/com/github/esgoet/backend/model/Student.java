@@ -14,6 +14,6 @@ public record Student(
         String email,
         String password,
         List<String> courses,
-        Map<String,List<Integer>> grades
+        Map<String,List<Grade>> grades
 ) {
 }

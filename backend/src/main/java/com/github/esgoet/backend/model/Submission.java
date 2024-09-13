@@ -9,6 +9,8 @@ public record Submission(
         String id,
         String studentId,
         String content,
+        String feedback,
+        Integer grade,
         LocalDateTime timestamp
 ) {
 }
