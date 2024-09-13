@@ -1,8 +1,10 @@
 import {AssignmentDto, Course} from "../../../types/courseTypes.ts";
-import {ChangeEvent, FormEvent, useState} from "react";
+import {ChangeEvent, FormEvent, useRef, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
-import {Button, Grid2, TextField} from "@mui/material";
+import {Button, Grid2, InputLabel, TextField} from "@mui/material";
+import CustomRichTextEditor from "../../../components/Shared/CustomRichTextEditor.tsx";
+import type {RichTextEditorRef} from "mui-tiptap";
 
 type AssignmentCreatorProps = {
     updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void,
@@ -19,6 +21,7 @@ export default function AssignmentCreator({course, updateCourse}: Readonly<Assig
         submissions: []
     })
     const navigate = useNavigate();
+    const rteRef = useRef<RichTextEditorRef>(null);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setAssignment({...assignment,[e.target.name]: e.target.value})
@@ -32,7 +35,7 @@ export default function AssignmentCreator({course, updateCourse}: Readonly<Assig
     return (
         <>
             <Button component={Link} to={".."} relative={"path"} variant={"outlined"}>Back to All Assignments</Button>
-            <h4>Create New Assignment</h4>
+            <h3>Create New Assignment</h3>
             <form onSubmit={handleSubmit}>
                 <TextField
                     label={"Assignment Title"}
@@ -73,16 +76,12 @@ export default function AssignmentCreator({course, updateCourse}: Readonly<Assig
                     required
                     aria-required
                 />
-                <TextField
-                    label={"Description"}
-                    name={"description"}
-                    value={assignment.description}
-                    onChange={handleChange}
-                    autoCapitalize={"on"}
-                    multiline
-                    minRows={4}
-                />
+
                 <Grid2 container  spacing={2}>
+                    <Grid2 size={12} id={"assignment-description"}>
+                        <InputLabel shrink htmlFor={"assignment-description"}>Description</InputLabel>
+                        <CustomRichTextEditor initialValue={""} ref={rteRef} />
+                    </Grid2>
                     <Grid2 size={{xs:12,sm:6}}>
                         <Button type={"reset"} variant={'outlined'} fullWidth
                                 onClick={() => setAssignment({

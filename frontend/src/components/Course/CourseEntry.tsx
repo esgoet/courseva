@@ -21,7 +21,7 @@ export default function CourseEntry({course, deleteCourse, updateUser, updateCou
                 disablePadding
             >
                 <ListItemButton onClick={()=>navigate(`/course/${course.id}`)} disableRipple>
-                    <ListItemText primary={<h3>{course.title}</h3>} secondary={course.id}/>
+                    <ListItemText primary={course.title} secondary={course.id} primaryTypographyProps={{variant:"button"}}/>
 
                 </ListItemButton>
             </ListItem>

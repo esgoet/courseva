@@ -29,7 +29,7 @@ export default function EditableTextDetail(props: Readonly<EditableTextDetailPro
     }
 
     return (
-        <form onSubmit={handleSubmit} className={`editable-detail ${props.inputType === "textarea" && "multiline"} ${editable && "editable"}`}>
+        <form onSubmit={handleSubmit} className={`editable-detail ${editable && "editable"}`}>
             <TextField
                 name={props.name}
                 label={props.label}
@@ -38,9 +38,6 @@ export default function EditableTextDetail(props: Readonly<EditableTextDetailPro
                 onChange={(e)=>setInput(e.target.value)}
                 disabled={!editable}
                 autoFocus={editable}
-                multiline={props.inputType === "textarea"}
-                fullWidth={props.inputType === "textarea"}
-                minRows={4}
                 variant={editable ? "outlined" : "standard"}
                 sx={{
                     "& .MuiInputBase-input.Mui-disabled": {
