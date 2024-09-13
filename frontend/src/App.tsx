@@ -210,7 +210,7 @@ export default function App() {
                                     <Route path={"lessons/:lessonId"} element={<LessonPage updateCourse={updateCourse}/>}/>
                                     <Route path={"assignments"} element={<AssignmentOverview updateCourse={updateCourse}/>}/>
                                     <Route path={"assignments/:assignmentId"} element={<AssignmentPage updateCourse={updateCourse}/>}/>
-                                    <Route path={"assignments/:assignmentId/submission/:submissionId"} element={<SubmissionPage/>}/>
+                                    <Route path={"assignments/:assignmentId/submission/:submissionId"} element={<SubmissionPage updateCourse={updateCourse}/>}/>
                                     <Route element={<ProtectedInstructorRoutes />}>
                                         <Route path={"lessons/create"} element={<LessonCreator updateCourse={updateCourse} course={currentCourse}/>}/>
                                         <Route path={"assignments/create"} element={<AssignmentCreator updateCourse={updateCourse} course={currentCourse}/>}/>

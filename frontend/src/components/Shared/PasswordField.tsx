@@ -11,7 +11,7 @@ export default function PasswordField({password, handleChange}: Readonly<Passwor
     const [showPassword, setShowPassword] = useState<boolean>();
     return (
         <FormControl variant="outlined">
-            <InputLabel htmlFor="password">Password</InputLabel>
+            <InputLabel htmlFor="password" required>Password</InputLabel>
             <OutlinedInput
                 label="Password"
                 name={"password"}

@@ -1,27 +1,47 @@
 import {Link, useParams} from "react-router-dom";
-import {Assignment, SubmissionDto} from "../../../types/courseTypes.ts";
-import {useEffect, useState} from "react";
-import {Button, Grid2, Typography} from "@mui/material";
+import {Assignment, AssignmentDto, SubmissionDto} from "../../../types/courseTypes.ts";
+import {FormEvent, useEffect, useRef, useState} from "react";
+import {Button, Grid2, Paper, Slider, Typography} from "@mui/material";
 import {formatDate} from "../../../utils/formatDate.ts";
 import {useCourse} from "../../../hooks/useCourse.ts";
-import {RichTextReadOnly} from "mui-tiptap";
+import {RichTextEditorRef, RichTextReadOnly} from "mui-tiptap";
 import useExtensions from "../../../hooks/useExtensions.ts";
+import CustomRichTextEditor from "../../../components/Shared/CustomRichTextEditor.tsx";
+import {convertToAssignmentDto, convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
 
-export default function SubmissionPage() {
+type SubmissionPageProps = {
+    updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void;
+}
+
+export default function SubmissionPage({updateCourse}:Readonly<SubmissionPageProps>) {
     const {submissionId, assignmentId} = useParams();
     const {course} = useCourse();
     const [submission, setSubmission] = useState<SubmissionDto | undefined>();
+    const [assignment, setAssignment] = useState<AssignmentDto | undefined>();
     const extensions = useExtensions();
+    const rteRef = useRef<RichTextEditorRef>(null);
 
     useEffect(()=> {
         if (course) {
             const currentAssignment : Assignment | undefined = course.assignments.find(assignment => assignment.id === assignmentId);
             if (currentAssignment) {
+                setAssignment(convertToAssignmentDto(currentAssignment));
                 const currentSubmission = currentAssignment.submissions.find(submission => submission.id === submissionId)
-                if (currentSubmission) setSubmission({...currentSubmission, timestamp: currentSubmission.timestamp.toString()})
+                if (currentSubmission) setSubmission({...currentSubmission, timestamp: currentSubmission.timestamp.toISOString().substring(0,19)})
             }
         }
     },[course, assignmentId, submissionId]);
+
+    const handleFeedbackSubmission = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (submission && assignment && course) {
+            const updatedSubmissions : SubmissionDto[] = [...assignment.submissions, {...submission, feedback: rteRef.current?.editor?.getHTML().toString()}];
+            const updatedAssignment = {...assignment,submissions: updatedSubmissions};
+            setAssignment(updatedAssignment);
+            updateCourse("assignments", convertToAssignmentDtoList(course.assignments)
+                .map(assignment => assignment.id === assignmentId ? updatedAssignment : assignment));
+        }
+    }
 
     return (
         <>
@@ -47,8 +67,27 @@ export default function SubmissionPage() {
                                 {formatDate(submission.timestamp).toUTCString()}
                             </Typography>
                         </Grid2>
+                        <Grid2>
+                            <h4>Feedback</h4>
+                            <form onSubmit={handleFeedbackSubmission}>
+                                <CustomRichTextEditor initialValue={submission.feedback ?? ""} ref={rteRef}/>
+                                <p>Grade: {submission.grade} ({submission.grade && submission.grade > 40 ? "Pass":"Fail"})</p>
+                                <Slider
+                                    value={submission.grade ?? 0}
+                                    marks={[{value: 0, label: "0"},{value: 40, label: "40"},{value: 70, label: "70"},{value: 100, label:"100"}]}
+                                    min={0}
+                                    max={100}
+                                    onChange={(e)=>setSubmission({...submission, grade: e.target.value})}
+                                    valueLabelDisplay="on"
+                                />
+                                <Button type={"submit"}>Submit Feedback</Button>
+                            </form>
+                        </Grid2>
                         <Grid2 size={12}>
-                            <RichTextReadOnly content={submission.content} extensions={extensions}/>
+                            <h4>Submission Content</h4>
+                            <Paper elevation={10} sx={{p: '20px'}}>
+                                <RichTextReadOnly content={submission.content} extensions={extensions}/>
+                            </Paper>
                         </Grid2>
                     </Grid2>
                 </>

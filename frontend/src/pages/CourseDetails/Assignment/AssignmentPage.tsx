@@ -40,7 +40,7 @@ export default function AssignmentPage({updateCourse}: Readonly<AssignmentPagePr
     const handleStudentSubmission = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (assignment && user) {
-            const updatedSubmissions : SubmissionDto[] = [...assignment.submissions, {id: "", studentId: user.id, timestamp: new Date(Date.now()).toISOString().substring(0,19), content: rteRef.current?.editor?.getHTML().toString() || ""}];
+            const updatedSubmissions : SubmissionDto[] = [...assignment.submissions, {id: "", studentId: user.id, feedback: undefined, grade: undefined, timestamp: new Date(Date.now()).toISOString().substring(0,19), content: rteRef.current?.editor?.getHTML().toString() || ""}];
             handleUpdate("submissions", updatedSubmissions);
         }
     }
