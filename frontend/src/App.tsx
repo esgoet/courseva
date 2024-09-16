@@ -1,7 +1,6 @@
 import './App.css'
 import {useEffect, useMemo, useState} from "react";
 import {AssignmentDto, Course, CourseDto, LessonDto, NewCourseDto} from "./types/courseTypes.ts";
-import axios, {AxiosResponse} from 'axios';
 import {Route, Routes, useNavigate} from "react-router-dom";
 import CourseDetailsPage from "./pages/CourseDetails/CourseDetailsPage.tsx";
 import CourseCreator from "./pages/CourseCreator.tsx";
@@ -27,6 +26,8 @@ import {createTheme, ThemeProvider} from "@mui/material";
 import {themeOptions} from "./styles/themeOptions.ts";
 import ParticipantOverview from "./pages/CourseDetails/Participant/ParticipantOverview.tsx";
 import BrowsePage from "./pages/BrowsePage/BrowsePage.tsx";
+import axiosInstance from "./api/axiosInstance.ts";
+import axios, {AxiosResponse} from "axios";
 
 export default function App() {
     const [courses, setCourses] = useState<Course[]>([]);
@@ -39,25 +40,6 @@ export default function App() {
     const theme = createTheme({cssVariables: true,...themeOptions});
 
     const authContextValue = useMemo(() => ({ user, isInstructor}), [user, isInstructor]);
-
-    const axiosInstance = axios.create();
-    axiosInstance.interceptors.request.use(
-        async function (config) {
-            if (config.method && ['POST', 'PUT', 'DELETE', 'PATCH'].includes(config.method.toUpperCase())) {
-                try {
-                    const csrfResponse = await axios.get("/api/auth/csrf");
-                    config.headers["X-CSRF-TOKEN"] = csrfResponse.data.token;
-                } catch (error) {
-                    console.error("Failed to fetch CSRF token:", error);
-                    return Promise.reject(error);
-                }
-            }
-            return config;
-        },
-        function (error) {
-            return Promise.reject(error);
-        }
-    );
 
     const fetchCourses = () => {
         axiosInstance.get("/api/courses")
