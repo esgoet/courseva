@@ -1,13 +1,17 @@
 import {Link, useParams} from "react-router-dom";
 import {Assignment, AssignmentDto, SubmissionDto} from "../../../types/courseTypes.ts";
 import {FormEvent, useEffect, useRef, useState} from "react";
-import {Button, Grid2, Paper, Slider, Typography} from "@mui/material";
+import {Button, Grid2, IconButton, Paper, Typography} from "@mui/material";
 import {formatDate} from "../../../utils/formatDate.ts";
 import {useCourse} from "../../../hooks/useCourse.ts";
 import {RichTextEditorRef, RichTextReadOnly} from "mui-tiptap";
 import useExtensions from "../../../hooks/useExtensions.ts";
-import CustomRichTextEditor from "../../../components/Shared/CustomRichTextEditor.tsx";
 import {convertToAssignmentDto, convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
+import FeedbackForm from "../../../components/Submission/FeedbackForm.tsx";
+import {useAuth} from "../../../hooks/useAuth.ts";
+import GradeSlider from "../../../components/Shared/GradeSlider.tsx";
+import EditIcon from "@mui/icons-material/Edit";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 type SubmissionPageProps = {
     updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void;
@@ -16,10 +20,12 @@ type SubmissionPageProps = {
 export default function SubmissionPage({updateCourse}:Readonly<SubmissionPageProps>) {
     const {submissionId, assignmentId} = useParams();
     const {course} = useCourse();
+    const {isInstructor} = useAuth();
     const [submission, setSubmission] = useState<SubmissionDto | undefined>();
     const [assignment, setAssignment] = useState<AssignmentDto | undefined>();
     const extensions = useExtensions();
     const rteRef = useRef<RichTextEditorRef>(null);
+    const [editable, setEditable] = useState<boolean>(false);
 
     useEffect(()=> {
         if (course) {
@@ -35,11 +41,12 @@ export default function SubmissionPage({updateCourse}:Readonly<SubmissionPagePro
     const handleFeedbackSubmission = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (submission && assignment && course) {
-            const updatedSubmissions : SubmissionDto[] = [...assignment.submissions, {...submission, feedback: rteRef.current?.editor?.getHTML().toString()}];
+            const updatedSubmissions : SubmissionDto[] = assignment.submissions.map(el => el.id === submissionId ?  {...submission, feedback: rteRef.current?.editor?.getHTML().toString()} : el);
             const updatedAssignment = {...assignment,submissions: updatedSubmissions};
             setAssignment(updatedAssignment);
             updateCourse("assignments", convertToAssignmentDtoList(course.assignments)
                 .map(assignment => assignment.id === assignmentId ? updatedAssignment : assignment));
+            setEditable(false);
         }
     }
 
@@ -67,25 +74,34 @@ export default function SubmissionPage({updateCourse}:Readonly<SubmissionPagePro
                                 {formatDate(submission.timestamp).toUTCString()}
                             </Typography>
                         </Grid2>
-                        <Grid2>
-                            <h4>Feedback</h4>
-                            <form onSubmit={handleFeedbackSubmission}>
-                                <CustomRichTextEditor initialValue={submission.feedback ?? ""} ref={rteRef}/>
-                                <p>Grade: {submission.grade} ({submission.grade && submission.grade > 40 ? "Pass":"Fail"})</p>
-                                <Slider
-                                    value={submission.grade ?? 0}
-                                    marks={[{value: 0, label: "0"},{value: 40, label: "40"},{value: 70, label: "70"},{value: 100, label:"100"}]}
-                                    min={0}
-                                    max={100}
-                                    onChange={(e)=>setSubmission({...submission, grade: e.target.value})}
-                                    valueLabelDisplay="on"
-                                />
-                                <Button type={"submit"}>Submit Feedback</Button>
-                            </form>
+                        <Grid2 size={12}>
+                            <Grid2 container justifyContent={'space-between'} alignItems={"center"}>
+                                <h4>Feedback</h4>
+                                {isInstructor && submission.feedback &&
+                                    <IconButton
+                                        onClick={() => setEditable(!editable)}
+                                        color={"secondary"}
+                                    >
+                                        {editable ? <CancelIcon fontSize={"small"}/> : <EditIcon fontSize={"small"}/>}
+                                    </IconButton>
+                                }
+                            </Grid2>
+                            {isInstructor && !submission.feedback || isInstructor && editable ?
+                                <FeedbackForm handleSubmit={handleFeedbackSubmission} submission={submission} setSubmission={setSubmission} ref={rteRef}/>
+                                :
+                                <>
+                                    <Paper elevation={10} sx={{p: '15px', mb: 2}}>
+                                        <RichTextReadOnly content={submission.feedback} extensions={extensions}/>
+                                    </Paper>
+                                    {(submission.grade || submission.grade === 0) &&
+                                    <GradeSlider submission={submission} setSubmission={setSubmission} disabled={true}/>
+                                    }
+                                </>
+                            }
                         </Grid2>
                         <Grid2 size={12}>
                             <h4>Submission Content</h4>
-                            <Paper elevation={10} sx={{p: '20px'}}>
+                            <Paper elevation={10} sx={{p: '15px'}}>
                                 <RichTextReadOnly content={submission.content} extensions={extensions}/>
                             </Paper>
                         </Grid2>

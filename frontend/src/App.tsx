@@ -36,7 +36,7 @@ export default function App() {
     const [instructors, setInstructors] = useState<Instructor[]>([]);
     const [isInstructor, setIsInstructor] = useState<boolean>(false);
     const navigate = useNavigate();
-    const theme = createTheme(themeOptions);
+    const theme = createTheme({cssVariables: true,...themeOptions});
 
     const authContextValue = useMemo(() => ({ user, isInstructor}), [user, isInstructor]);
 
