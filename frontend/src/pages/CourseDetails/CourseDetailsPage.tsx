@@ -7,7 +7,7 @@ import {useAuth} from "../../hooks/useAuth.ts";
 import CourseActions from "../../components/Course/CourseActions.tsx";
 import {
     Breadcrumbs, Container,
-    Grid2, ListItem, ListItemText, Paper,
+    Grid2, InputLabel, ListItem, ListItemText, Paper,
     Typography, useMediaQuery, useTheme
 } from "@mui/material";
 import CourseTabs from "../../components/Course/CourseTabs.tsx";
@@ -29,7 +29,8 @@ export default function CourseDetailsPage({updateCourse, course, fetchCourse, de
     const theme = useTheme();
     const isMobile = !(useMediaQuery(theme.breakpoints.up('sm')));
     const { courseId } = useParams();
-    const {isInstructor} = useAuth();
+    const {user, isInstructor} = useAuth();
+    const gradeAverage: number | undefined = (user && 'grades' in user && course && user.grades[course.id].length > 0) ? user.grades[course.id].reduce((acc, currentValue) => acc + currentValue.grade, 0)/user.grades[course.id].length : undefined;
 
 
     useEffect(() =>{
@@ -69,6 +70,14 @@ export default function CourseDetailsPage({updateCourse, course, fetchCourse, de
                                                     allowedToEdit={isInstructor}/>
                             </Grid2>
                         </Grid2>
+                        {gradeAverage &&
+                            <>
+                                <InputLabel disabled shrink>Grade Average</InputLabel>
+                                <Typography color={gradeAverage >= 40 ? "success" : "error"}>
+                                    {gradeAverage}
+                                </Typography>
+                            </>
+                        }
                     </Paper>
                     <Container disableGutters sx={{mt: 2}}>
                         {isMobile ? <CourseTabsMobile/> :
