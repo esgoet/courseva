@@ -4,6 +4,7 @@ import com.github.esgoet.backend.dto.NewAppUserDto;
 import com.github.esgoet.backend.dto.StudentResponseDto;
 import com.github.esgoet.backend.dto.StudentUpdateDto;
 import com.github.esgoet.backend.exception.UserNotFoundException;
+import com.github.esgoet.backend.model.Grade;
 import com.github.esgoet.backend.model.Student;
 import com.github.esgoet.backend.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +22,7 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final IdService idService;
     private final PasswordEncoder passwordEncoder;
+    private static final String USER_TYPE = "student";
 
     public StudentResponseDto createStudent(NewAppUserDto user) {
         Student student = new Student(idService.randomId(), user.username(), user.email(), passwordEncoder.encode(user.password()), List.of(), new HashMap<>());
@@ -36,7 +37,7 @@ public class StudentService {
 
 
     public StudentResponseDto getStudentById(String id) {
-        return convertToStudentResponseDto(studentRepository.findById(id).orElseThrow(()-> new UserNotFoundException("No student found with id: " + id)));
+        return convertToStudentResponseDto(studentRepository.findById(id).orElseThrow(()-> new UserNotFoundException(USER_TYPE, id)));
     }
 
     public Student getStudentByUsername(String username) {
@@ -54,7 +55,7 @@ public class StudentService {
     }
 
     public StudentResponseDto updateStudent(String id, StudentUpdateDto updatedStudent) {
-        Student student = studentRepository.findById(id).orElseThrow(()-> new UserNotFoundException("No student found with id: " + id))
+        Student student = studentRepository.findById(id).orElseThrow(()-> new UserNotFoundException(USER_TYPE, id))
                 .withUsername(updatedStudent.username())
                 .withEmail(updatedStudent.email())
                 .withCourses(updatedStudent.courses())
@@ -64,5 +65,21 @@ public class StudentService {
 
     public void deleteStudent(String id) {
         studentRepository.deleteById(id);
+    }
+
+    public StudentResponseDto updateStudentGrades(String id, Map.Entry<String, Grade> grade) {
+        Student student = studentRepository.findById(id).orElseThrow(()-> new UserNotFoundException(USER_TYPE, id));
+        Map<String, List<Grade>> currentGrades = new HashMap<>(student.grades());
+        List<Grade> gradeList = currentGrades.getOrDefault(grade.getKey(), new ArrayList<>());
+        Optional<Grade> existingGrade = gradeList.stream()
+                .filter(g -> g.assignmentId().equals(grade.getValue().assignmentId()))
+                .findFirst();
+        if (existingGrade.isPresent()) {
+            gradeList = gradeList.stream().map(g -> g.assignmentId().equals(grade.getValue().assignmentId()) ? grade.getValue() : g).toList();
+        } else {
+            gradeList.add(grade.getValue());
+        }
+        currentGrades.put(grade.getKey(), gradeList);
+        return convertToStudentResponseDto(studentRepository.save(student.withGrades(currentGrades)));
     }
 }

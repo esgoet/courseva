@@ -12,6 +12,7 @@ import {useAuth} from "../../../hooks/useAuth.ts";
 import GradeSlider from "../../../components/Shared/GradeSlider.tsx";
 import EditIcon from "@mui/icons-material/Edit";
 import CancelIcon from "@mui/icons-material/Cancel";
+import axiosInstance from "../../../api/axiosInstance.ts";
 
 type SubmissionPageProps = {
     updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void;
@@ -38,6 +39,7 @@ export default function SubmissionPage({updateCourse}:Readonly<SubmissionPagePro
         }
     },[course, assignmentId, submissionId]);
 
+
     const handleFeedbackSubmission = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (submission && assignment && course) {
@@ -47,6 +49,13 @@ export default function SubmissionPage({updateCourse}:Readonly<SubmissionPagePro
             updateCourse("assignments", convertToAssignmentDtoList(course.assignments)
                 .map(assignment => assignment.id === assignmentId ? updatedAssignment : assignment));
             setEditable(false);
+
+            axiosInstance.put(`/api/students/${submission.studentId}/grades`, {
+                [course.id]: {
+                    assignmentId: assignmentId,
+                    grade: submission.grade
+                }
+            })
         }
     }
 

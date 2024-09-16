@@ -21,6 +21,7 @@ public class InstructorService {
     private final InstructorRepository instructorRepository;
     private final IdService idService;
     private final PasswordEncoder passwordEncoder;
+    private static final String USER_TYPE = "instructor";
 
     public InstructorResponseDto createInstructor(NewAppUserDto user) {
         Instructor instructor = new Instructor(idService.randomId(), user.username(), user.email(), passwordEncoder.encode(user.password()), List.of());
@@ -34,7 +35,7 @@ public class InstructorService {
 
 
     public InstructorResponseDto getInstructorById(String id) {
-        return convertToInstructorResponseDto(instructorRepository.findById(id).orElseThrow(()-> new UserNotFoundException("No instructor found with id: " + id)));
+        return convertToInstructorResponseDto(instructorRepository.findById(id).orElseThrow(()-> new UserNotFoundException(USER_TYPE, id)));
     }
 
     public Instructor getInstructorByUsername(String username) {
@@ -52,7 +53,7 @@ public class InstructorService {
     }
 
     public InstructorResponseDto updateInstructor(String id, InstructorUpdateDto updatedInstructor) {
-        Instructor instructor = instructorRepository.findById(id).orElseThrow(()-> new UserNotFoundException("No instructor found with id: " + id))
+        Instructor instructor = instructorRepository.findById(id).orElseThrow(()-> new UserNotFoundException(USER_TYPE, id))
                 .withUsername(updatedInstructor.username())
                 .withEmail(updatedInstructor.email())
                 .withCourses(updatedInstructor.courses());
