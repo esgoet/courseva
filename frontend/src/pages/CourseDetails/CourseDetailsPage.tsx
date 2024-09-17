@@ -14,6 +14,7 @@ import CourseTabs from "../../components/Course/CourseTabs.tsx";
 import CourseTabsMobile from "../../components/Course/CourseTabsMobile.tsx";
 import {CourseContextType} from "../../hooks/useCourse.ts";
 import EditableRichText from "../../components/Shared/EditableRichText.tsx";
+import calcCourseGradeAverage from "../../utils/calcCourseGradeAverage.ts";
 
 type CoursePageProps = {
     updateCourse: (updatedProperty: string, updatedValue: string | string[]) => void,
@@ -30,7 +31,7 @@ export default function CourseDetailsPage({updateCourse, course, fetchCourse, de
     const isMobile = !(useMediaQuery(theme.breakpoints.up('sm')));
     const { courseId } = useParams();
     const {user, isInstructor} = useAuth();
-    const gradeAverage: number | undefined = (user && 'grades' in user && course && user.grades[course.id].length > 0) ? user.grades[course.id].reduce((acc, currentValue) => acc + currentValue.grade, 0)/user.grades[course.id].length : undefined;
+    const gradeAverage: number | undefined = (user && 'grades' in user && course && user.grades[course.id].length > 0) ? calcCourseGradeAverage(user.grades[course.id]) : undefined;
 
 
     useEffect(() =>{
