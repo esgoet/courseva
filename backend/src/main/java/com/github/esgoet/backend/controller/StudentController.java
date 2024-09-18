@@ -6,6 +6,7 @@ import com.github.esgoet.backend.dto.StudentUpdateDto;
 import com.github.esgoet.backend.model.Grade;
 import com.github.esgoet.backend.service.StudentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class StudentController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public StudentResponseDto createStudent(@RequestBody NewAppUserDto user) {
         return studentService.createStudent(user);
     }
@@ -43,6 +45,7 @@ public class StudentController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteStudent(@PathVariable String id) {
         studentService.deleteStudent(id);
     }

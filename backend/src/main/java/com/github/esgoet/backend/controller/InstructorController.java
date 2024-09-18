@@ -5,6 +5,7 @@ import com.github.esgoet.backend.dto.NewAppUserDto;
 import com.github.esgoet.backend.dto.InstructorUpdateDto;
 import com.github.esgoet.backend.service.InstructorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class InstructorController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public InstructorResponseDto createInstructor(@RequestBody NewAppUserDto user) {
         return instructorService.createInstructor(user);
     }
@@ -36,6 +38,7 @@ public class InstructorController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteInstructor(@PathVariable String id) {
         instructorService.deleteInstructor(id);
     }

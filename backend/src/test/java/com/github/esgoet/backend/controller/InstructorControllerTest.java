@@ -72,7 +72,7 @@ class InstructorControllerTest {
                         }
                         """))
                 //THEN
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().json("""
                         {
                           "username": "esgoet",
@@ -146,7 +146,7 @@ class InstructorControllerTest {
         //WHEN
         mockMvc.perform(delete("/api/instructors/1").with(csrf().asHeader()))
                 //THEN
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
         //THEN
         mockMvc.perform(get("/api/instructors"))
                 .andExpect(status().isOk())

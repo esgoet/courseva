@@ -95,7 +95,7 @@ class CourseControllerTest {
                       "startDate": "2024-07-27"
                     }
                     """))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().json("""
                    {
                       "id": "math-101-24-07-27-1",
@@ -185,7 +185,7 @@ class CourseControllerTest {
         mockMvc.perform(delete("/api/courses/1")
                         .with(csrf().asHeader()))
                 //THEN
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
         mockMvc.perform(get("/api/courses"))
                 //THEN
                 .andExpect(status().isOk())
