@@ -1,5 +1,5 @@
 import {Grid2} from "@mui/material";
-import EditableListDetail from "../../../components/Shared/EditableListDetail.tsx";
+import EditableUserList from "../../../components/Shared/EditableUserList.tsx";
 import {Instructor, Student} from "../../../types/userTypes.ts";
 import {useCourse} from "../../../hooks/useCourse.ts";
 
@@ -17,12 +17,12 @@ export default function ParticipantOverview({students, instructors, updateCourse
                 <h3>Participants</h3>
             </Grid2>
             <Grid2 size={{xs:12, sm:6}}>
-                <EditableListDetail label={"Students"} name={"students"} initialValue={course?.students || []}
-                                    updateCourse={updateCourse} options={students}/>
+                <EditableUserList label={"Students"} name={"students"} initialValue={course?.students || []}
+                                  updateCourse={updateCourse} options={students}/>
             </Grid2>
             <Grid2 size={{xs: 12, sm: 6}}>
-                <EditableListDetail label={"Instructors"} name={"instructors"} initialValue={course?.instructors || []}
-                                    updateCourse={updateCourse} options={instructors}/>
+                <EditableUserList label={"Instructors"} name={"instructors"} initialValue={course?.instructors || []}
+                                  updateCourse={updateCourse} options={instructors}/>
             </Grid2>
         </Grid2>
     );
