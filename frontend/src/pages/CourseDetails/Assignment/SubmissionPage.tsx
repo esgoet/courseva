@@ -1,27 +1,63 @@
 import {Link, useParams} from "react-router-dom";
-import {Assignment, SubmissionDto} from "../../../types/courseTypes.ts";
-import {useEffect, useState} from "react";
-import {Button, Grid2, Typography} from "@mui/material";
+import {Assignment, AssignmentDto, SubmissionDto} from "../../../types/courseTypes.ts";
+import {FormEvent, useEffect, useRef, useState} from "react";
+import {Button, Grid2, IconButton, Paper, Typography} from "@mui/material";
 import {formatDate} from "../../../utils/formatDate.ts";
 import {useCourse} from "../../../hooks/useCourse.ts";
-import {RichTextReadOnly} from "mui-tiptap";
+import {RichTextEditorRef, RichTextReadOnly} from "mui-tiptap";
 import useExtensions from "../../../hooks/useExtensions.ts";
+import {convertToAssignmentDto, convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
+import FeedbackForm from "../../../components/Submission/FeedbackForm.tsx";
+import {useAuth} from "../../../hooks/useAuth.ts";
+import GradeSlider from "../../../components/Shared/GradeSlider.tsx";
+import EditIcon from "@mui/icons-material/Edit";
+import CancelIcon from "@mui/icons-material/Cancel";
+import axiosInstance from "../../../api/axiosInstance.ts";
 
-export default function SubmissionPage() {
+type SubmissionPageProps = {
+    updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void;
+}
+
+export default function SubmissionPage({updateCourse}:Readonly<SubmissionPageProps>) {
     const {submissionId, assignmentId} = useParams();
     const {course} = useCourse();
+    const {isInstructor} = useAuth();
     const [submission, setSubmission] = useState<SubmissionDto | undefined>();
+    const [assignment, setAssignment] = useState<AssignmentDto | undefined>();
     const extensions = useExtensions();
+    const rteRef = useRef<RichTextEditorRef>(null);
+    const [editable, setEditable] = useState<boolean>(false);
 
     useEffect(()=> {
         if (course) {
             const currentAssignment : Assignment | undefined = course.assignments.find(assignment => assignment.id === assignmentId);
             if (currentAssignment) {
+                setAssignment(convertToAssignmentDto(currentAssignment));
                 const currentSubmission = currentAssignment.submissions.find(submission => submission.id === submissionId)
-                if (currentSubmission) setSubmission({...currentSubmission, timestamp: currentSubmission.timestamp.toString()})
+                if (currentSubmission) setSubmission({...currentSubmission, timestamp: currentSubmission.timestamp.toISOString().substring(0,19)})
             }
         }
     },[course, assignmentId, submissionId]);
+
+
+    const handleFeedbackSubmission = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (submission && assignment && course) {
+            const updatedSubmissions : SubmissionDto[] = assignment.submissions.map(el => el.id === submissionId ?  {...submission, feedback: rteRef.current?.editor?.getHTML().toString()} : el);
+            const updatedAssignment = {...assignment,submissions: updatedSubmissions};
+            setAssignment(updatedAssignment);
+            updateCourse("assignments", convertToAssignmentDtoList(course.assignments)
+                .map(assignment => assignment.id === assignmentId ? updatedAssignment : assignment));
+            setEditable(false);
+
+            axiosInstance.put(`/api/students/${submission.studentId}/grades`, {
+                [course.id]: {
+                    assignmentId: assignmentId,
+                    grade: submission.grade
+                }
+            })
+        }
+    }
 
     return (
         <>
@@ -48,7 +84,41 @@ export default function SubmissionPage() {
                             </Typography>
                         </Grid2>
                         <Grid2 size={12}>
-                            <RichTextReadOnly content={submission.content} extensions={extensions}/>
+                            <Grid2 container justifyContent={'space-between'} alignItems={"center"}>
+                                <h4>Feedback</h4>
+                                {(isInstructor && submission.feedback) &&
+                                    <IconButton
+                                        onClick={() => setEditable(!editable)}
+                                        color={"secondary"}
+                                    >
+                                        {editable ? <CancelIcon fontSize={"small"}/> : <EditIcon fontSize={"small"}/>}
+                                    </IconButton>
+                                }
+                            </Grid2>
+                            {isInstructor && !submission.feedback || isInstructor && editable ?
+                                <FeedbackForm handleSubmit={handleFeedbackSubmission} submission={submission} setSubmission={setSubmission} ref={rteRef}/>
+                                :
+                                <>
+                                {submission.feedback ?
+                                    <Paper elevation={10} sx={{p: '15px', mb: 2}}>
+                                            <RichTextReadOnly content={submission.feedback} extensions={extensions}/>
+                                    </Paper>
+                                    :
+                                    <Typography color={"text.disabled"} >
+                                        No feedback yet.
+                                    </Typography>
+                                }
+                                    {(submission.grade || submission.grade === 0) &&
+                                    <GradeSlider submission={submission} setSubmission={setSubmission} disabled={true}/>
+                                    }
+                                </>
+                            }
+                        </Grid2>
+                        <Grid2 size={12}>
+                            <h4>Submission Content</h4>
+                            <Paper elevation={10} sx={{p: '15px'}}>
+                                <RichTextReadOnly content={submission.content} extensions={extensions}/>
+                            </Paper>
                         </Grid2>
                     </Grid2>
                 </>

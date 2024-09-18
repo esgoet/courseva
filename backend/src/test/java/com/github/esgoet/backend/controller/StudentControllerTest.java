@@ -158,4 +158,67 @@ class StudentControllerTest {
                 .andExpect(content().json("[]"));
 
     }
+
+    @Test
+    @WithMockUser(authorities = {"INSTRUCTOR"})
+    @DirtiesContext
+    void updateStudentGradesTest() throws Exception {
+        //GIVEN
+        studentRepository.save(new Student("1","esgoet","esgoet@fakeemail.com","123", List.of("courseId"), new HashMap<>()));
+        //WHEN
+        mockMvc.perform(put("/api/students/1/grades")
+                        .with(csrf().asHeader())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                              "courseId": {
+                                "assignmentId": "assignmentId",
+                                "grade": 70
+                              }
+                            }
+                            """))
+                        .andExpect(status().isOk())
+                        .andExpect(content().json("""
+                                {
+                                  "id": "1",
+                                  "username": "esgoet",
+                                  "email": "esgoet@fakeemail.com",
+                                  "courses": ["courseId"],
+                                  "grades": {"courseId": [
+                                          {
+                                            "assignmentId": "assignmentId",
+                                            "grade": 70
+                                          }
+                                        ]}
+                                }
+                                """));
+
+    }
+
+    @Test
+    @WithMockUser(authorities = {"INSTRUCTOR"})
+    @DirtiesContext
+    void updateStudentGradesTest_whenStudentDoesNotExist() throws Exception {
+        //WHEN
+        mockMvc.perform(put("/api/students/1/grades")
+                        .with(csrf().asHeader())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                              "courseId": {
+                                "assignmentId": "assignmentId",
+                                "grade": 70
+                              }
+                            }
+                            """))
+                //THEN
+                .andExpect(status().isNotFound())
+                .andExpect(content().json("""
+                        {
+                          "message": "No student found with id: 1",
+                           "statusCode": 404
+                        }
+                        """))
+                .andExpect(jsonPath("$.timestamp").exists());
+    }
 }

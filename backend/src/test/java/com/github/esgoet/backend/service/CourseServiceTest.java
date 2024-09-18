@@ -122,8 +122,8 @@ class CourseServiceTest {
         Lesson lessonWithId = new Lesson("lesson-1", "Lesson 1", "Introduction to Math", localDateTime);
         Lesson lessonWithoutId = new Lesson("", "Lesson 2", "Advanced Math", localDateTime);
 
-        Submission submissionWithId = new Submission("submission-1", "s1", "answer", localDateTime);
-        Submission submissionWithoutId = new Submission("", "s2", "group answer", localDateTime);
+        Submission submissionWithId = new Submission("submission-1", "s1", "answer", "feedback", 70, localDateTime);
+        Submission submissionWithoutId = new Submission("", "s2", "group answer","feedback", 75, localDateTime);
 
         Assignment assignmentWithId = new Assignment("assignment-1", "Assignment 1", "Solve problems", localDateTime, localDateTime.plusDays(7), List.of(submissionWithId));
         Assignment assignmentWithoutId = new Assignment("", "Assignment 2", "Group project", localDateTime, localDateTime.plusDays(7), List.of(submissionWithoutId));

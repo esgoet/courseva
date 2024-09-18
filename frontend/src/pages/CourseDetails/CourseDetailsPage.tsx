@@ -7,13 +7,15 @@ import {useAuth} from "../../hooks/useAuth.ts";
 import CourseActions from "../../components/Course/CourseActions.tsx";
 import {
     Breadcrumbs, Container,
-    Grid2, ListItem, ListItemText, Paper,
+    Grid2, InputLabel, ListItem, ListItemText, Paper,
     Typography, useMediaQuery, useTheme
 } from "@mui/material";
 import CourseTabs from "../../components/Course/CourseTabs.tsx";
 import CourseTabsMobile from "../../components/Course/CourseTabsMobile.tsx";
 import {CourseContextType} from "../../hooks/useCourse.ts";
 import EditableRichText from "../../components/Shared/EditableRichText.tsx";
+import {calculateCourseGradeAverage, calculateStudentGradeAverage } from "../../utils/calculateGradeAverage.ts";
+import GradeDisplay from "../../components/Shared/GradeDisplay.tsx";
 
 type CoursePageProps = {
     updateCourse: (updatedProperty: string, updatedValue: string | string[]) => void,
@@ -29,7 +31,9 @@ export default function CourseDetailsPage({updateCourse, course, fetchCourse, de
     const theme = useTheme();
     const isMobile = !(useMediaQuery(theme.breakpoints.up('sm')));
     const { courseId } = useParams();
-    const {isInstructor} = useAuth();
+    const {user, isInstructor} = useAuth();
+    const gradeAverage: number | undefined = (user && 'grades' in user && course && user.grades[course.id]) ? calculateStudentGradeAverage(user.grades[course.id]) : undefined;
+    const courseAverage : number | undefined = (course) && calculateCourseGradeAverage(course);
 
 
     useEffect(() =>{
@@ -69,6 +73,18 @@ export default function CourseDetailsPage({updateCourse, course, fetchCourse, de
                                                     allowedToEdit={isInstructor}/>
                             </Grid2>
                         </Grid2>
+                        {gradeAverage &&
+                            <>
+                                <InputLabel disabled shrink>Grade Average</InputLabel>
+                                <GradeDisplay grade={gradeAverage}/>
+                            </>
+                        }
+                        {(isInstructor && courseAverage) &&
+                            <>
+                                <InputLabel disabled shrink>Course Average</InputLabel>
+                                <GradeDisplay grade={courseAverage}/>
+                            </>
+                        }
                     </Paper>
                     <Container disableGutters sx={{mt: 2}}>
                         {isMobile ? <CourseTabsMobile/> :

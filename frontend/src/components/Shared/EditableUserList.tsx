@@ -15,7 +15,7 @@ type EditableListDetailProps = {
     options: Student[] | Instructor[]
 }
 
-export default function EditableListDetail(props: Readonly<EditableListDetailProps>){
+export default function EditableUserList(props: Readonly<EditableListDetailProps>){
     const [editable, setEditable] = useState<boolean>(false);
     const [input, setInput ] = useState<string[]>(props.initialValue);
     const {isInstructor} = useAuth();

@@ -62,6 +62,8 @@ export type Submission = {
     id: string,
     studentId: string,
     content: string,
+    feedback: string | undefined,
+    grade: number | undefined,
     timestamp: Date
 }
 
@@ -69,5 +71,7 @@ export type SubmissionDto = {
     id: string,
     studentId: string,
     content: string,
+    feedback: string | undefined,
+    grade: number | undefined,
     timestamp: string
 }

@@ -37,7 +37,19 @@ export const themeOptions: ThemeOptions = {
                         backgroundColor: 'rgba(76,131,245,0.2)',
                     }
                 }
-        }
+            }
+        },
+        MuiSlider: {
+            styleOverrides: {
+                root: {
+                    '&.Mui-disabled.MuiSlider-colorSuccess': {
+                        color: 'var(--mui-palette-success-main)',
+                    },
+                    '&.Mui-disabled.MuiSlider-colorError': {
+                        color: 'var(--mui-palette-error-main)',
+                    }
+                }
+            }
         }
     }
 };

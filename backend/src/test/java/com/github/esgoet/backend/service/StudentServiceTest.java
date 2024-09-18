@@ -4,6 +4,7 @@ import com.github.esgoet.backend.dto.NewAppUserDto;
 import com.github.esgoet.backend.dto.StudentResponseDto;
 import com.github.esgoet.backend.dto.StudentUpdateDto;
 import com.github.esgoet.backend.exception.UserNotFoundException;
+import com.github.esgoet.backend.model.Grade;
 import com.github.esgoet.backend.model.Student;
 import com.github.esgoet.backend.model.AppUserRole;
 import com.github.esgoet.backend.repository.StudentRepository;
@@ -15,9 +16,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -207,6 +206,64 @@ class StudentServiceTest {
         studentService.deleteStudent("1");
         //THEN
         verify(studentRepository).deleteById("1");
+    }
+
+    @Test
+    void updateStudentGradesTest_whenStudentExistsAndGradeDoesNotExist() {
+        //GIVEN
+        Student student = new Student("1","esgoet","esgoet@fakeemail.com","123", List.of("courseId"), new HashMap<>());
+        Student updatedStudent = new Student("1","esgoet","esgoet@fakeemail.com","123", List.of("courseId"), Map.of("courseId", List.of(new Grade("assignmentId", 70))));
+        when(studentRepository.findById("1")).thenReturn(Optional.of(student));
+        when(studentRepository.save(updatedStudent)).thenReturn(updatedStudent);
+        Map.Entry<String, Grade> gradeToAdd = new AbstractMap.SimpleEntry<>("courseId", new Grade("assignmentId", 70));
+
+        //WHEN
+        StudentResponseDto actual = studentService.updateStudentGrades("1", gradeToAdd);
+
+        //THEN
+        StudentResponseDto expected = new StudentResponseDto("1", "esgoet", "esgoet@fakeemail.com", List.of("courseId"), Map.of("courseId", List.of(new Grade("assignmentId", 70))));
+        verify(studentRepository).findById("1");
+        verify(studentRepository).save(updatedStudent);
+        assertEquals(expected, actual);
+
+    }
+
+    @Test
+    void updateStudentGradesTest_whenStudentAndGradeExists() {
+        //GIVEN
+        List<Grade> existingGrades = new ArrayList<>();
+        existingGrades.add(new Grade("assignmentId", 70));
+        Student student = new Student("1","esgoet","esgoet@fakeemail.com","123", List.of("courseId"), Map.of("courseId", existingGrades));
+
+        Student updatedStudent = new Student("1","esgoet","esgoet@fakeemail.com","123", List.of("courseId"), Map.of("courseId", List.of(new Grade("assignmentId", 75))));
+        when(studentRepository.findById("1")).thenReturn(Optional.of(student));
+        when(studentRepository.save(updatedStudent)).thenReturn(updatedStudent);
+        Map.Entry<String, Grade> gradeToAdd = new AbstractMap.SimpleEntry<>("courseId", new Grade("assignmentId", 75));
+
+        //WHEN
+        StudentResponseDto actual = studentService.updateStudentGrades("1", gradeToAdd);
+
+        //THEN
+        StudentResponseDto expected = new StudentResponseDto("1", "esgoet", "esgoet@fakeemail.com", List.of("courseId"), Map.of("courseId", List.of(new Grade("assignmentId", 75))));
+        verify(studentRepository).findById("1");
+        verify(studentRepository).save(updatedStudent);
+        assertEquals(expected, actual);
+
+    }
+
+    @Test
+    void updateStudentGradesTest_whenStudentDoesNotExist() {
+        //GIVEN
+        when(studentRepository.findById("1")).thenReturn(Optional.empty());
+        Map.Entry<String, Grade> gradeToAdd = new AbstractMap.SimpleEntry<>("courseId", new Grade("assignmentId", 75));
+
+        //THEN
+        UserNotFoundException thrown = assertThrows(UserNotFoundException.class,
+                //WHEN
+                () -> studentService.updateStudentGrades("1",gradeToAdd));
+        verify(studentRepository).findById("1");
+        verify(studentRepository, never()).save(any());
+        assertEquals("No student found with id: 1", thrown.getMessage());
     }
 
 }

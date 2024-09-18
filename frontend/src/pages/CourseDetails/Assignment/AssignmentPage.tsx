@@ -9,6 +9,7 @@ import {useCourse} from "../../../hooks/useCourse.ts";
 import EditableRichText from "../../../components/Shared/EditableRichText.tsx";
 import CustomRichTextEditor from "../../../components/Shared/CustomRichTextEditor.tsx";
 import {RichTextEditorRef} from "mui-tiptap";
+import {getMostRecentSubmissionsByStudent} from "../../../utils/getMostRecentSubmissionsByStudent.ts";
 
 type AssignmentPageProps = {
     updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void
@@ -40,7 +41,7 @@ export default function AssignmentPage({updateCourse}: Readonly<AssignmentPagePr
     const handleStudentSubmission = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (assignment && user) {
-            const updatedSubmissions : SubmissionDto[] = [...assignment.submissions, {id: "", studentId: user.id, timestamp: new Date(Date.now()).toISOString().substring(0,19), content: rteRef.current?.editor?.getHTML().toString() || ""}];
+            const updatedSubmissions : SubmissionDto[] = [...assignment.submissions, {id: "", studentId: user.id, feedback: undefined, grade: undefined, timestamp: new Date(Date.now()).toISOString().substring(0,19), content: rteRef.current?.editor?.getHTML().toString() || ""}];
             handleUpdate("submissions", updatedSubmissions);
         }
     }
@@ -66,6 +67,7 @@ export default function AssignmentPage({updateCourse}: Readonly<AssignmentPagePr
                             {assignment.submissions.filter(submission => submission.studentId === user.id).length > 0 &&
                                 <>
                                     <h4>Your Past Submissions</h4>
+                                    <p>Please note: only your most recent submission will be shown to your instructor.</p>
                                     <List dense >
                                         {assignment.submissions.filter(submission => submission.studentId === user.id).map(submission =>
                                             (
@@ -98,7 +100,8 @@ export default function AssignmentPage({updateCourse}: Readonly<AssignmentPagePr
                             <h4>Submissions</h4>
                             {assignment.submissions.length > 0 ?
                                 <List dense>
-                                    {assignment.submissions.map(submission => (
+                                    {getMostRecentSubmissionsByStudent(assignment.submissions)
+                                        .map(submission => (
                                         <ListItem key={`submission-${submission.id}`} disablePadding>
                                             <ListItemButton component={Link} to={`submission/${submission.id}`}>
                                                 <ListItemText primary={submission.studentId} secondary={submission.timestamp}/>
