@@ -2,7 +2,7 @@ import {Checkbox, List, ListItem, ListItemButton, ListItemIcon, ListItemText, To
 import {Instructor, Student} from "../../types/userTypes.ts";
 import {Dispatch, SetStateAction} from "react";
 import {useAuth} from "../../hooks/useAuth.ts";
-import calcCourseGradeAverage from "../../utils/calcGradeAverage.ts";
+import {calcStudentGradeAverage} from "../../utils/calcGradeAverage.ts";
 import {useCourse} from "../../hooks/useCourse.ts";
 import GradeDisplay from "./GradeDisplay.tsx";
 
@@ -52,7 +52,7 @@ export default function UserCheckList(props: Readonly<CheckListProps>) {
                                 id={`grade-average-list-${option.id}`}
                                 primary={
                                     <Tooltip title={"Grade Average"}>
-                                        <GradeDisplay grade={calcCourseGradeAverage(option.grades[course.id])}/>
+                                        <GradeDisplay grade={calcStudentGradeAverage(option.grades[course.id])}/>
                                     </Tooltip>
                                 }
                                 sx={{textAlign: 'right'}}

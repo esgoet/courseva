@@ -8,7 +8,7 @@ export default function GradeDisplay({grade}: Readonly<GradeDisplayProps>) {
     return (
 
         <Typography color={grade >= 40 ? "success" : "error"} sx={{bgcolor: 'background.default', py: '4px', px: '8px', borderRadius: 1}} variant={"button"}>
-            {grade} / 100
+            {grade.toFixed(2)} / 100
         </Typography>
 
     );
