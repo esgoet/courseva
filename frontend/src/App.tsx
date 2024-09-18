@@ -111,20 +111,19 @@ export default function App() {
     }
 
     const login = (user: UserLoginDto) => {
-        axios.post("/api/auth/login", {}, {
+        axios.get("/api/auth/me", {
             auth: {
                 username: user.username,
                 password: user.password
             }
         })
-            .then(()=> {
-                fetchUser()
-                    .then(()=>{
-                        fetchCourses();
-                        fetchStudents();
-                        fetchInstructors();
-                        navigate("/")
-                    });
+            .then((response)=> {
+                setUser(response.data)
+                setIsInstructor(checkIsInstructor(response.data))
+                fetchCourses();
+                fetchStudents();
+                fetchInstructors();
+                navigate("/");
             })
             .catch(error => {
                 setUser(null);
