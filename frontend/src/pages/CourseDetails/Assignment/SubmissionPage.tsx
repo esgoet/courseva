@@ -86,7 +86,7 @@ export default function SubmissionPage({updateCourse}:Readonly<SubmissionPagePro
                         <Grid2 size={12}>
                             <Grid2 container justifyContent={'space-between'} alignItems={"center"}>
                                 <h4>Feedback</h4>
-                                {isInstructor && submission.feedback &&
+                                {(isInstructor && submission.feedback) &&
                                     <IconButton
                                         onClick={() => setEditable(!editable)}
                                         color={"secondary"}
@@ -99,9 +99,15 @@ export default function SubmissionPage({updateCourse}:Readonly<SubmissionPagePro
                                 <FeedbackForm handleSubmit={handleFeedbackSubmission} submission={submission} setSubmission={setSubmission} ref={rteRef}/>
                                 :
                                 <>
+                                {submission.feedback ?
                                     <Paper elevation={10} sx={{p: '15px', mb: 2}}>
-                                        <RichTextReadOnly content={submission.feedback} extensions={extensions}/>
+                                            <RichTextReadOnly content={submission.feedback} extensions={extensions}/>
                                     </Paper>
+                                    :
+                                    <Typography color={"text.disabled"} >
+                                        No feedback yet.
+                                    </Typography>
+                                }
                                     {(submission.grade || submission.grade === 0) &&
                                     <GradeSlider submission={submission} setSubmission={setSubmission} disabled={true}/>
                                     }
