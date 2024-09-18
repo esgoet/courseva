@@ -86,13 +86,13 @@ export default function AssignmentOverview({updateCourse}: Readonly<AssignmentOv
                                             primaryTypographyProps={{fontSize: isMobile ? 'body2.fontSize' : 'body1.fontSize'}}
                                         />
                                     </Grid2>
-                                    {grade &&
-                                        <Grid2 size={{xs: 4, sm: 2}} sx={{textAlign: 'right'}}>
+                                    <Grid2 size={{xs: 4, sm: 2}} sx={{textAlign: 'right'}}>
+                                        {grade &&
                                             <ListItemText
                                                 primary={<GradeDisplay grade={grade}/>}
                                             />
-                                        </Grid2>
-                                    }
+                                        }
+                                    </Grid2>
                                 </Grid2>
                             </ListItemButton>
                         </ListItem>
