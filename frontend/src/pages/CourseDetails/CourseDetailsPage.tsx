@@ -15,6 +15,7 @@ import CourseTabsMobile from "../../components/Course/CourseTabsMobile.tsx";
 import {CourseContextType} from "../../hooks/useCourse.ts";
 import EditableRichText from "../../components/Shared/EditableRichText.tsx";
 import calcCourseGradeAverage from "../../utils/calcCourseGradeAverage.ts";
+import GradeDisplay from "../../components/Shared/GradeDisplay.tsx";
 
 type CoursePageProps = {
     updateCourse: (updatedProperty: string, updatedValue: string | string[]) => void,
@@ -31,7 +32,7 @@ export default function CourseDetailsPage({updateCourse, course, fetchCourse, de
     const isMobile = !(useMediaQuery(theme.breakpoints.up('sm')));
     const { courseId } = useParams();
     const {user, isInstructor} = useAuth();
-    const gradeAverage: number | undefined = (user && 'grades' in user && course && user.grades[course.id].length > 0) ? calcCourseGradeAverage(user.grades[course.id]) : undefined;
+    const gradeAverage: number | undefined = (user && 'grades' in user && course && user.grades[course.id]) ? calcCourseGradeAverage(user.grades[course.id]) : undefined;
 
 
     useEffect(() =>{
@@ -74,9 +75,7 @@ export default function CourseDetailsPage({updateCourse, course, fetchCourse, de
                         {gradeAverage &&
                             <>
                                 <InputLabel disabled shrink>Grade Average</InputLabel>
-                                <Typography color={gradeAverage >= 40 ? "success" : "error"}>
-                                    {gradeAverage}
-                                </Typography>
+                                <GradeDisplay grade={gradeAverage}/>
                             </>
                         }
                     </Paper>
