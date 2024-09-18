@@ -4,10 +4,8 @@ import com.github.esgoet.backend.dto.NewAppUserDto;
 import com.github.esgoet.backend.model.AppUserRole;
 import com.github.esgoet.backend.service.InstructorService;
 import com.github.esgoet.backend.service.StudentService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
@@ -41,13 +39,6 @@ public class AuthController {
             return studentService.createStudent(userDto);
         }
         return instructorService.createInstructor(userDto);
-    }
-
-    @PostMapping("/logout")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void logout(HttpSession session) {
-        session.invalidate();
-        SecurityContextHolder.clearContext();
     }
 
     @GetMapping("/csrf")
