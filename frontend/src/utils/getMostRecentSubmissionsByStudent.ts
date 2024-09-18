@@ -1,6 +1,6 @@
-import { SubmissionDto } from "../types/courseTypes";
+import {Submission, SubmissionDto} from "../types/courseTypes";
 
-export function getMostRecentSubmissionsByStudent(submissions: SubmissionDto[]) : SubmissionDto[] {
+export function getMostRecentSubmissionsByStudent(submissions: (SubmissionDto | Submission)[]) : (SubmissionDto | Submission)[] {
     const mostRecent = submissions.reduce((acc, submission) => {
         const { studentId, timestamp } = submission;
 
@@ -13,7 +13,7 @@ export function getMostRecentSubmissionsByStudent(submissions: SubmissionDto[]) 
         }
 
         return acc;
-    }, {} as { [studentId: string]: SubmissionDto });
+    }, {} as { [studentId: string]: SubmissionDto | Submission });
 
     // Return the filtered submissions as an array
     return Object.values(mostRecent);

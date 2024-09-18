@@ -2,7 +2,7 @@ import {Checkbox, List, ListItem, ListItemButton, ListItemIcon, ListItemText, To
 import {Instructor, Student} from "../../types/userTypes.ts";
 import {Dispatch, SetStateAction} from "react";
 import {useAuth} from "../../hooks/useAuth.ts";
-import calcCourseGradeAverage from "../../utils/calcCourseGradeAverage.ts";
+import calcCourseGradeAverage from "../../utils/calcGradeAverage.ts";
 import {useCourse} from "../../hooks/useCourse.ts";
 import GradeDisplay from "./GradeDisplay.tsx";
 
