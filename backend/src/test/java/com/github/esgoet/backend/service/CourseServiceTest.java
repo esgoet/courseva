@@ -82,13 +82,13 @@ class CourseServiceTest {
         //GIVEN
         Course course = new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("1","2"),  List.of("1","2"), startDate);
         NewCourseDto courseDto = new NewCourseDto("Math 101", "This is Math 101", List.of("1","2"),  List.of("1","2"), startDate);
-        when(idService.generateCourseId(courseDto.title(),courseDto.startDate())).thenReturn("1");
+        when(idService.generateCourseId(courseDto.title())).thenReturn("1");
         when(courseRepository.save(course)).thenReturn(course);
         //WHEN
         Course actual = courseService.createCourse(courseDto);
         //THEN
         Course expected = new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("1","2"),  List.of("1","2"), startDate);
-        verify(idService).generateCourseId(courseDto.title(),courseDto.startDate());
+        verify(idService).generateCourseId(courseDto.title());
         verify(courseRepository).save(course);
         assertEquals(expected, actual);
 

@@ -98,7 +98,6 @@ class CourseControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().json("""
                    {
-                      "id": "math-101-24-07-27-1",
                       "title": "Math 101",
                       "description": "This is Math 101",
                       "lessons": [],
@@ -107,7 +106,8 @@ class CourseControllerTest {
                       "instructors": [],
                       "startDate": "2024-07-27"
                     }
-                   """));
+                   """))
+                .andExpect(jsonPath("$.id").exists());
     }
 
     @Test
