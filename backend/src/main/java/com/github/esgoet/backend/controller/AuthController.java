@@ -26,12 +26,6 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/login")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void login() {
-        // This method is only here to trigger the login process
-    }
-
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public Object register(@RequestBody NewAppUserDto userDto) {
