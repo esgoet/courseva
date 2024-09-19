@@ -7,7 +7,7 @@ import {Button, Grid2, Paper} from "@mui/material";
 type DashboardProps = {
     courses: Course[],
     deleteCourse: (courseId: string) => void,
-    updateUser: (updatedProperty: string, updatedValue: string[]) => void,
+    updateUser: (courseId: string, isAdded: boolean) => void,
     updateCourse: (updatedProperty: string, updatedValue: string[], course: Course) => void,
 }
 export default function Dashboard({courses, deleteCourse, updateUser, updateCourse}: Readonly<DashboardProps>) {

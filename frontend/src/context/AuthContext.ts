@@ -1,8 +1,8 @@
 import {createContext} from "react";
-import {Instructor, Student} from "../types/userTypes.ts";
+import { AppUser } from "../types/userTypes";
 
 type AuthContextType = {
-    user: Student | Instructor | null | undefined,
+    user: AppUser | null | undefined,
     isInstructor: boolean,
 }
 

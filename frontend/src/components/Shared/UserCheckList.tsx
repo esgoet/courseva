@@ -44,7 +44,7 @@ export default function UserCheckList(props: Readonly<CheckListProps>) {
                     <ListItemButton role={undefined} dense disableRipple sx={{cursor: 'default'}}>
                         <ListItemText
                             id={`checkbox-list-label-${option.id}`}
-                            primary={option.username}
+                            primary={option.id}
                         />
                         {
                             (props.course &&!props.editable && isInstructor && 'grades' in option  && option.grades[props.course.id]) &&

@@ -6,7 +6,7 @@ import ConfirmedDeleteIconButton from "../Shared/ConfirmedDeleteIconButton.tsx";
 type CourseActionsProps = {
     course: Course,
     deleteCourse: (id: string) => void,
-    updateUser: (updatedProperty: string, updatedValue: string[]) => void,
+    updateUser: (courseId: string, isAdded: boolean) => void,
     updateCourse: (updatedProperty: string, updatedValue: string[], course: Course) => void,
 };
 
