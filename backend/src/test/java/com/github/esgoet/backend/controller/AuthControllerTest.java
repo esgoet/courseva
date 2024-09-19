@@ -1,8 +1,8 @@
 package com.github.esgoet.backend.controller;
 
-import com.github.esgoet.backend.model.Instructor;
+import com.github.esgoet.backend.model.AppUser;
 import com.github.esgoet.backend.model.Student;
-import com.github.esgoet.backend.repository.InstructorRepository;
+import com.github.esgoet.backend.repository.AppUserRepository;
 import com.github.esgoet.backend.repository.StudentRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +27,17 @@ class AuthControllerTest {
     @Autowired
     MockMvc mockMvc;
     @Autowired
-    StudentRepository studentRepository;
+    AppUserRepository appUserRepository;
     @Autowired
-    InstructorRepository instructorRepository;
+    StudentRepository studentRepository;
 
     @Test
     @DirtiesContext
     @WithMockUser(username = "esgoet")
     void getLoggedInUserTest() throws Exception {
         //GIVEN
-        studentRepository.save(new Student("1","esgoet","esgoet@fakeemail.com","123", List.of(),new HashMap<>()));
+        Student student =  studentRepository.save(new Student("s1", List.of(),new HashMap<>()));
+        appUserRepository.save(new AppUser("1","esgoet","esgoet@fakeemail.com","encodedPassword", student, null));
         //WHEN
         mockMvc.perform(get("/api/auth/me"))
                 .andExpect(status().isOk())
@@ -45,28 +46,12 @@ class AuthControllerTest {
                       "id": "1",
                       "username": "esgoet",
                       "email": "esgoet@fakeemail.com",
-                      "courses": [],
-                      "grades": {}
-                    }
-                    """));
-    }
-
-    @Test
-    @DirtiesContext
-    @WithMockUser(username = "esgoet")
-    void getLoggedInUserTest_whenNoStudentButInstructorWithId() throws Exception {
-        //GIVEN
-        instructorRepository.save(new Instructor("1","esgoet","esgoet@fakeemail.com","123", List.of()));
-        //WHEN
-        mockMvc.perform(get("/api/auth/me"))
-                //THEN
-                .andExpect(status().isOk())
-                .andExpect(content().json("""
-                    {
-                      "id": "1",
-                      "username": "esgoet",
-                      "email": "esgoet@fakeemail.com",
-                      "courses": []
+                      "student": {
+                        "id": "s1",
+                        "courses": [],
+                        "grades": {}
+                      },
+                      "instructor": null
                     }
                     """));
     }
@@ -81,8 +66,8 @@ class AuthControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().json("""
                     {
-                      "message": "No instructor found with username: esgoet",
-                      "statusCode":404
+                      "message": "No user found with username: esgoet",
+                      "statusCode": 404
                     }
                     """))
                 .andExpect(jsonPath("$.timestamp").exists());
@@ -109,11 +94,15 @@ class AuthControllerTest {
                     {
                       "username": "esgoet",
                       "email": "esgoet@fakeemail.com",
-                      "courses": [],
-                      "grades": {}
+                       "student": {
+                        "courses": [],
+                        "grades": {}
+                      },
+                      "instructor": null
                     }
                     """))
-                .andExpect(jsonPath("$.id").exists());
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.student.id").exists());
     }
 
     @Test
@@ -136,9 +125,13 @@ class AuthControllerTest {
                     {
                       "username": "esgoet",
                       "email": "esgoet@fakeemail.com",
-                      "courses": []
+                      "student": null,
+                      "instructor": {
+                        "courses": []
+                      }
                     }
                     """))
-                .andExpect(jsonPath("$.id").exists());
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.instructor.id").exists());
     }
 }

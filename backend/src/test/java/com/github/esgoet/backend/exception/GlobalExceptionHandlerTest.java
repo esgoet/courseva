@@ -61,12 +61,12 @@ class GlobalExceptionHandlerTest {
 
     @Test
     @WithMockUser(username = "esgoet")
-    void handleUsernameNotFoundExceptionTest_forInstructors() throws Exception {
+    void handleUsernameNotFoundExceptionTest() throws Exception {
         mockMvc.perform(get("/api/auth/me"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().json("""
                     {
-                      "message": "No instructor found with username: esgoet",
+                      "message": "No user found with username: esgoet",
                       "statusCode": 404
                     }
                     """))
