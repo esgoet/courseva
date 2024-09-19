@@ -113,7 +113,7 @@ export default function App() {
     const login = (user: UserLoginDto) => {
         axios.get("/api/auth/me", {
             auth: {
-                username: user.username,
+                username: user.email,
                 password: user.password
             }
         })
@@ -149,25 +149,42 @@ export default function App() {
             .catch((error)=>console.error(error.response.data));
     }
 
-    const updateUserCourses = (courseId: string, isAdded: boolean) => {
-        const baseUrl : string = isInstructor ? "/api/instructors" : "/api/students";
-        if (user) {
-            const instructorOrStudent: Instructor | Student | undefined = isInstructor ? user.instructor : user.student;
-            if (instructorOrStudent) {
-                if (isAdded) {
-                    instructorOrStudent.courses.push(courseId);
-                } else {
-                    instructorOrStudent.courses.filter(course => course !== courseId);
-                }
-                axiosInstance.put(`${baseUrl}/${instructorOrStudent.id}`, {...instructorOrStudent, courses: instructorOrStudent.courses})
-                    .then((response) => {
-                        if (isInstructor) {
-                            setUser({...user, instructor: response.data})
-                        } else {
-                            setUser({...user, student: response.data});
-                        }
-                    })
-                    .catch((error)=>console.error(error.response.data));
+    const updateStudent = (updatedProperty?: string, updatedValue?: string, student = user?.student) => {
+        if (user && student) {
+            if (updatedProperty && updatedValue) student = {...student, [updatedProperty]: updatedValue};
+            axiosInstance.put(`/api/students/${student.id}`, student)
+                .then((response) => {
+                    setUser({...user, student: response.data})
+                })
+                .catch((error)=>console.error(error.response.data));
+        }
+    }
+
+    const updateInstructor = (updatedProperty?: string, updatedValue?: string, instructor = user?.instructor) => {
+        if (user && instructor) {
+            if (updatedProperty && updatedValue) instructor = {...instructor, [updatedProperty]: updatedValue};
+            axiosInstance.put(`/api/instructors/${instructor.id}`, instructor)
+                .then((response) => {
+                    setUser({...user, instructor: response.data})
+                })
+                .catch((error)=>console.error(error.response.data));
+        }
+    }
+
+    const updateUserCourses = (courseId: string, isAdded: boolean, userToUpdate?: Student | Instructor): void => {
+        if (!userToUpdate && user) {
+            userToUpdate = isInstructor ? user.instructor : user.student;
+        }
+        if (userToUpdate) {
+            if (isAdded) {
+                userToUpdate.courses.push(courseId);
+            } else {
+                userToUpdate.courses.filter(course => course !== courseId);
+            }
+            if ('grades' in userToUpdate) {
+                updateStudent(userToUpdate);
+            } else {
+                updateInstructor(userToUpdate);
             }
         }
     }
@@ -200,7 +217,7 @@ export default function App() {
                             <Route element={<ProtectedRoutes />}>
                                 <Route path={"/"} element={<Dashboard courses={courses} deleteCourse={deleteCourse} updateUser={updateUserCourses} updateCourse={updateCourse}/>}/>
                                 <Route path={"/browse"} element={<BrowsePage courses={courses} deleteCourse={deleteCourse} updateUser={updateUserCourses} updateCourse={updateCourse}/>}/>
-                                <Route path={"/account"} element={<UserAccountPage updateUser={updateUser} deleteUser={deleteUser}/>}/>
+                                <Route path={"/account"} element={<UserAccountPage updateUser={updateUser} deleteUser={deleteUser} updateInstructor={updateInstructor} updateStudent={updateStudent}/>}/>
                                 <Route path={"/course/:courseId"} element={<CourseDetailsPage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse} deleteCourse={deleteCourse} students={students} instructors={instructors} updateUser={updateUserCourses}/>}>
                                     <Route index element={<ParticipantOverview students={students} instructors={instructors} updateCourse={updateCourse}/>}/>
                                     <Route path={"lessons"} element={<LessonOverview updateCourse={updateCourse}/>}/>

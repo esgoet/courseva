@@ -34,7 +34,7 @@ export default function EditableTextDetail(props: Readonly<EditableTextDetailPro
                 name={props.name}
                 label={props.label}
                 type={props.inputType}
-                value={props.initialValue}
+                value={input}
                 onChange={(e)=>setInput(e.target.value)}
                 disabled={!editable}
                 autoFocus={editable}

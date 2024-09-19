@@ -6,13 +6,16 @@ import {Link} from "react-router-dom";
 import {Button, Grid2, Paper} from "@mui/material";
 
 type UserAccountPageProps = {
-    updateUser: (updatedProperty: string, updatedValue: string) => void;
-    deleteUser: (id: string) => void;
+    updateUser: (updatedProperty: string, updatedValue: string) => void,
+    updateStudent: (updatedProperty: string, updatedValue: string) => void,
+    updateInstructor: (updatedProperty: string, updatedValue: string) => void,
+    deleteUser: (id: string) => void
 };
 
-export default function UserAccountPage({updateUser, deleteUser}: Readonly<UserAccountPageProps>) {
+export default function UserAccountPage({updateUser, updateStudent, updateInstructor, deleteUser}: Readonly<UserAccountPageProps>) {
     const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
-    const {user} = useAuth();
+    const {user, isInstructor} = useAuth();
+
 
     return (
         <>
@@ -21,8 +24,13 @@ export default function UserAccountPage({updateUser, deleteUser}: Readonly<UserA
                 <Paper sx={{p:'20px', mt: '10px'}} square={false}>
                     <Grid2 container spacing={2}>
                         <Grid2 size={{xs: 12, sm: 6}}>
-                            <EditableTextDetail inputType={"text"} label={"Username"} name={"username"}
-                                                initialValue={user.username} updateFunction={updateUser} allowedToEdit={true}/>
+                            <EditableTextDetail
+                                inputType={"text"}
+                                label={"Username"}
+                                name={"username"}
+                                initialValue={user.student?.username ?? user.instructor?.username ?? ""}
+                                updateFunction={isInstructor ? updateInstructor : updateStudent}
+                                allowedToEdit={true}/>
                         </Grid2>
                         <Grid2 size={{xs: 12, sm: 6}}>
                             <EditableTextDetail inputType={"email"} label={"Email"} name={"email"} initialValue={user.email}

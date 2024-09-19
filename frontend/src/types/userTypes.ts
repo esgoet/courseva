@@ -1,6 +1,5 @@
 export type AppUser = {
     id: string,
-    username: string,
     email: string,
     student: Student | undefined,
     instructor: Instructor | undefined
@@ -8,6 +7,7 @@ export type AppUser = {
 
 export type Student = {
     id: string,
+    username: string,
     courses: string[],
     grades: {
         [courseId: string] : Grade[],
@@ -21,6 +21,7 @@ export type Grade = {
 
 export type Instructor = {
     id: string,
+    username: string,
     courses: string[]
 }
 
@@ -32,7 +33,7 @@ export type NewUserDto = {
 }
 
 export type UserLoginDto = {
-    username: string,
+    email: string,
     password: string
 }
 

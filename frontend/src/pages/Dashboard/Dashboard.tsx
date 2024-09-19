@@ -17,7 +17,7 @@ export default function Dashboard({courses, deleteCourse, updateUser, updateCour
         {user &&
                 <Grid2 container spacing={2}>
                     <Grid2>
-                        <p>Hello {user.username}!</p>
+                        <p>Hello {user.student?.username ?? user.instructor?.username}!</p>
                     </Grid2>
                     <Grid2>
                         {isInstructor && <Button component={Link} to={"/course/create"} variant={"outlined"} color={"secondary"}>Create a Course</Button>}

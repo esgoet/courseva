@@ -9,7 +9,7 @@ type LoginPageProps = {
 }
 
 export default function LoginPage({login}:Readonly<LoginPageProps>) {
-    const [user, setUser] = useState<UserLoginDto>({username:"", password:""});
+    const [user, setUser] = useState<UserLoginDto>({email:"", password:""});
 
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -18,7 +18,7 @@ export default function LoginPage({login}:Readonly<LoginPageProps>) {
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setUser({username:"", password:""});
+        setUser({email:"", password:""});
         login(user);
     }
 
@@ -27,10 +27,10 @@ export default function LoginPage({login}:Readonly<LoginPageProps>) {
             <h2>Login</h2>
             <form onSubmit={handleSubmit}>
                 <TextField
-                    label={"Username"}
-                    type={"text"}
-                    name={"username"}
-                    value={user.username}
+                    label={"Email"}
+                    type={"email"}
+                    name={"email"}
+                    value={user.email}
                     onChange={handleChange}
                     required
                     aria-required
