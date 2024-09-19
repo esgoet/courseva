@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 public record StudentUpdateDto(
-        String username,
-        String email,
         List<String> courses,
         Map<String,List<Grade>> grades
 ) {

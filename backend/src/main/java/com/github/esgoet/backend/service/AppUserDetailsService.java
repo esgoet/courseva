@@ -1,7 +1,6 @@
 package com.github.esgoet.backend.service;
 
-import com.github.esgoet.backend.model.Instructor;
-import com.github.esgoet.backend.model.Student;
+import com.github.esgoet.backend.model.AppUser;
 import com.github.esgoet.backend.model.AppUserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,28 +15,15 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AppUserDetailsService implements UserDetailsService {
-    private final StudentService studentService;
-    private final InstructorService instructorService;
+    private final AppUserService appUserService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        String name;
-        String password;
-        String role;
-        try {
-            Student student = studentService.getStudentByUsername(username);
-            name = student.username();
-            password = student.password();
-            role = AppUserRole.STUDENT.name();
-        } catch (UsernameNotFoundException e) {
-            Instructor instructor = instructorService.getInstructorByUsername(username);
-            name = instructor.username();
-            password = instructor.password();
-            role = AppUserRole.INSTRUCTOR.name();
-        }
+        AppUser appUser = appUserService.getAppUserByUsername(username);
+        String role = appUser.student() == null ? AppUserRole.INSTRUCTOR.name() : AppUserRole.STUDENT.name();
         return new User(
-                name,
-                password,
+                appUser.username(),
+                appUser.password(),
                 List.of(new SimpleGrantedAuthority(role)));
     }
 }

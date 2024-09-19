@@ -50,17 +50,6 @@ export default function CourseCreator({createCourse, students, instructors}: Rea
                     required
                     aria-required
                 />
-                <TextField
-                    label={"Course Description"}
-                    name={"description"}
-                    value={course.description}
-                    onChange={handleChange}
-                    autoCapitalize={"on"}
-                    required
-                    aria-required
-                    multiline
-                    minRows={4}
-                />
                 <Grid2 size={12} id={"assignment-description"}>
                     <InputLabel shrink htmlFor={"assignment-description"} required aria-required>Course Description</InputLabel>
                     <CustomRichTextEditor initialValue={""} ref={rteRef} />
