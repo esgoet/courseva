@@ -26,29 +26,27 @@ public class AppUserService {
     public AppUserResponseDto createAppUser(NewAppUserDto user) {
         AppUser appUser = new AppUser(
                 idService.randomId(),
-                user.username(),
                 user.email(),
                 passwordEncoder.encode(user.password()),
-                user.role().equals(AppUserRole.STUDENT) ? studentService.createStudent() : null,
-                user.role().equals(AppUserRole.INSTRUCTOR) ? instructorService.createInstructor() : null
+                user.role().equals(AppUserRole.STUDENT) ? studentService.createStudent(user.username()) : null,
+                user.role().equals(AppUserRole.INSTRUCTOR) ? instructorService.createInstructor(user.username()) : null
         );
         appUserRepository.save(appUser);
         return convertToAppUserResponseDto(appUser);
     }
 
-    public AppUser getAppUserByUsername(String username) {
-        return appUserRepository.findAppUserByUsername(username).orElseThrow(()-> new UsernameNotFoundException("No user found with username: " + username));
+    public AppUser getAppUserByEmail(String email) {
+        return appUserRepository.findAppUserByEmail(email).orElseThrow(()-> new UsernameNotFoundException("No user found with email: " + email));
     }
 
     public AppUserResponseDto getLoggedInAppUser() {
         var principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        AppUser appUser = getAppUserByUsername(principal.getUsername());
+        AppUser appUser = getAppUserByEmail(principal.getUsername());
         return convertToAppUserResponseDto(appUser);
     }
 
     public AppUserResponseDto updateAppUser(String id, AppUserUpdateDto updateDto) {
         AppUser appUser = appUserRepository.findById(id).orElseThrow(()-> new UserNotFoundException(USER_TYPE, id))
-                .withUsername(updateDto.username())
                 .withEmail(updateDto.email());
         return convertToAppUserResponseDto(appUserRepository.save(appUser));
     }
@@ -61,7 +59,7 @@ public class AppUserService {
     }
 
     public AppUserResponseDto convertToAppUserResponseDto (AppUser appUser) {
-        return new AppUserResponseDto(appUser.id(),appUser.username(),appUser.email(), appUser.student(), appUser.instructor()
+        return new AppUserResponseDto(appUser.id(),appUser.email(), appUser.student(), appUser.instructor()
         );
     }
 

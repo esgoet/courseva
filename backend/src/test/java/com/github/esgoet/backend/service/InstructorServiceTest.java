@@ -21,12 +21,12 @@ class InstructorServiceTest {
     @Test
     void getInstructorByIdTest_whenInstructorExists() {
         //GIVEN
-        Instructor instructor = new Instructor("i1", new ArrayList<>());
+        Instructor instructor = new Instructor("i1", "esgoet", new ArrayList<>());
         when(instructorRepository.findById("i1")).thenReturn(Optional.of(instructor));
         //WHEN
         Instructor actual = instructorService.getInstructorById("i1");
         //THEN
-        Instructor expected = new Instructor("i1", new ArrayList<>());
+        Instructor expected = new Instructor("i1", "esgoet", new ArrayList<>());
         verify(instructorRepository).findById("i1");
         assertEquals(expected, actual);
     }
@@ -46,13 +46,13 @@ class InstructorServiceTest {
     @Test
     void createInstructorTest() {
         //GIVEN
-        Instructor instructor =  new Instructor("i1", new ArrayList<>());
+        Instructor instructor =  new Instructor("i1", "esgoet", new ArrayList<>());
         when(idService.randomId()).thenReturn("i1");
         when(instructorRepository.save(instructor)).thenReturn(instructor);
         //WHEN
-        Instructor actual = instructorService.createInstructor();
+        Instructor actual = instructorService.createInstructor("esgoet");
         //THEN
-        Instructor expected = new Instructor("i1", new ArrayList<>());
+        Instructor expected = new Instructor("i1", "esgoet", new ArrayList<>());
         verify(idService).randomId();
         verify(instructorRepository).save(instructor);
         assertEquals(expected, actual);
@@ -61,12 +61,12 @@ class InstructorServiceTest {
     @Test
     void getAllInstructorsTest() {
         //GIVEN
-        List<Instructor> instructors = List.of(new Instructor("i1", new ArrayList<>()));
+        List<Instructor> instructors = List.of(new Instructor("i1", "esgoet", new ArrayList<>()));
         when(instructorRepository.findAll()).thenReturn(instructors);
         //WHEN
         List<Instructor> actual = instructorService.getAllInstructors();
         //THEN
-        List<Instructor> expected = List.of(new Instructor("i1", new ArrayList<>()));
+        List<Instructor> expected = List.of(new Instructor("i1", "esgoet", new ArrayList<>()));
         verify(instructorRepository).findAll();
         assertEquals(expected, actual);
     }
@@ -75,15 +75,15 @@ class InstructorServiceTest {
     @Test
     void updateInstructorTest_whenInstructorExists() {
         //GIVEN
-        Instructor existingInstructor = new Instructor("i1", List.of());
-        InstructorUpdateDto updatedInstructorDto = new InstructorUpdateDto(  List.of("courseId-1"));
-        Instructor updatedInstructor = new Instructor("i1", List.of("courseId-1"));
+        Instructor existingInstructor = new Instructor("i1", "esgoet", List.of());
+        InstructorUpdateDto updatedInstructorDto = new InstructorUpdateDto("esgoet", List.of("courseId-1"));
+        Instructor updatedInstructor = new Instructor("i1", "esgoet", List.of("courseId-1"));
         when(instructorRepository.findById("i1")).thenReturn(Optional.of(existingInstructor));
         when(instructorRepository.save(updatedInstructor)).thenReturn(updatedInstructor);
         //WHEN
         Instructor actual = instructorService.updateInstructor("i1", updatedInstructorDto);
         // THEN
-        Instructor expected = new Instructor("i1", List.of("courseId-1"));
+        Instructor expected = new Instructor("i1", "esgoet", List.of("courseId-1"));
         verify(instructorRepository).findById("i1");
         verify(instructorRepository).save(updatedInstructor);
         assertEquals(expected, actual);
@@ -93,7 +93,7 @@ class InstructorServiceTest {
     @Test
     void updateInstructorTest_whenInstructorNotFound() {
         //GIVEN
-        InstructorUpdateDto updatedInstructorDto = new InstructorUpdateDto( List.of("courseId-1"));
+        InstructorUpdateDto updatedInstructorDto = new InstructorUpdateDto("esgoet", List.of("courseId-1"));
         when(instructorRepository.findById("i1")).thenReturn(Optional.empty());
         // THEN
         UserNotFoundException thrown = assertThrows(UserNotFoundException.class,

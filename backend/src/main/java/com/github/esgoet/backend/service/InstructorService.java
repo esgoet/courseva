@@ -17,8 +17,8 @@ public class InstructorService {
     private final IdService idService;
     private static final String USER_TYPE = "instructor";
 
-    public Instructor createInstructor() {
-        Instructor instructor = new Instructor(idService.randomId(), new ArrayList<>());
+    public Instructor createInstructor(String username) {
+        Instructor instructor = new Instructor(idService.randomId(), username, new ArrayList<>());
         return instructorRepository.save(instructor);
     }
 
@@ -30,9 +30,10 @@ public class InstructorService {
         return instructorRepository.findById(id).orElseThrow(()-> new UserNotFoundException(USER_TYPE, id));
     }
 
-    public Instructor updateInstructor(String id, InstructorUpdateDto updatedInstructor) {
+    public Instructor updateInstructor(String id, InstructorUpdateDto updateDto) {
         Instructor instructor = instructorRepository.findById(id).orElseThrow(()-> new UserNotFoundException(USER_TYPE, id))
-                .withCourses(updatedInstructor.courses());
+                .withUsername(updateDto.username())
+                .withCourses(updateDto.courses());
         return instructorRepository.save(instructor);
     }
 

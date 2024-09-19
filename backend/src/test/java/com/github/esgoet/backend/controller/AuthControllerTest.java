@@ -33,21 +33,21 @@ class AuthControllerTest {
 
     @Test
     @DirtiesContext
-    @WithMockUser(username = "esgoet")
+    @WithMockUser(username = "esgoet@fakeemail.com")
     void getLoggedInUserTest() throws Exception {
         //GIVEN
-        Student student =  studentRepository.save(new Student("s1", List.of(),new HashMap<>()));
-        appUserRepository.save(new AppUser("1","esgoet","esgoet@fakeemail.com","encodedPassword", student, null));
+        Student student =  studentRepository.save(new Student("s1", "esgoet", List.of(),new HashMap<>()));
+        appUserRepository.save(new AppUser("1","esgoet@fakeemail.com","encodedPassword", student, null));
         //WHEN
         mockMvc.perform(get("/api/auth/me"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                     {
                       "id": "1",
-                      "username": "esgoet",
                       "email": "esgoet@fakeemail.com",
                       "student": {
                         "id": "s1",
+                        "username": "esgoet",
                         "courses": [],
                         "grades": {}
                       },
@@ -58,7 +58,7 @@ class AuthControllerTest {
 
     @Test
     @DirtiesContext
-    @WithMockUser(username = "esgoet")
+    @WithMockUser(username = "esgoet@fakeemail.com")
     void getLoggedInUserTest_whenNoLoggedInUserWithId() throws Exception {
        //WHEN
         mockMvc.perform(get("/api/auth/me"))
@@ -66,7 +66,7 @@ class AuthControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().json("""
                     {
-                      "message": "No user found with username: esgoet",
+                      "message": "No user found with email: esgoet@fakeemail.com",
                       "statusCode": 404
                     }
                     """))
@@ -92,9 +92,9 @@ class AuthControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().json("""
                     {
-                      "username": "esgoet",
                       "email": "esgoet@fakeemail.com",
                        "student": {
+                        "username": "esgoet",
                         "courses": [],
                         "grades": {}
                       },
@@ -123,10 +123,10 @@ class AuthControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().json("""
                     {
-                      "username": "esgoet",
                       "email": "esgoet@fakeemail.com",
                       "student": null,
                       "instructor": {
+                        "username": "esgoet",
                         "courses": []
                       }
                     }

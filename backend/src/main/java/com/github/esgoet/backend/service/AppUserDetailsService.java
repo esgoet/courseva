@@ -18,11 +18,11 @@ public class AppUserDetailsService implements UserDetailsService {
     private final AppUserService appUserService;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AppUser appUser = appUserService.getAppUserByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        AppUser appUser = appUserService.getAppUserByEmail(email);
         String role = appUser.student() == null ? AppUserRole.INSTRUCTOR.name() : AppUserRole.STUDENT.name();
         return new User(
-                appUser.username(),
+                appUser.email(),
                 appUser.password(),
                 List.of(new SimpleGrantedAuthority(role)));
     }
