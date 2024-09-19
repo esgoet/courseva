@@ -10,6 +10,7 @@ import java.util.Map;
 @Document("students")
 public record Student(
         String id,
+        String username,
         List<String> courses,
         Map<String,List<Grade>> grades
 ) {

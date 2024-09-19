@@ -11,6 +11,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -41,7 +42,7 @@ class StudentControllerTest {
     @DirtiesContext
     void getStudentByIdTest() throws Exception {
         //GIVEN
-        studentRepository.save(new Student("s1", List.of(), new HashMap<>()));
+        studentRepository.save(new Student("s1", "esgoet", new ArrayList<>(), new HashMap<>()));
         //WHEN
         mockMvc.perform(get("/api/students/s1"))
                 //THEN
@@ -49,6 +50,7 @@ class StudentControllerTest {
                 .andExpect(content().json("""
                       {
                           "id": "s1",
+                          "username": "esgoet",
                           "courses": [],
                           "grades": {}
                       }
@@ -61,13 +63,14 @@ class StudentControllerTest {
     @DirtiesContext
     void updateStudentTest() throws Exception {
         //GIVEN
-        studentRepository.save(new Student("s1", List.of(), new HashMap<>()));
+        studentRepository.save(new Student("s1", "esgoet", new ArrayList<>(), new HashMap<>()));
         //WHEN
         mockMvc.perform(put("/api/students/s1")
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                             {
+                              "username": "esgoet",
                               "courses": ["courseId-1"],
                               "grades": {}
                             }
@@ -77,6 +80,7 @@ class StudentControllerTest {
                 .andExpect(content().json("""
                         {
                           "id": "s1",
+                          "username": "esgoet",
                           "courses": ["courseId-1"],
                           "grades": {}
                         }
@@ -93,6 +97,7 @@ class StudentControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                             {
+                              "username": "esgoet",
                               "courses": ["courseId-1"],
                               "grades": {}
                             }
@@ -114,7 +119,7 @@ class StudentControllerTest {
     @DirtiesContext
     void updateStudentGradesTest() throws Exception {
         //GIVEN
-        studentRepository.save(new Student("s1", List.of("courseId"), new HashMap<>()));
+        studentRepository.save(new Student("s1", "esgoet", List.of("courseId"), new HashMap<>()));
         //WHEN
         mockMvc.perform(put("/api/students/s1/grades")
                         .with(csrf().asHeader())
@@ -131,6 +136,7 @@ class StudentControllerTest {
                         .andExpect(content().json("""
                                 {
                                   "id": "s1",
+                                  "username": "esgoet",
                                   "courses": ["courseId"],
                                   "grades": {"courseId": [
                                           {
@@ -164,7 +170,7 @@ class StudentControllerTest {
                 .andExpect(content().json("""
                         {
                           "message": "No student found with id: s1",
-                           "statusCode": 404
+                          "statusCode": 404
                         }
                         """))
                 .andExpect(jsonPath("$.timestamp").exists());

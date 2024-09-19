@@ -24,38 +24,38 @@ class AppUserDetailsServiceTest {
     @Test
     void loadUserByUsernameTest_whenUserStudent() {
         //GIVEN
-        AppUser appUser = new AppUser("1", "esgoet", "esgoet@fakeemail.com","123", new Student("s1", List.of(), new HashMap<>()), null);
-        when(appUserService.getAppUserByUsername("esgoet")).thenReturn(appUser);
+        AppUser appUser = new AppUser("1", "esgoet@fakeemail.com","123", new Student("s1", "esgoet", List.of(), new HashMap<>()), null);
+        when(appUserService.getAppUserByEmail("esgoet@fakeemail.com")).thenReturn(appUser);
         //WHEN
-        UserDetails actual = appUserDetailsService.loadUserByUsername("esgoet");
+        UserDetails actual = appUserDetailsService.loadUserByUsername("esgoet@fakeemail.com");
         //THEN
-        UserDetails expected = new User("esgoet","123",List.of(new SimpleGrantedAuthority(AppUserRole.STUDENT.name())));
-        verify(appUserService).getAppUserByUsername("esgoet");
+        UserDetails expected = new User("esgoet@fakeemail.com","123",List.of(new SimpleGrantedAuthority(AppUserRole.STUDENT.name())));
+        verify(appUserService).getAppUserByEmail("esgoet@fakeemail.com");
         assertEquals(expected, actual);
     }
 
     @Test
     void loadUserByUsernameTest_whenUserInstructor() {
         //GIVEN
-        AppUser appUser = new AppUser("1", "esgoet", "esgoet@fakeemail.com","123", null, new Instructor("i1",new ArrayList<>()));
-        when(appUserService.getAppUserByUsername("esgoet")).thenReturn(appUser);
+        AppUser appUser = new AppUser("1", "esgoet@fakeemail.com","123", null, new Instructor("i1","esgoet", new ArrayList<>()));
+        when(appUserService.getAppUserByEmail("esgoet@fakeemail.com")).thenReturn(appUser);
         //WHEN
-        UserDetails actual = appUserDetailsService.loadUserByUsername("esgoet");
+        UserDetails actual = appUserDetailsService.loadUserByUsername("esgoet@fakeemail.com");
         //THEN
-        UserDetails expected = new User("esgoet","123",List.of(new SimpleGrantedAuthority(AppUserRole.INSTRUCTOR.name())));
-        verify(appUserService).getAppUserByUsername("esgoet");
+        UserDetails expected = new User("esgoet@fakeemail.com","123",List.of(new SimpleGrantedAuthority(AppUserRole.INSTRUCTOR.name())));
+        verify(appUserService).getAppUserByEmail("esgoet@fakeemail.com");
         assertEquals(expected, actual);
     }
 
     @Test
     void loadUserByUsernameTest_whenUserNotFound() {
         //GIVEN
-        when(appUserService.getAppUserByUsername("esgoet")).thenThrow(new UsernameNotFoundException("No user found with username: esgoet"));
+        when(appUserService.getAppUserByEmail("esgoet@fakeemail.com")).thenThrow(new UsernameNotFoundException("No user found with email: esgoet@fakeemail.com"));
         //THEN
         UsernameNotFoundException thrown = assertThrows(UsernameNotFoundException.class,
                 //THEN
-                () -> appUserDetailsService.loadUserByUsername("esgoet"));
-        verify(appUserService).getAppUserByUsername("esgoet");
-        assertEquals("No user found with username: esgoet", thrown.getMessage());
+                () -> appUserDetailsService.loadUserByUsername("esgoet@fakeemail.com"));
+        verify(appUserService).getAppUserByEmail("esgoet@fakeemail.com");
+        assertEquals("No user found with email: esgoet@fakeemail.com", thrown.getMessage());
     }
 }

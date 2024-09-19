@@ -17,8 +17,8 @@ public class StudentService {
     private final IdService idService;
     private static final String USER_TYPE = "student";
 
-    public Student createStudent() {
-        Student student = new Student(idService.randomId(), new ArrayList<>(), new HashMap<>());
+    public Student createStudent(String username) {
+        Student student = new Student(idService.randomId(), username, new ArrayList<>(), new HashMap<>());
         return studentRepository.save(student);
     }
 
@@ -30,10 +30,11 @@ public class StudentService {
         return studentRepository.findById(id).orElseThrow(()-> new UserNotFoundException(USER_TYPE, id));
     }
 
-    public Student updateStudent(String id, StudentUpdateDto updatedStudent) {
+    public Student updateStudent(String id, StudentUpdateDto updateDto) {
         Student student = studentRepository.findById(id).orElseThrow(()-> new UserNotFoundException(USER_TYPE, id))
-                .withCourses(updatedStudent.courses())
-                .withGrades(updatedStudent.grades());
+                .withUsername(updateDto.username())
+                .withCourses(updateDto.courses())
+                .withGrades(updateDto.grades());
         return studentRepository.save(student);
     }
 

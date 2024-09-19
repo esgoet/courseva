@@ -42,6 +42,11 @@ public class SecurityConfig {
                 )
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .httpBasic(httpSecurityHttpBasicConfigurer -> httpSecurityHttpBasicConfigurer.authenticationEntryPoint((request, response, authException)-> response.sendError(401)))
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .usernameParameter("email")
+                        .permitAll()
+                )
                 .logout(logout -> logout.logoutUrl("/api/auth/logout"));
         return http.build();
     }

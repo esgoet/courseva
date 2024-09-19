@@ -1,6 +1,7 @@
 package com.github.esgoet.backend.model;
 
 import lombok.With;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -8,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document("users")
 public record AppUser(
         String id,
-        String username,
+        @Indexed(unique = true)
         String email,
         String password,
         @DBRef

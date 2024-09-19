@@ -9,6 +9,7 @@ import java.util.List;
 @Document("instructors")
 public record Instructor(
         String id,
+        String username,
         List<String> courses
 ) {
 }

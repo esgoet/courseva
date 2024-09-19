@@ -11,7 +11,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -40,7 +40,7 @@ class InstructorControllerTest {
     @DirtiesContext
     void getInstructorByIdTest() throws Exception {
         //GIVEN
-        instructorRepository.save(new Instructor("i1",List.of()));
+        instructorRepository.save(new Instructor("i1","esgoet", new ArrayList<>()));
         //WHEN
         mockMvc.perform(get("/api/instructors/i1"))
                 //THEN
@@ -48,6 +48,7 @@ class InstructorControllerTest {
                 .andExpect(content().json("""
                       {
                           "id": "i1",
+                          "username": "esgoet",
                           "courses": []
                       }
                       """));
@@ -58,13 +59,14 @@ class InstructorControllerTest {
     @DirtiesContext
     void updateInstructorTest() throws Exception {
         //GIVEN
-        instructorRepository.save(new Instructor("i1", List.of()));
+        instructorRepository.save(new Instructor("i1", "esgoet", new ArrayList<>()));
         //WHEN
         mockMvc.perform(put("/api/instructors/i1")
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                             {
+                              "username": "esgoet",
                               "courses": ["courseId-1"]
                             }
                             """))
@@ -73,6 +75,7 @@ class InstructorControllerTest {
                 .andExpect(content().json("""
                         {
                           "id": "i1",
+                          "username": "esgoet",
                           "courses": ["courseId-1"]
                         }
                 """));
@@ -88,6 +91,7 @@ class InstructorControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                             {
+                              "username": "esgoet",
                               "courses": ["courseId-1"]
                             }
                             """))

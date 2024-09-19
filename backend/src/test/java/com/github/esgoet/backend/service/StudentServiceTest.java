@@ -20,12 +20,12 @@ class StudentServiceTest {
     @Test
     void getStudentByIdTest_whenStudentExists() {
         //GIVEN
-        Student student = new Student("s1", List.of(), new HashMap<>());
+        Student student = new Student("s1", "esgoet", new ArrayList<>(), new HashMap<>());
         when(studentRepository.findById("s1")).thenReturn(Optional.of(student));
         //WHEN
         Student actual = studentService.getStudentById("s1");
         //THEN
-        Student expected = new Student("s1", List.of(), new HashMap<>());
+        Student expected = new Student("s1", "esgoet", new ArrayList<>(), new HashMap<>());
         verify(studentRepository).findById("s1");
         assertEquals(expected, actual);
     }
@@ -45,13 +45,13 @@ class StudentServiceTest {
     @Test
     void createStudentTest() {
         //GIVEN
-        Student student =  new Student("s1",List.of(), new HashMap<>());
+        Student student =  new Student("s1", "esgoet", new ArrayList<>(), new HashMap<>());
         when(idService.randomId()).thenReturn("s1");
         when(studentRepository.save(student)).thenReturn(student);
         //WHEN
-        Student actual = studentService.createStudent();
+        Student actual = studentService.createStudent("esgoet");
         //THEN
-        Student expected = new Student("s1", List.of(), new HashMap<>());
+        Student expected = new Student("s1", "esgoet", new ArrayList<>(), new HashMap<>());
         verify(idService).randomId();
         verify(studentRepository).save(student);
         assertEquals(expected, actual);
@@ -60,12 +60,12 @@ class StudentServiceTest {
     @Test
     void getAllStudentsTest() {
         //GIVEN
-        List<Student> students = List.of(new Student("s1", List.of(), new HashMap<>()));
+        List<Student> students = List.of(new Student("s1", "esgoet", new ArrayList<>(), new HashMap<>()));
         when(studentRepository.findAll()).thenReturn(students);
         //WHEN
         List<Student> actual = studentService.getAllStudents();
         //THEN
-        List<Student> expected = List.of(new Student("s1", List.of(), new HashMap<>()));
+        List<Student> expected = List.of(new Student("s1", "esgoet", new ArrayList<>(), new HashMap<>()));
         verify(studentRepository).findAll();
         assertEquals(expected, actual);
     }
@@ -73,15 +73,15 @@ class StudentServiceTest {
     @Test
     void updateStudentTest_whenStudentExists() {
         //GIVEN
-        Student existingStudent = new Student("s1", List.of(), new HashMap<>());
-        StudentUpdateDto updatedStudentDto = new StudentUpdateDto(List.of("courseId-1"), new HashMap<>());
-        Student updatedStudent = new Student("s1", List.of("courseId-1"), new HashMap<>());
+        Student existingStudent = new Student("s1", "esgoet", new ArrayList<>(), new HashMap<>());
+        StudentUpdateDto updatedStudentDto = new StudentUpdateDto("esgoet", List.of("courseId-1"), new HashMap<>());
+        Student updatedStudent = new Student("s1", "esgoet", List.of("courseId-1"), new HashMap<>());
         when(studentRepository.findById("s1")).thenReturn(Optional.of(existingStudent));
         when(studentRepository.save(updatedStudent)).thenReturn(updatedStudent);
         //WHEN
         Student actual = studentService.updateStudent("s1", updatedStudentDto);
         // THEN
-        Student expected = new Student("s1", List.of("courseId-1"), new HashMap<>());
+        Student expected = new Student("s1", "esgoet", List.of("courseId-1"), new HashMap<>());
         verify(studentRepository).findById("s1");
         verify(studentRepository).save(updatedStudent);
         assertEquals(expected, actual);
@@ -91,7 +91,7 @@ class StudentServiceTest {
     @Test
     void updateStudentTest_whenStudentNotFound() {
         //GIVEN
-        StudentUpdateDto updatedStudentDto = new StudentUpdateDto(List.of("courseId-1"), new HashMap<>());
+        StudentUpdateDto updatedStudentDto = new StudentUpdateDto("esgoet", List.of("courseId-1"), new HashMap<>());
         when(studentRepository.findById("s1")).thenReturn(Optional.empty());
         // THEN
         UserNotFoundException thrown = assertThrows(UserNotFoundException.class,
@@ -115,15 +115,15 @@ class StudentServiceTest {
     @Test
     void updateStudentGradesTest_whenStudentExistsAndGradeDoesNotExist() {
         //GIVEN
-        Student existingStudent = new Student("s1", List.of("courseId"), new HashMap<>());
-        Student updatedStudent = new Student("s1", List.of("courseId"), Map.of("courseId", List.of(new Grade("assignmentId", 70))));
+        Student existingStudent = new Student("s1", "esgoet", List.of("courseId"), new HashMap<>());
+        Student updatedStudent = new Student("s1", "esgoet", List.of("courseId"), Map.of("courseId", List.of(new Grade("assignmentId", 70))));
         when(studentRepository.findById("s1")).thenReturn(Optional.of(existingStudent));
         when(studentRepository.save(updatedStudent)).thenReturn(updatedStudent);
         Map.Entry<String, Grade> gradeToAdd = new AbstractMap.SimpleEntry<>("courseId", new Grade("assignmentId", 70));
         //WHEN
         Student actual = studentService.updateStudentGrades("s1", gradeToAdd);
         //THEN
-        Student expected = new Student("s1",  List.of("courseId"), Map.of("courseId", List.of(new Grade("assignmentId", 70))));
+        Student expected = new Student("s1", "esgoet", List.of("courseId"), Map.of("courseId", List.of(new Grade("assignmentId", 70))));
         verify(studentRepository).findById("s1");
         verify(studentRepository).save(updatedStudent);
         assertEquals(expected, actual);
@@ -133,8 +133,8 @@ class StudentServiceTest {
     @Test
     void updateStudentGradesTest_whenStudentAndGradeExists() {
         //GIVEN
-        Student existingStudent = new Student("s1", List.of("courseId"), Map.of("courseId", List.of(new Grade("assignmentId", 70))));
-        Student updatedStudent = new Student("s1", List.of("courseId"), Map.of("courseId", List.of(new Grade("assignmentId", 75))));
+        Student existingStudent = new Student("s1", "esgoet", List.of("courseId"), Map.of("courseId", List.of(new Grade("assignmentId", 70))));
+        Student updatedStudent = new Student("s1", "esgoet", List.of("courseId"), Map.of("courseId", List.of(new Grade("assignmentId", 75))));
         Map.Entry<String, Grade> gradeToAdd = new AbstractMap.SimpleEntry<>("courseId", new Grade("assignmentId", 75));
 
         when(studentRepository.findById("s1")).thenReturn(Optional.of(existingStudent));
@@ -143,7 +143,7 @@ class StudentServiceTest {
         //WHEN
         Student actual = studentService.updateStudentGrades("s1", gradeToAdd);
         //THEN
-        Student expected = new Student("s1",  List.of("courseId"), Map.of("courseId", List.of(new Grade("assignmentId", 75))));
+        Student expected = new Student("s1","esgoet", List.of("courseId"), Map.of("courseId", List.of(new Grade("assignmentId", 75))));
         verify(studentRepository).findById("s1");
         verify(studentRepository).save(updatedStudent);
         assertEquals(expected, actual);
