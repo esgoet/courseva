@@ -179,7 +179,7 @@ export default function App() {
             if (isAdded) {
                 userToUpdate.courses.push(courseId);
             } else {
-                userToUpdate.courses.filter(course => course !== courseId);
+                userToUpdate.courses = userToUpdate.courses.filter(course => course !== courseId);
             }
             if ('grades' in userToUpdate) {
                 updateStudent(undefined, undefined, userToUpdate);
