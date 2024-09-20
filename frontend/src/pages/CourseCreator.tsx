@@ -1,7 +1,6 @@
 import {ChangeEvent, FormEvent, useRef, useState} from "react";
 import {NewCourseDto} from "../types/courseTypes.ts";
 import {Link} from "react-router-dom";
-import {Instructor, Student} from "../types/userTypes.ts";
 import {
     Button,
     Grid2, InputLabel,
@@ -10,17 +9,19 @@ import {
 import UserCheckList from "../components/Shared/UserCheckList.tsx";
 import type {RichTextEditorRef} from "mui-tiptap";
 import CustomRichTextEditor from "../components/Shared/CustomRichTextEditor.tsx";
+import {useData} from "../hooks/useData.ts";
+import {Instructor, Student} from "../types/userTypes.ts";
 
 type CourseCreatorProps = {
     createCourse: (course: NewCourseDto) => void,
-    students: Student[],
-    instructors: Instructor[]
 }
 
-export default function CourseCreator({createCourse, students, instructors}: Readonly<CourseCreatorProps>) {
+export default function CourseCreator({createCourse}: Readonly<CourseCreatorProps>) {
     const [course, setCourse] = useState<NewCourseDto>({title:"", description:"", students:[], instructors:[], startDate: ""})
     const [courseStudents, setCourseStudents] = useState<string[]>([]);
     const [courseInstructors, setCourseInstructors] = useState<string[]>([]);
+    const students = useData<Student>('/api/students');
+    const instructors = useData<Instructor>('/api/instructors');
     const rteRef = useRef<RichTextEditorRef>(null);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

@@ -2,7 +2,6 @@ import {Link, Outlet, useParams} from "react-router-dom";
 import {Course} from "../../types/courseTypes.ts";
 import {useEffect} from "react";
 import EditableTextDetail from "../../components/Shared/EditableTextDetail.tsx";
-import {Instructor, Student} from "../../types/userTypes.ts";
 import {useAuth} from "../../hooks/useAuth.ts";
 import CourseActions from "../../components/Course/CourseActions.tsx";
 import {
@@ -22,8 +21,6 @@ type CoursePageProps = {
     course: Course | undefined,
     fetchCourse: (courseId: string) => void,
     deleteCourse: (courseId: string) => void,
-    students: Student[],
-    instructors: Instructor[],
     updateUser: (courseId: string, isAdded: boolean) => void
 }
 

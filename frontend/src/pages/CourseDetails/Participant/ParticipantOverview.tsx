@@ -2,15 +2,17 @@ import {Grid2} from "@mui/material";
 import EditableUserList from "../../../components/Shared/EditableUserList.tsx";
 import {Instructor, Student} from "../../../types/userTypes.ts";
 import {useCourse} from "../../../hooks/useCourse.ts";
+import {useData} from "../../../hooks/useData.ts";
 
 type ParticipantOverviewProps = {
-    students: Student[],
-    instructors: Instructor[],
     updateCourse: (updatedProperty: string, updatedValue: string | string[]) => void,
 };
 
-export default function ParticipantOverview({students, instructors, updateCourse}: Readonly<ParticipantOverviewProps>) {
+export default function ParticipantOverview({updateCourse}: Readonly<ParticipantOverviewProps>) {
     const {course} = useCourse();
+    const students = useData<Student>('/api/students');
+    const instructors = useData<Instructor>('/api/instructors');
+
     return (
         <Grid2 container spacing={2}>
             <Grid2 size={12}>

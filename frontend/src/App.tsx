@@ -33,8 +33,6 @@ export default function App() {
     const [courses, setCourses] = useState<Course[]>([]);
     const [currentCourse, setCurrentCourse] = useState<Course | undefined>();
     const [user, setUser] = useState<AppUser | null | undefined>();
-    const [students, setStudents] = useState<Student[]>([]);
-    const [instructors, setInstructors] = useState<Instructor[]>([]);
     const [isInstructor, setIsInstructor] = useState<boolean>(false);
     const navigate = useNavigate();
     const theme = createTheme({cssVariables: true,...themeOptions});
@@ -64,18 +62,6 @@ export default function App() {
                 console.error(error.response.data);
                 setCurrentCourse(undefined);
             });
-    }
-
-    const fetchStudents = () => {
-        axiosInstance.get("/api/students")
-            .then((response : AxiosResponse<Student[]>) => setStudents(response.data))
-            .catch((error) => console.error(error.response.data));
-    }
-
-    const fetchInstructors = () => {
-        axiosInstance.get("/api/instructors")
-            .then((response : AxiosResponse<Instructor[]>) => setInstructors(response.data))
-            .catch((error) => console.error(error.response.data));
     }
 
     const updateCourse = (updatedProperty: string, updatedValue: string | string[] | LessonDto[] | AssignmentDto[], courseToUpdate = currentCourse) => {
@@ -120,8 +106,8 @@ export default function App() {
                 setUser(response.data)
                 setIsInstructor(checkIsInstructor(response.data))
                 fetchCourses();
-                fetchStudents();
-                fetchInstructors();
+                // fetchStudents();
+                // fetchInstructors();
                 navigate("/");
             })
             .catch(error => {
@@ -200,8 +186,6 @@ export default function App() {
         fetchUser()
             .then(()=> {
                 fetchCourses();
-                fetchStudents();
-                fetchInstructors();
             })
     }, []);
 
@@ -217,8 +201,8 @@ export default function App() {
                                 <Route path={"/"} element={<Dashboard courses={courses} deleteCourse={deleteCourse} updateUser={updateUserCourses} updateCourse={updateCourse}/>}/>
                                 <Route path={"/browse"} element={<BrowsePage courses={courses} deleteCourse={deleteCourse} updateUser={updateUserCourses} updateCourse={updateCourse}/>}/>
                                 <Route path={"/account"} element={<UserAccountPage updateUser={updateUser} deleteUser={deleteUser} updateInstructor={updateInstructor} updateStudent={updateStudent}/>}/>
-                                <Route path={"/course/:courseId"} element={<CourseDetailsPage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse} deleteCourse={deleteCourse} students={students} instructors={instructors} updateUser={updateUserCourses}/>}>
-                                    <Route index element={<ParticipantOverview students={students} instructors={instructors} updateCourse={updateCourse}/>}/>
+                                <Route path={"/course/:courseId"} element={<CourseDetailsPage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse} deleteCourse={deleteCourse}  updateUser={updateUserCourses}/>}>
+                                    <Route index element={<ParticipantOverview updateCourse={updateCourse}/>}/>
                                     <Route path={"lessons"} element={<LessonOverview updateCourse={updateCourse}/>}/>
                                     <Route path={"lessons/:lessonId"} element={<LessonPage updateCourse={updateCourse}/>}/>
                                     <Route path={"assignments"} element={<AssignmentOverview updateCourse={updateCourse}/>}/>
@@ -230,7 +214,7 @@ export default function App() {
                                     </Route>
                                 </Route>
                                 <Route element={<ProtectedInstructorRoutes/>}>
-                                    <Route path={"/course/create"} element={<CourseCreator createCourse={createCourse} students={students} instructors={instructors}/>}/>
+                                    <Route path={"/course/create"} element={<CourseCreator createCourse={createCourse} />}/>
                                 </Route>
                             </Route>
                         </Routes>

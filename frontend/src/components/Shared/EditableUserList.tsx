@@ -1,5 +1,4 @@
 import {FormEvent, useState} from "react";
-import {Instructor, Student} from "../../types/userTypes.ts";
 import {useAuth} from "../../hooks/useAuth.ts";
 import {IconButton} from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
@@ -7,13 +6,14 @@ import CheckIcon from '@mui/icons-material/Check';
 import CancelIcon from '@mui/icons-material/Cancel';
 import UserCheckList from "./UserCheckList.tsx";
 import {useCourse} from "../../hooks/useCourse.ts";
+import {Instructor, Student} from "../../types/userTypes.ts";
 
 type EditableListDetailProps = {
     label: string,
     name: string,
     initialValue: string[],
     updateCourse: (updatedProperty: string, updatedValue: string[]) => void,
-    options: Student[] | Instructor[]
+    options: { data: Student[]|Instructor[], error: Error | undefined, loading: boolean }
 }
 
 export default function EditableUserList(props: Readonly<EditableListDetailProps>){
@@ -35,10 +35,12 @@ export default function EditableUserList(props: Readonly<EditableListDetailProps
     return (
         <form onSubmit={handleSubmit} className={`editable-detail multiselect  ${editable && "editable"}`}>
             <label htmlFor={props.name}>{props.label}</label>
-            <UserCheckList editable={editable} options={props.options} currentOptions={input} setCurrentOptions={setInput} course={course}/>
+            <UserCheckList editable={editable} options={props.options} currentOptions={input}
+                           setCurrentOptions={setInput} course={course}/>
             {isInstructor &&
                 <IconButton onClick={() => setEditable(!editable)}>
-                    {editable ? <CheckIcon fontSize={"small"} color={"secondary"}/> : <EditIcon fontSize={"small"} color={"secondary"}/>}
+                    {editable ? <CheckIcon fontSize={"small"} color={"secondary"}/> :
+                        <EditIcon fontSize={"small"} color={"secondary"}/>}
                 </IconButton>}
             {editable && <IconButton type={"reset"} onClick={handleCancel}>
                 <CancelIcon fontSize={"small"} color={"secondary"}/>
