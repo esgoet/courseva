@@ -49,17 +49,15 @@ export default function App() {
 
     const createCourse = (course : NewCourseDto)  => {
         axiosInstance.post("/api/courses", course)
-            .then((response : AxiosResponse<Course>) => {
-                if (response.status === 200) {
-                    fetchCourses();
-                    navigate(`/course/${response.data.id}`);
-                }
+            .then((response : AxiosResponse<CourseDto>) => {
+                setCourses([...courses, convertToCourse(response.data)]);
+                navigate(`/course/${response.data.id}`);
             })
             .catch((error) => console.error(error.response.data));
     }
     const fetchCourse = (id: string) => {
         axiosInstance.get(`/api/courses/${id}`)
-            .then((response) => {
+            .then((response: AxiosResponse<CourseDto>) => {
                 setCurrentCourse(convertToCourse(response.data));
             })
             .catch((error) => {
@@ -80,13 +78,12 @@ export default function App() {
             .catch((error) => console.error(error.response.data));
     }
 
-    const updateCourse = (updatedProperty: string, updatedValue: string | string[] | LessonDto[] | AssignmentDto[], course = currentCourse) => {
-        axiosInstance.put(`/api/courses/${course?.id}`, {...course, [updatedProperty]: updatedValue})
-            .then((response) => {
-                if (response.status === 200) {
-                    if (currentCourse?.id) fetchCourse(currentCourse.id);
-                    fetchCourses();
-                }
+    const updateCourse = (updatedProperty: string, updatedValue: string | string[] | LessonDto[] | AssignmentDto[], courseToUpdate = currentCourse) => {
+        axiosInstance.put(`/api/courses/${courseToUpdate?.id}`, {...courseToUpdate, [updatedProperty]: updatedValue})
+            .then((response: AxiosResponse<CourseDto>) => {
+                    const updatedCourse = convertToCourse(response.data);
+                    setCourses(courses.map(course => course.id === updatedCourse.id ? updatedCourse : course));
+                    if (currentCourse?.id === updatedCourse.id) setCurrentCourse(updatedCourse);
             })
             .catch((error)=>console.error(error.response.data));
     }
@@ -94,7 +91,9 @@ export default function App() {
 
     const deleteCourse = (courseId: string) => {
         axiosInstance.delete(`/api/courses/${courseId}`)
-            .then((response)=> response.status === 200 && fetchCourses())
+            .then(() => {
+                setCourses(courses.filter(course => course.id !== courseId))
+            })
             .catch((error)=> console.error(error.response.data))
     }
 
