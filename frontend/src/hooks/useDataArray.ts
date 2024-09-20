@@ -2,8 +2,8 @@ import axiosInstance from "../api/axiosInstance.ts";
 import {useEffect, useState} from "react";
 import {AxiosResponse} from "axios";
 
-export const useData = <T>(endpoint: string, expectArray: boolean) => {
-    const [data, setData] = useState<T[] | T | undefined>();
+export const useDataArray = <T>(endpoint: string) => {
+    const [data, setData] = useState<T[]>([]);
     const [error, setError] = useState<Error>();
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -12,10 +12,11 @@ export const useData = <T>(endpoint: string, expectArray: boolean) => {
             const controller = new AbortController();
             setLoading(true);
             axiosInstance.get(endpoint)
-                .then((response: AxiosResponse<T[] | T>)=> setData(response.data))
+                .then((response: AxiosResponse<T[]>)=> {
+                    setData(response.data)
+                })
                 .catch((error) => {
                     setError(error);
-                    if (expectArray) setData([]);
                 })
                 .finally(() => setLoading(false));
             return () => controller.abort();

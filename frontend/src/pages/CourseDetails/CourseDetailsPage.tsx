@@ -1,6 +1,5 @@
 import {Link, Outlet, useParams} from "react-router-dom";
-import {Course} from "../../types/courseTypes.ts";
-import {useEffect} from "react";
+import {Course, CourseDto} from "../../types/courseTypes.ts";
 import EditableTextDetail from "../../components/Shared/EditableTextDetail.tsx";
 import {useAuth} from "../../hooks/useAuth.ts";
 import CourseActions from "../../components/Course/CourseActions.tsx";
@@ -11,10 +10,12 @@ import {
 } from "@mui/material";
 import CourseTabs from "../../components/Course/CourseTabs.tsx";
 import CourseTabsMobile from "../../components/Course/CourseTabsMobile.tsx";
-import {CourseContextType} from "../../hooks/useCourse.ts";
+import {CourseContextType} from "../../hooks/useCurrentCourse.ts";
 import EditableRichText from "../../components/Shared/EditableRichText.tsx";
 import {calculateCourseGradeAverage, calculateStudentGradeAverage } from "../../utils/calculateGradeAverage.ts";
 import GradeDisplay from "../../components/Shared/GradeDisplay.tsx";
+import {useDataObject} from "../../hooks/useDataObject.ts";
+import {convertToCourse} from "../../utils/convertToCourse.ts";
 
 type CoursePageProps = {
     updateCourse: (updatedProperty: string, updatedValue: string | string[]) => void,
@@ -24,18 +25,17 @@ type CoursePageProps = {
     updateUser: (courseId: string, isAdded: boolean) => void
 }
 
-export default function CourseDetailsPage({updateCourse, course, fetchCourse, deleteCourse, updateUser}: Readonly<CoursePageProps>) {
+export default function CourseDetailsPage({updateCourse, deleteCourse, updateUser}: Readonly<CoursePageProps>) {
     const theme = useTheme();
     const isMobile = !(useMediaQuery(theme.breakpoints.up('sm')));
     const { courseId } = useParams();
     const {user, isInstructor} = useAuth();
+
+    const {data, loading, error} = useDataObject<CourseDto>(`/api/courses/${courseId}`);
+    const course: Course | undefined = data && convertToCourse(data);
+
     const gradeAverage: number | undefined = (course && user?.student?.grades[course.id]) ? calculateStudentGradeAverage(user.student.grades[course.id]) : undefined;
     const courseAverage : number | undefined = (course) && calculateCourseGradeAverage(course);
-
-
-    useEffect(() =>{
-        if (courseId) fetchCourse(courseId);
-    },[courseId]);
 
     return (
         <>
