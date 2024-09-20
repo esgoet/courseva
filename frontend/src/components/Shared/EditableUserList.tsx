@@ -13,7 +13,7 @@ type EditableListDetailProps = {
     name: string,
     initialValue: string[],
     updateCourse: (updatedProperty: string, updatedValue: string[]) => void,
-    options: { data: Student[]|Instructor[], error: Error | undefined, loading: boolean }
+    options: { data: Student[]|Instructor[], loading: boolean, error: Error | undefined}
 }
 
 export default function EditableUserList(props: Readonly<EditableListDetailProps>){

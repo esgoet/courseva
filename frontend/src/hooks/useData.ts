@@ -20,5 +20,5 @@ export const useData = <T>(endpoint: string) => {
             return () => controller.abort();
         }
     }, [endpoint]);
-    return {data, error, loading};
+    return {data, loading, error};
 }
