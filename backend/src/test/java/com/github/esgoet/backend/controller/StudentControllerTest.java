@@ -42,14 +42,14 @@ class StudentControllerTest {
     @DirtiesContext
     void getStudentByIdTest() throws Exception {
         //GIVEN
-        studentRepository.save(new Student("s1", "esgoet", new ArrayList<>(), new HashMap<>()));
+        studentRepository.save(new Student("s-1", "esgoet", new ArrayList<>(), new HashMap<>()));
         //WHEN
-        mockMvc.perform(get("/api/students/s1"))
+        mockMvc.perform(get("/api/students/s-1"))
                 //THEN
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                       {
-                          "id": "s1",
+                          "id": "s-1",
                           "username": "esgoet",
                           "courses": [],
                           "grades": {}
@@ -63,9 +63,9 @@ class StudentControllerTest {
     @DirtiesContext
     void updateStudentTest() throws Exception {
         //GIVEN
-        studentRepository.save(new Student("s1", "esgoet", new ArrayList<>(), new HashMap<>()));
+        studentRepository.save(new Student("s-1", "esgoet", new ArrayList<>(), new HashMap<>()));
         //WHEN
-        mockMvc.perform(put("/api/students/s1")
+        mockMvc.perform(put("/api/students/s-1")
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -79,7 +79,7 @@ class StudentControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {
-                          "id": "s1",
+                          "id": "s-1",
                           "username": "esgoet",
                           "courses": ["courseId-1"],
                           "grades": {}
@@ -92,7 +92,7 @@ class StudentControllerTest {
     @DirtiesContext
     void updateStudentTest_whenStudentDoesNotExist() throws Exception {
        //WHEN
-        mockMvc.perform(put("/api/students/s1")
+        mockMvc.perform(put("/api/students/s-1")
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -106,7 +106,7 @@ class StudentControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().json("""
                         {
-                          "message": "No student found with id: s1",
+                          "message": "No student found with id: s-1",
                            "statusCode": 404
                         }
                         """))
@@ -119,9 +119,9 @@ class StudentControllerTest {
     @DirtiesContext
     void updateStudentGradesTest() throws Exception {
         //GIVEN
-        studentRepository.save(new Student("s1", "esgoet", List.of("courseId"), new HashMap<>()));
+        studentRepository.save(new Student("s-1", "esgoet", List.of("courseId"), new HashMap<>()));
         //WHEN
-        mockMvc.perform(put("/api/students/s1/grades")
+        mockMvc.perform(put("/api/students/s-1/grades")
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -135,7 +135,7 @@ class StudentControllerTest {
                         .andExpect(status().isOk())
                         .andExpect(content().json("""
                                 {
-                                  "id": "s1",
+                                  "id": "s-1",
                                   "username": "esgoet",
                                   "courses": ["courseId"],
                                   "grades": {"courseId": [
@@ -154,7 +154,7 @@ class StudentControllerTest {
     @DirtiesContext
     void updateStudentGradesTest_whenStudentDoesNotExist() throws Exception {
         //WHEN
-        mockMvc.perform(put("/api/students/s1/grades")
+        mockMvc.perform(put("/api/students/s-1/grades")
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -169,7 +169,7 @@ class StudentControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().json("""
                         {
-                          "message": "No student found with id: s1",
+                          "message": "No student found with id: s-1",
                           "statusCode": 404
                         }
                         """))

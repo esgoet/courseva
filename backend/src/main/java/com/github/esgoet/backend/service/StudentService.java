@@ -18,7 +18,7 @@ public class StudentService {
     private static final String USER_TYPE = "student";
 
     public Student createStudent(String username) {
-        Student student = new Student(idService.randomId(), username, new ArrayList<>(), new HashMap<>());
+        Student student = new Student("s-" + idService.randomId(), username, new ArrayList<>(), new HashMap<>());
         return studentRepository.save(student);
     }
 

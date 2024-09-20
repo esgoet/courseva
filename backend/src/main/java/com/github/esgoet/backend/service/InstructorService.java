@@ -18,7 +18,7 @@ public class InstructorService {
     private static final String USER_TYPE = "instructor";
 
     public Instructor createInstructor(String username) {
-        Instructor instructor = new Instructor(idService.randomId(), username, new ArrayList<>());
+        Instructor instructor = new Instructor("i-" + idService.randomId(), username, new ArrayList<>());
         return instructorRepository.save(instructor);
     }
 

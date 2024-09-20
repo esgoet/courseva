@@ -36,7 +36,7 @@ class AppUserControllerTest {
     @DirtiesContext
     void updateAppUserTest_whenUserExists() throws Exception {
         //GIVEN
-        Instructor instructor = instructorRepository.save(new Instructor("i1", "esgoet", new ArrayList<>()));
+        Instructor instructor = instructorRepository.save(new Instructor("i-1", "esgoet", new ArrayList<>()));
         appUserRepository.save(new AppUser("1","esgoet@fakeemail.com","encodedPassword",null, instructor));
         //WHEN
         mockMvc.perform(put("/api/users/1")
@@ -55,7 +55,7 @@ class AppUserControllerTest {
                           "email": "esgoet@updatedemail.com",
                           "student": null,
                           "instructor": {
-                            "id": "i1",
+                            "id": "i-1",
                             "username": "esgoet",
                             "courses": []
                           }
@@ -88,7 +88,7 @@ class AppUserControllerTest {
     @DirtiesContext
     void deleteAppUserTest() throws Exception {
         //GIVEN
-        appUserRepository.save(new AppUser("1","esgoet@fakeemail.com","encodedPassword",null, new Instructor("i1", "esgoet",List.of())));
+        appUserRepository.save(new AppUser("1","esgoet@fakeemail.com","encodedPassword",null, new Instructor("i-1", "esgoet",List.of())));
         //WHEN
         mockMvc.perform(delete("/api/users/1").with(csrf().asHeader()))
                 //THEN

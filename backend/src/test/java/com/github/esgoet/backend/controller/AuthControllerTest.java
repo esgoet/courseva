@@ -36,7 +36,7 @@ class AuthControllerTest {
     @WithMockUser(username = "esgoet@fakeemail.com")
     void getLoggedInUserTest() throws Exception {
         //GIVEN
-        Student student =  studentRepository.save(new Student("s1", "esgoet", List.of(),new HashMap<>()));
+        Student student =  studentRepository.save(new Student("s-1", "esgoet", List.of(),new HashMap<>()));
         appUserRepository.save(new AppUser("1","esgoet@fakeemail.com","encodedPassword", student, null));
         //WHEN
         mockMvc.perform(get("/api/auth/me"))
@@ -46,7 +46,7 @@ class AuthControllerTest {
                       "id": "1",
                       "email": "esgoet@fakeemail.com",
                       "student": {
-                        "id": "s1",
+                        "id": "s-1",
                         "username": "esgoet",
                         "courses": [],
                         "grades": {}

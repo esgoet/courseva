@@ -43,7 +43,7 @@ class CourseControllerTest {
     @WithMockUser
     void getCourseByIdTest_whenCourseExists() throws Exception {
         //GIVEN
-        courseRepository.save(new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s1","s2"),  List.of("i1","i2"), startDate));
+        courseRepository.save(new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s-1","s-2"),  List.of("i-1","i-2"), startDate));
         //WHEN
         mockMvc.perform(get("/api/courses/1"))
                 //THEN
@@ -55,8 +55,8 @@ class CourseControllerTest {
                       "description": "This is Math 101",
                       "lessons": [],
                       "assignments": [],
-                      "students": ["s1","s2"],
-                      "instructors": ["i1","i2"],
+                      "students": ["s-1","s-2"],
+                      "instructors": ["i-1","i-2"],
                       "startDate": "2024-07-27"
                     }
                     """));
@@ -115,7 +115,7 @@ class CourseControllerTest {
     @WithMockUser
     void updateCourseTest_whenCourseExists() throws Exception {
         //GIVEN
-        courseRepository.save(new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s1","s2"),  List.of("i1","i2"), startDate));
+        courseRepository.save(new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s-1","s-2"),  List.of("i-1","i-2"), startDate));
         //WHEN
         mockMvc.perform(put("/api/courses/1")
                         .with(csrf().asHeader())
@@ -126,8 +126,8 @@ class CourseControllerTest {
                       "description": "This is Math 101",
                       "lessons": [],
                       "assignments": [],
-                      "students": ["s1","s2","s3"],
-                      "instructors": ["i1"],
+                      "students": ["s-1","s-2","s-3"],
+                      "instructors": ["i-1"],
                       "startDate": "2024-07-27"
                     }
                    """))
@@ -139,8 +139,8 @@ class CourseControllerTest {
                       "description": "This is Math 101",
                       "lessons": [],
                       "assignments": [],
-                      "students": ["s1","s2","s3"],
-                      "instructors": ["i1"],
+                      "students": ["s-1","s-2","s-3"],
+                      "instructors": ["i-1"],
                       "startDate": "2024-07-27"
                     }
                    """));
@@ -160,8 +160,8 @@ class CourseControllerTest {
                       "description": "This is Math 101",
                       "lessons": [],
                       "assignments": [],
-                      "students": ["s1","s2","s3"],
-                      "instructors": ["i1"],
+                      "students": ["s-1","s-2","s-3"],
+                      "instructors": ["i-1"],
                       "startDate": "2024-07-27"
                     }
                    """))
@@ -180,7 +180,7 @@ class CourseControllerTest {
     @WithMockUser(authorities = {"INSTRUCTOR"})
     void deleteCourse() throws Exception {
         //GIVEN
-        courseRepository.save(new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s1", "s2"), List.of("i1", "i2"), startDate));
+        courseRepository.save(new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s-1", "s-2"), List.of("i-1", "i-2"), startDate));
         //WHEN
         mockMvc.perform(delete("/api/courses/1")
                         .with(csrf().asHeader()))

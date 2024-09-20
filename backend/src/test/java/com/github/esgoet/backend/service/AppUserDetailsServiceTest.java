@@ -24,7 +24,7 @@ class AppUserDetailsServiceTest {
     @Test
     void loadUserByUsernameTest_whenUserStudent() {
         //GIVEN
-        AppUser appUser = new AppUser("1", "esgoet@fakeemail.com","123", new Student("s1", "esgoet", List.of(), new HashMap<>()), null);
+        AppUser appUser = new AppUser("1", "esgoet@fakeemail.com","123", new Student("s-1", "esgoet", List.of(), new HashMap<>()), null);
         when(appUserService.getAppUserByEmail("esgoet@fakeemail.com")).thenReturn(appUser);
         //WHEN
         UserDetails actual = appUserDetailsService.loadUserByUsername("esgoet@fakeemail.com");
@@ -37,7 +37,7 @@ class AppUserDetailsServiceTest {
     @Test
     void loadUserByUsernameTest_whenUserInstructor() {
         //GIVEN
-        AppUser appUser = new AppUser("1", "esgoet@fakeemail.com","123", null, new Instructor("i1","esgoet", new ArrayList<>()));
+        AppUser appUser = new AppUser("1", "esgoet@fakeemail.com","123", null, new Instructor("i-1","esgoet", new ArrayList<>()));
         when(appUserService.getAppUserByEmail("esgoet@fakeemail.com")).thenReturn(appUser);
         //WHEN
         UserDetails actual = appUserDetailsService.loadUserByUsername("esgoet@fakeemail.com");

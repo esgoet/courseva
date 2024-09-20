@@ -38,7 +38,7 @@ class AppUserServiceTest {
     void createAppUserTest_whenUserStudent() {
         //GIVEN
         NewAppUserDto userDto = new NewAppUserDto("esgoet","esgoet@fakeemail.com","123", AppUserRole.STUDENT);
-        Student student = new Student("s1","esgoet",new ArrayList<>(), new HashMap<>());
+        Student student = new Student("s-1","esgoet",new ArrayList<>(), new HashMap<>());
         AppUser appUser = new AppUser("1",  "esgoet@fakeemail.com","encodedPassword", student, null);
 
         when(idService.randomId()).thenReturn("1");
@@ -61,7 +61,7 @@ class AppUserServiceTest {
     void createAppUserTest_whenUserInstructor() {
         //GIVEN
         NewAppUserDto userDto = new NewAppUserDto("esgoet","esgoet@fakeemail.com","123", AppUserRole.INSTRUCTOR);
-        Instructor instructor = new Instructor("i1","esgoet",new ArrayList<>());
+        Instructor instructor = new Instructor("i-1","esgoet",new ArrayList<>());
         AppUser appUser = new AppUser("1", "esgoet@fakeemail.com","encodedPassword", null, instructor);
 
         when(idService.randomId()).thenReturn("1");
@@ -83,12 +83,12 @@ class AppUserServiceTest {
     @Test
     void getAppUserByEmailTest_whenUserExists() {
         //GIVEN
-        AppUser appUser = new AppUser("1","esgoet@fakeemail.com","encodedPassword", new Student("s1","esgoet", List.of(),new HashMap<>()), null);
+        AppUser appUser = new AppUser("1","esgoet@fakeemail.com","encodedPassword", new Student("s-1","esgoet", List.of(),new HashMap<>()), null);
         when(appUserRepository.findAppUserByEmail("esgoet@fakeemail.com")).thenReturn(Optional.of(appUser));
         //WHEN
         AppUser actual = appUserService.getAppUserByEmail("esgoet@fakeemail.com");
         //THEN
-        AppUser expected = new AppUser("1","esgoet@fakeemail.com","encodedPassword", new Student("s1", "esgoet", List.of(),new HashMap<>()), null);
+        AppUser expected = new AppUser("1","esgoet@fakeemail.com","encodedPassword", new Student("s-1", "esgoet", List.of(),new HashMap<>()), null);
         verify(appUserRepository).findAppUserByEmail("esgoet@fakeemail.com");
         assertEquals(expected,actual);
     }
@@ -114,12 +114,12 @@ class AppUserServiceTest {
         when(authentication.getPrincipal()).thenReturn(user);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
-        AppUser appUser = new AppUser("1","esgoet@fakeemail.com","encodedPassword", new Student("s1", "esgoet", List.of(),new HashMap<>()), null);
+        AppUser appUser = new AppUser("1","esgoet@fakeemail.com","encodedPassword", new Student("s-1", "esgoet", List.of(),new HashMap<>()), null);
         when(appUserRepository.findAppUserByEmail("esgoet@fakeemail.com")).thenReturn(Optional.of(appUser));
         //WHEN
         AppUserResponseDto actual = appUserService.getLoggedInAppUser();
         //THEN
-        AppUserResponseDto expected = new AppUserResponseDto("1","esgoet@fakeemail.com", new Student("s1", "esgoet", List.of(),new HashMap<>()), null);
+        AppUserResponseDto expected = new AppUserResponseDto("1","esgoet@fakeemail.com", new Student("s-1", "esgoet", List.of(),new HashMap<>()), null);
         verify(authentication).getPrincipal();
         verify(securityContext).getAuthentication();
         verify(appUserRepository).findAppUserByEmail("esgoet@fakeemail.com");
@@ -152,15 +152,15 @@ class AppUserServiceTest {
     @Test
     void updateAppUserTest_whenUserExists() {
         //GIVEN
-        AppUser appUser = new AppUser("1","esgoet@fakeemail.com","encodedPassword", new Student("s1", "esgoet",List.of(),new HashMap<>()), null);
+        AppUser appUser = new AppUser("1","esgoet@fakeemail.com","encodedPassword", new Student("s-1", "esgoet",List.of(),new HashMap<>()), null);
         AppUserUpdateDto updateDto = new AppUserUpdateDto("esgoet@updatedemail.com");
-        AppUser updatedAppUser = new AppUser("1","esgoet@updatedemail.com","encodedPassword", new Student("s1", "esgoet", List.of(),new HashMap<>()), null);
+        AppUser updatedAppUser = new AppUser("1","esgoet@updatedemail.com","encodedPassword", new Student("s-1", "esgoet", List.of(),new HashMap<>()), null);
         when(appUserRepository.findById("1")).thenReturn(Optional.of(appUser));
         when(appUserRepository.save(updatedAppUser)).thenReturn(updatedAppUser);
         //WHEN
         AppUserResponseDto actual = appUserService.updateAppUser("1",updateDto);
         //THEN
-        AppUserResponseDto expected = new AppUserResponseDto("1","esgoet@updatedemail.com", new Student("s1","esgoet", List.of(),new HashMap<>()), null);
+        AppUserResponseDto expected = new AppUserResponseDto("1","esgoet@updatedemail.com", new Student("s-1","esgoet", List.of(),new HashMap<>()), null);
         verify(appUserRepository).findById("1");
         verify(appUserRepository).save(updatedAppUser);
         assertEquals(expected,actual);
@@ -183,14 +183,14 @@ class AppUserServiceTest {
     @Test
     void deleteAppUserTest() {
         //GIVEN
-        AppUser appUser = new AppUser("1","esgoet@fakeemail.com","encodedPassword", new Student("s1", "esgoet", List.of(),new HashMap<>()), null);
+        AppUser appUser = new AppUser("1","esgoet@fakeemail.com","encodedPassword", new Student("s-1", "esgoet", List.of(),new HashMap<>()), null);
         when(appUserRepository.findById("1")).thenReturn(Optional.of(appUser));
-        doNothing().when(studentService).deleteStudent("s1");
+        doNothing().when(studentService).deleteStudent("s-1");
         doNothing().when(appUserRepository).deleteById("1");
         //WHEN
         appUserService.deleteAppUser("1");
         //THEN
-        verify(studentService).deleteStudent("s1");
+        verify(studentService).deleteStudent("s-1");
         verify(instructorService, never()).deleteInstructor(anyString());
         verify(appUserRepository).deleteById("1");
     }
@@ -198,11 +198,11 @@ class AppUserServiceTest {
     @Test
     void convertToAppUserResponseDtoTest() {
         //GIVEN
-        AppUser appUser = new AppUser("1","esgoet@fakeemail.com","encodedPassword", new Student("s1", "esgoet", List.of(),new HashMap<>()), null);
+        AppUser appUser = new AppUser("1","esgoet@fakeemail.com","encodedPassword", new Student("s-1", "esgoet", List.of(),new HashMap<>()), null);
         //WHEN
         AppUserResponseDto actual = appUserService.convertToAppUserResponseDto(appUser);
         //THEN
-        AppUserResponseDto expected = new AppUserResponseDto("1","esgoet@fakeemail.com", new Student("s1", "esgoet", List.of(),new HashMap<>()), null);
+        AppUserResponseDto expected = new AppUserResponseDto("1","esgoet@fakeemail.com", new Student("s-1", "esgoet", List.of(),new HashMap<>()), null);
         assertEquals(expected,actual);
     }
 }

@@ -40,14 +40,14 @@ class InstructorControllerTest {
     @DirtiesContext
     void getInstructorByIdTest() throws Exception {
         //GIVEN
-        instructorRepository.save(new Instructor("i1","esgoet", new ArrayList<>()));
+        instructorRepository.save(new Instructor("i-1","esgoet", new ArrayList<>()));
         //WHEN
-        mockMvc.perform(get("/api/instructors/i1"))
+        mockMvc.perform(get("/api/instructors/i-1"))
                 //THEN
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                       {
-                          "id": "i1",
+                          "id": "i-1",
                           "username": "esgoet",
                           "courses": []
                       }
@@ -59,9 +59,9 @@ class InstructorControllerTest {
     @DirtiesContext
     void updateInstructorTest() throws Exception {
         //GIVEN
-        instructorRepository.save(new Instructor("i1", "esgoet", new ArrayList<>()));
+        instructorRepository.save(new Instructor("i-1", "esgoet", new ArrayList<>()));
         //WHEN
-        mockMvc.perform(put("/api/instructors/i1")
+        mockMvc.perform(put("/api/instructors/i-1")
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -74,7 +74,7 @@ class InstructorControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {
-                          "id": "i1",
+                          "id": "i-1",
                           "username": "esgoet",
                           "courses": ["courseId-1"]
                         }
@@ -86,7 +86,7 @@ class InstructorControllerTest {
     @DirtiesContext
     void updateInstructorTest_whenInstructorDoesNotExist() throws Exception {
         //WHEN
-        mockMvc.perform(put("/api/instructors/i1")
+        mockMvc.perform(put("/api/instructors/i-1")
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -99,7 +99,7 @@ class InstructorControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().json("""
                         {
-                          "message": "No instructor found with id: i1",
+                          "message": "No instructor found with id: i-1",
                            "statusCode": 404
                         }
                         """))
