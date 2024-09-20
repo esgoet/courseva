@@ -182,9 +182,9 @@ export default function App() {
                 userToUpdate.courses.filter(course => course !== courseId);
             }
             if ('grades' in userToUpdate) {
-                updateStudent(userToUpdate);
+                updateStudent(undefined, undefined, userToUpdate);
             } else {
-                updateInstructor(userToUpdate);
+                updateInstructor(undefined, undefined, userToUpdate);
             }
         }
     }
