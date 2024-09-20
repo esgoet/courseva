@@ -20,8 +20,8 @@ export default function CourseCreator({createCourse}: Readonly<CourseCreatorProp
     const [course, setCourse] = useState<NewCourseDto>({title:"", description:"", students:[], instructors:[], startDate: ""})
     const [courseStudents, setCourseStudents] = useState<string[]>([]);
     const [courseInstructors, setCourseInstructors] = useState<string[]>([]);
-    const students = useData<Student>('/api/students');
-    const instructors = useData<Instructor>('/api/instructors');
+    const students = useData<Student>('/api/students',true);
+    const instructors = useData<Instructor>('/api/instructors', true);
     const rteRef = useRef<RichTextEditorRef>(null);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
