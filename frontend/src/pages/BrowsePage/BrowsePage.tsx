@@ -8,7 +8,7 @@ import AddIcon from "@mui/icons-material/Add";
 type BrowsePageProps = {
     courses: Course[],
     deleteCourse: (courseId: string) => void,
-    updateUser: (updatedProperty: string, updatedValue: string[]) => void,
+    updateUser: (courseId: string, isAdded: boolean) => void,
     updateCourse: (updatedProperty: string, updatedValue: string[], course: Course) => void,
 };
 

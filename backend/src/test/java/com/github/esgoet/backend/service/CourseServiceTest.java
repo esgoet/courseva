@@ -82,13 +82,13 @@ class CourseServiceTest {
         //GIVEN
         Course course = new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("1","2"),  List.of("1","2"), startDate);
         NewCourseDto courseDto = new NewCourseDto("Math 101", "This is Math 101", List.of("1","2"),  List.of("1","2"), startDate);
-        when(idService.generateCourseId(courseDto.title(),courseDto.startDate())).thenReturn("1");
+        when(idService.generateCourseId(courseDto.title())).thenReturn("1");
         when(courseRepository.save(course)).thenReturn(course);
         //WHEN
         Course actual = courseService.createCourse(courseDto);
         //THEN
         Course expected = new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("1","2"),  List.of("1","2"), startDate);
-        verify(idService).generateCourseId(courseDto.title(),courseDto.startDate());
+        verify(idService).generateCourseId(courseDto.title());
         verify(courseRepository).save(course);
         assertEquals(expected, actual);
 
@@ -97,15 +97,15 @@ class CourseServiceTest {
     @Test
     void updateCourseTest_whenCourseExists() {
         //GIVEN
-        Course course = new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of(),  List.of("i1"), startDate);
-        UpdateCourseDto courseDto = new UpdateCourseDto("Math 101", "This is Math 101", List.of(), List.of(), List.of("s1","s2","s3"),  List.of("i1","i2"), startDate);
-        Course updatedCourse = new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s1","s2","s3"),  List.of("i1","i2"), startDate);
+        Course course = new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of(),  List.of("i-1"), startDate);
+        UpdateCourseDto courseDto = new UpdateCourseDto("Math 101", "This is Math 101", List.of(), List.of(), List.of("s-1","s-2","s-3"),  List.of("i-1","i-2"), startDate);
+        Course updatedCourse = new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s-1","s-2","s-3"),  List.of("i-1","i-2"), startDate);
         when(courseRepository.findById("1")).thenReturn(Optional.of(course));
         when(courseRepository.save(updatedCourse)).thenReturn(updatedCourse);
         //WHEN
         Course actual = courseService.updateCourse("1", courseDto);
         //THEN
-        Course expected = new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s1","s2","s3"),  List.of("i1","i2"), startDate);
+        Course expected = new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s-1","s-2","s-3"),  List.of("i-1","i-2"), startDate);
         verify(courseRepository).findById("1");
         verify(courseRepository).save(updatedCourse);
         assertEquals(expected, actual);
@@ -122,8 +122,8 @@ class CourseServiceTest {
         Lesson lessonWithId = new Lesson("lesson-1", "Lesson 1", "Introduction to Math", localDateTime);
         Lesson lessonWithoutId = new Lesson("", "Lesson 2", "Advanced Math", localDateTime);
 
-        Submission submissionWithId = new Submission("submission-1", "s1", "answer", "feedback", 70, localDateTime);
-        Submission submissionWithoutId = new Submission("", "s2", "group answer","feedback", 75, localDateTime);
+        Submission submissionWithId = new Submission("submission-1", "s-1", "answer", "feedback", 70, localDateTime);
+        Submission submissionWithoutId = new Submission("", "s-2", "group answer","feedback", 75, localDateTime);
 
         Assignment assignmentWithId = new Assignment("assignment-1", "Assignment 1", "Solve problems", localDateTime, localDateTime.plusDays(7), List.of(submissionWithId));
         Assignment assignmentWithoutId = new Assignment("", "Assignment 2", "Group project", localDateTime, localDateTime.plusDays(7), List.of(submissionWithoutId));
@@ -132,8 +132,8 @@ class CourseServiceTest {
                 "This is Math 101",
                 List.of(lessonWithId, lessonWithoutId),
                 List.of(assignmentWithId, assignmentWithoutId),
-                List.of("s1", "s2", "s3"),
-                List.of("i1", "i2"),
+                List.of("s-1", "s-2", "s-3"),
+                List.of("i-1", "i-2"),
                 startDate);
         Course existingCourse = new Course(
                 existingCourseId,
@@ -142,7 +142,7 @@ class CourseServiceTest {
                 List.of(lessonWithId),
                 List.of(assignmentWithId),
                 List.of(),
-                List.of("i1"),
+                List.of("i-1"),
                 startDate);
         Course updatedCourse = new Course(
                 existingCourseId,
@@ -152,8 +152,8 @@ class CourseServiceTest {
                 List.of(assignmentWithId, assignmentWithoutId
                         .withId(newAssignmentId)
                         .withSubmissions(List.of(submissionWithoutId.withId(newSubmissionId)))),
-                List.of("s1", "s2", "s3"),
-                List.of("i1", "i2"),
+                List.of("s-1", "s-2", "s-3"),
+                List.of("i-1", "i-2"),
                 startDate);
         when(idService.randomId()).thenReturn(newLessonId, newAssignmentId, newSubmissionId);
         when(courseRepository.findById(existingCourseId)).thenReturn(Optional.of(existingCourse));
@@ -170,8 +170,8 @@ class CourseServiceTest {
                 List.of(assignmentWithId, assignmentWithoutId
                                 .withId(newAssignmentId)
                                 .withSubmissions(List.of(submissionWithoutId.withId(newSubmissionId)))),
-                List.of("s1", "s2", "s3"),
-                List.of("i1", "i2"),
+                List.of("s-1", "s-2", "s-3"),
+                List.of("i-1", "i-2"),
                 startDate);
         verify(courseRepository).findById(existingCourseId);
         verify(idService, times(3)).randomId();
@@ -184,8 +184,8 @@ class CourseServiceTest {
     @Test
     void updateCourseTest_whenCourseDoesNotExist() {
         //GIVEN
-        UpdateCourseDto courseDto = new UpdateCourseDto("Math 101", "This is Math 101", List.of(), List.of(), List.of("s1","s2","s3"),  List.of("i1","i2"), startDate);
-        Course updatedCourse = new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s1","s2","s3"),  List.of("i1","i2"), startDate);
+        UpdateCourseDto courseDto = new UpdateCourseDto("Math 101", "This is Math 101", List.of(), List.of(), List.of("s-1","s-2","s-3"),  List.of("i-1","i-2"), startDate);
+        Course updatedCourse = new Course("1", "Math 101", "This is Math 101", List.of(), List.of(), List.of("s-1","s-2","s-3"),  List.of("i-1","i-2"), startDate);
         when(courseRepository.findById("1")).thenReturn(Optional.empty());
         //THEN
         CourseNotFoundException exception = assertThrows(CourseNotFoundException.class,

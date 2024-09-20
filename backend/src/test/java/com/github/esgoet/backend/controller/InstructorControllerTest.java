@@ -11,7 +11,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -40,47 +40,18 @@ class InstructorControllerTest {
     @DirtiesContext
     void getInstructorByIdTest() throws Exception {
         //GIVEN
-        instructorRepository.save(new Instructor("1","esgoet","esgoet@fakeemail.com","123", List.of()));
+        instructorRepository.save(new Instructor("i-1","esgoet", new ArrayList<>()));
         //WHEN
-        mockMvc.perform(get("/api/instructors/1"))
+        mockMvc.perform(get("/api/instructors/i-1"))
                 //THEN
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                       {
-                          "id": "1",
+                          "id": "i-1",
                           "username": "esgoet",
-                          "email": "esgoet@fakeemail.com",
                           "courses": []
                       }
                       """));
-    }
-
-    @Test
-    @WithMockUser
-    @DirtiesContext
-    void createInstructorTest() throws Exception {
-        //WHEN
-        mockMvc.perform(post("/api/instructors")
-                        .with(csrf().asHeader())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                         {
-                          "username": "esgoet",
-                          "email": "esgoet@fakeemail.com",
-                          "password": "123",
-                          "role": "INSTRUCTOR"
-                        }
-                        """))
-                //THEN
-                .andExpect(status().isOk())
-                .andExpect(content().json("""
-                        {
-                          "username": "esgoet",
-                          "email": "esgoet@fakeemail.com",
-                          "courses": []
-                        }
-                """))
-                .andExpect(jsonPath("$.id").exists());
     }
 
     @Test
@@ -88,15 +59,14 @@ class InstructorControllerTest {
     @DirtiesContext
     void updateInstructorTest() throws Exception {
         //GIVEN
-        instructorRepository.save(new Instructor("1","esgoet","esgoet@fakeemail.com","123", List.of()));
+        instructorRepository.save(new Instructor("i-1", "esgoet", new ArrayList<>()));
         //WHEN
-        mockMvc.perform(put("/api/instructors/1")
+        mockMvc.perform(put("/api/instructors/i-1")
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                             {
                               "username": "esgoet",
-                              "email": "esgoet@fakeemail.com",
                               "courses": ["courseId-1"]
                             }
                             """))
@@ -104,9 +74,8 @@ class InstructorControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {
-                          "id": "1",
+                          "id": "i-1",
                           "username": "esgoet",
-                          "email": "esgoet@fakeemail.com",
                           "courses": ["courseId-1"]
                         }
                 """));
@@ -117,13 +86,12 @@ class InstructorControllerTest {
     @DirtiesContext
     void updateInstructorTest_whenInstructorDoesNotExist() throws Exception {
         //WHEN
-        mockMvc.perform(put("/api/instructors/1")
+        mockMvc.perform(put("/api/instructors/i-1")
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                             {
                               "username": "esgoet",
-                              "email": "esgoet@fakeemail.com",
                               "courses": ["courseId-1"]
                             }
                             """))
@@ -131,26 +99,11 @@ class InstructorControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().json("""
                         {
-                          "message": "No instructor found with id: 1",
+                          "message": "No instructor found with id: i-1",
                            "statusCode": 404
                         }
                         """))
                 .andExpect(jsonPath("$.timestamp").exists());
     }
 
-    @Test
-    @WithMockUser(authorities = {"INSTRUCTOR"})
-    @DirtiesContext
-    void deleteInstructorTest() throws Exception {
-        instructorRepository.save(new Instructor("1","esgoet","esgoet@fakeemail.com","123", List.of()));
-        //WHEN
-        mockMvc.perform(delete("/api/instructors/1").with(csrf().asHeader()))
-                //THEN
-                .andExpect(status().isOk());
-        //THEN
-        mockMvc.perform(get("/api/instructors"))
-                .andExpect(status().isOk())
-                .andExpect(content().json("[]"));
-
-    }
 }

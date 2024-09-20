@@ -5,6 +5,7 @@ import com.github.esgoet.backend.dto.UpdateCourseDto;
 import com.github.esgoet.backend.model.Course;
 import com.github.esgoet.backend.service.CourseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class CourseController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Course createCourse(@RequestBody NewCourseDto courseDto) {
         return courseService.createCourse(courseDto);
     }
@@ -36,6 +38,7 @@ public class CourseController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCourse(@PathVariable String id) {
         courseService.deleteCourse(id);
     }

@@ -11,8 +11,6 @@ import java.util.Map;
 public record Student(
         String id,
         String username,
-        String email,
-        String password,
         List<String> courses,
         Map<String,List<Grade>> grades
 ) {

@@ -1,8 +1,8 @@
-import {Instructor, Student} from "../types/userTypes.ts";
+import {AppUser} from "../types/userTypes.ts";
 
-export function checkIsInstructor(user: Student | Instructor | null | undefined): user is Instructor {
+export function checkIsInstructor(user: AppUser | null | undefined): boolean {
     if (user) {
-        return !('grades' in user);
+        return user.instructor !== undefined;
     } else {
         return false;
     }

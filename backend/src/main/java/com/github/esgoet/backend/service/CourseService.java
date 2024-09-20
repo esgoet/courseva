@@ -29,7 +29,7 @@ public class CourseService {
     }
 
     public Course createCourse(NewCourseDto courseDto) {
-        Course course = new Course(idService.generateCourseId(courseDto.title(), courseDto.startDate()),courseDto.title(), courseDto.description(),List.of(), List.of(), courseDto.students(), courseDto.instructors(), courseDto.startDate());
+        Course course = new Course(idService.generateCourseId(courseDto.title()),courseDto.title(), courseDto.description(),List.of(), List.of(), courseDto.students(), courseDto.instructors(), courseDto.startDate());
         return courseRepository.save(course);
     }
 

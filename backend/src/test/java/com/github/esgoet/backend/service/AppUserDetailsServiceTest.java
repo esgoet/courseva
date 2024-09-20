@@ -1,5 +1,6 @@
 package com.github.esgoet.backend.service;
 
+import com.github.esgoet.backend.model.AppUser;
 import com.github.esgoet.backend.model.AppUserRole;
 import com.github.esgoet.backend.model.Instructor;
 import com.github.esgoet.backend.model.Student;
@@ -9,6 +10,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,50 +18,44 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class AppUserDetailsServiceTest {
-    private final StudentService studentService = mock(StudentService.class);
-    private final InstructorService instructorService = mock(InstructorService.class);
-    private final AppUserDetailsService appUserDetailsService = new AppUserDetailsService(studentService, instructorService);
+    private final AppUserService appUserService = mock(AppUserService.class);
+    private final AppUserDetailsService appUserDetailsService = new AppUserDetailsService(appUserService);
 
     @Test
-    void loadUserByUsername_whenStudentExistsWithUsername() {
+    void loadUserByUsernameTest_whenUserStudent() {
         //GIVEN
-        Student student = new Student("1","esgoet","esgoet@fakeemail.com","123", List.of(), new HashMap<>());
-        when(studentService.getStudentByUsername("esgoet")).thenReturn(student);
+        AppUser appUser = new AppUser("1", "esgoet@fakeemail.com","123", new Student("s-1", "esgoet", List.of(), new HashMap<>()), null);
+        when(appUserService.getAppUserByEmail("esgoet@fakeemail.com")).thenReturn(appUser);
         //WHEN
-        UserDetails actual = appUserDetailsService.loadUserByUsername("esgoet");
+        UserDetails actual = appUserDetailsService.loadUserByUsername("esgoet@fakeemail.com");
         //THEN
-        UserDetails expected = new User("esgoet","123",List.of(new SimpleGrantedAuthority(AppUserRole.STUDENT.name())));
-        verify(studentService).getStudentByUsername("esgoet");
-        verify(instructorService, never()).getInstructorByUsername("esgoet");
+        UserDetails expected = new User("esgoet@fakeemail.com","123",List.of(new SimpleGrantedAuthority(AppUserRole.STUDENT.name())));
+        verify(appUserService).getAppUserByEmail("esgoet@fakeemail.com");
         assertEquals(expected, actual);
     }
 
     @Test
-    void loadUserByUsername_whenInstructorExistsWithUsername() {
+    void loadUserByUsernameTest_whenUserInstructor() {
         //GIVEN
-        Instructor instructor = new Instructor("1","esgoet","esgoet@fakeemail.com","123", List.of());
-        when(studentService.getStudentByUsername("esgoet")).thenThrow(new UsernameNotFoundException("No student found with username: esgoet"));
-        when(instructorService.getInstructorByUsername("esgoet")).thenReturn(instructor);
+        AppUser appUser = new AppUser("1", "esgoet@fakeemail.com","123", null, new Instructor("i-1","esgoet", new ArrayList<>()));
+        when(appUserService.getAppUserByEmail("esgoet@fakeemail.com")).thenReturn(appUser);
         //WHEN
-        UserDetails actual = appUserDetailsService.loadUserByUsername("esgoet");
+        UserDetails actual = appUserDetailsService.loadUserByUsername("esgoet@fakeemail.com");
         //THEN
-        UserDetails expected = new User("esgoet","123",List.of(new SimpleGrantedAuthority(AppUserRole.INSTRUCTOR.name())));
-        verify(studentService).getStudentByUsername("esgoet");
-        verify(instructorService).getInstructorByUsername("esgoet");
+        UserDetails expected = new User("esgoet@fakeemail.com","123",List.of(new SimpleGrantedAuthority(AppUserRole.INSTRUCTOR.name())));
+        verify(appUserService).getAppUserByEmail("esgoet@fakeemail.com");
         assertEquals(expected, actual);
     }
 
     @Test
-    void loadUserByUsername_whenNoUserExistsWithUsername() {
+    void loadUserByUsernameTest_whenUserNotFound() {
         //GIVEN
-        when(studentService.getStudentByUsername("esgoet")).thenThrow(new UsernameNotFoundException("No student found with username: esgoet"));
-        when(instructorService.getInstructorByUsername("esgoet")).thenThrow(new UsernameNotFoundException("No instructor found with username: esgoet"));
+        when(appUserService.getAppUserByEmail("esgoet@fakeemail.com")).thenThrow(new UsernameNotFoundException("No user found with email: esgoet@fakeemail.com"));
         //THEN
         UsernameNotFoundException thrown = assertThrows(UsernameNotFoundException.class,
                 //THEN
-                () -> appUserDetailsService.loadUserByUsername("esgoet"));
-        verify(studentService).getStudentByUsername("esgoet");
-        verify(instructorService).getInstructorByUsername("esgoet");
-        assertEquals("No instructor found with username: esgoet", thrown.getMessage());
+                () -> appUserDetailsService.loadUserByUsername("esgoet@fakeemail.com"));
+        verify(appUserService).getAppUserByEmail("esgoet@fakeemail.com");
+        assertEquals("No user found with email: esgoet@fakeemail.com", thrown.getMessage());
     }
 }

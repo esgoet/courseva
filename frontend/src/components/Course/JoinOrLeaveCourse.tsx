@@ -6,7 +6,7 @@ import {Button} from "@mui/material";
 
 type JoinOrLeaveCourseProps = {
     course: Course,
-    updateUser: (updatedProperty: string, updatedValue: string[]) => void,
+    updateUser: (courseId: string, isAdded: boolean) => void,
     updateCourse: (updatedProperty: string, updatedValue: string[], course: Course) => void,
 };
 
@@ -15,15 +15,15 @@ export default function JoinOrLeaveCourse({course, updateUser, updateCourse}: Re
     const [confirmLeave, setConfirmLeave] = useState<boolean>(false);
     const handleJoin = () => {
         if (user) {
-            updateUser("courses", [...user.courses, course.id]);
+            updateUser(course.id, true);
             updateCourse(isInstructor ? "instructors" : "students", [...(isInstructor ? course.instructors : course.students), user.id], course);
         }
     }
 
     const handleLeave = () => {
         if (user) {
-            updateUser("courses", user.courses.filter(userCourse => userCourse !== course.id));
-            updateCourse(isInstructor ? "instructors" : "students", (isInstructor ? course.instructors.filter(instructor => instructor !== user.id) : course.students.filter(student => student !== user.id)), course);
+            updateUser(course.id, false);
+            updateCourse(isInstructor ? "instructors" : "students", (isInstructor ? course.instructors.filter(instructor => instructor !== user.instructor?.id) : course.students.filter(student => student !== user.student?.id)), course);
         }
     }
 

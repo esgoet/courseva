@@ -24,7 +24,7 @@ type CoursePageProps = {
     deleteCourse: (courseId: string) => void,
     students: Student[],
     instructors: Instructor[],
-    updateUser: (updatedProperty: string, updatedValue: string[]) => void
+    updateUser: (courseId: string, isAdded: boolean) => void
 }
 
 export default function CourseDetailsPage({updateCourse, course, fetchCourse, deleteCourse, updateUser}: Readonly<CoursePageProps>) {
@@ -32,7 +32,7 @@ export default function CourseDetailsPage({updateCourse, course, fetchCourse, de
     const isMobile = !(useMediaQuery(theme.breakpoints.up('sm')));
     const { courseId } = useParams();
     const {user, isInstructor} = useAuth();
-    const gradeAverage: number | undefined = (user && 'grades' in user && course && user.grades[course.id]) ? calculateStudentGradeAverage(user.grades[course.id]) : undefined;
+    const gradeAverage: number | undefined = (course && user?.student?.grades[course.id]) ? calculateStudentGradeAverage(user.student.grades[course.id]) : undefined;
     const courseAverage : number | undefined = (course) && calculateCourseGradeAverage(course);
 
 

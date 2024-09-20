@@ -3,19 +3,19 @@ import {Instructor, Student} from "../../types/userTypes.ts";
 import {Dispatch, SetStateAction} from "react";
 import {useAuth} from "../../hooks/useAuth.ts";
 import {calculateStudentGradeAverage} from "../../utils/calculateGradeAverage.ts";
-import {useCourse} from "../../hooks/useCourse.ts";
 import GradeDisplay from "./GradeDisplay.tsx";
+import { Course } from "../../types/courseTypes.ts";
 
 type CheckListProps = {
     editable: boolean
     options: Student[] | Instructor[]
     currentOptions: string[],
-    setCurrentOptions: Dispatch<SetStateAction<string[]>>
+    setCurrentOptions: Dispatch<SetStateAction<string[]>>,
+    course?: Course
 };
 
 export default function UserCheckList(props: Readonly<CheckListProps>) {
     const {isInstructor } = useAuth();
-    const {course} = useCourse();
     const handleToggle = (id: string) => {
         if (props.currentOptions.includes(id)) {
             props.setCurrentOptions(props.currentOptions.filter(option => option !== id));
@@ -47,12 +47,12 @@ export default function UserCheckList(props: Readonly<CheckListProps>) {
                             primary={option.username}
                         />
                         {
-                            (!props.editable && isInstructor && 'grades' in option && course && option.grades[course.id]) &&
+                            (props.course &&!props.editable && isInstructor && 'grades' in option  && option.grades[props.course.id]) &&
                             <ListItemText
                                 id={`grade-average-list-${option.id}`}
                                 primary={
                                     <Tooltip title={"Grade Average"}>
-                                        <GradeDisplay grade={calculateStudentGradeAverage(option.grades[course.id])}/>
+                                        <GradeDisplay grade={calculateStudentGradeAverage(option.grades[props.course.id])}/>
                                     </Tooltip>
                                 }
                                 sx={{textAlign: 'right'}}

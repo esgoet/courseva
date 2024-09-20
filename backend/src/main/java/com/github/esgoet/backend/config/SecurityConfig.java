@@ -36,14 +36,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/courses").hasAuthority(AppUserRole.INSTRUCTOR.name())
                         .requestMatchers(HttpMethod.DELETE, "/api/courses/**").hasAuthority(AppUserRole.INSTRUCTOR.name())
-                        .requestMatchers(HttpMethod.DELETE, "/api/instructors/**").hasAuthority(AppUserRole.INSTRUCTOR.name())
                         .requestMatchers(HttpMethod.PUT, "/api/instructors/**").hasAuthority(AppUserRole.INSTRUCTOR.name())
                         .requestMatchers(HttpMethod.PUT, "/api/students/{id}/grades").hasAuthority(AppUserRole.INSTRUCTOR.name())
-                        .requestMatchers(HttpMethod.DELETE, "/api/students/**").hasAuthority(AppUserRole.STUDENT.name())
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
-                .httpBasic(httpSecurityHttpBasicConfigurer -> httpSecurityHttpBasicConfigurer.authenticationEntryPoint((request, response, authException)-> response.sendError(401)));
+                .httpBasic(httpSecurityHttpBasicConfigurer -> httpSecurityHttpBasicConfigurer.authenticationEntryPoint((request, response, authException)-> response.sendError(401)))
+                .logout(logout -> logout.logoutUrl("/api/auth/logout"));
         return http.build();
     }
 }

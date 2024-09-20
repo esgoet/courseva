@@ -10,8 +10,6 @@ import java.util.List;
 public record Instructor(
         String id,
         String username,
-        String email,
-        String password,
         List<String> courses
 ) {
 }

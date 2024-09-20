@@ -7,7 +7,7 @@ import {Button, Grid2, Paper} from "@mui/material";
 type DashboardProps = {
     courses: Course[],
     deleteCourse: (courseId: string) => void,
-    updateUser: (updatedProperty: string, updatedValue: string[]) => void,
+    updateUser: (courseId: string, isAdded: boolean) => void,
     updateCourse: (updatedProperty: string, updatedValue: string[], course: Course) => void,
 }
 export default function Dashboard({courses, deleteCourse, updateUser, updateCourse}: Readonly<DashboardProps>) {
@@ -17,7 +17,7 @@ export default function Dashboard({courses, deleteCourse, updateUser, updateCour
         {user &&
                 <Grid2 container spacing={2}>
                     <Grid2>
-                        <p>Hello {user.username}!</p>
+                        <p>Hello {user.student?.username ?? user.instructor?.username}!</p>
                     </Grid2>
                     <Grid2>
                         {isInstructor && <Button component={Link} to={"/course/create"} variant={"outlined"} color={"secondary"}>Create a Course</Button>}

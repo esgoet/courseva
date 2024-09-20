@@ -11,6 +11,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,66 +40,37 @@ class StudentControllerTest {
     @Test
     @WithMockUser
     @DirtiesContext
-    void getStudentByIdByIdTest() throws Exception {
+    void getStudentByIdTest() throws Exception {
         //GIVEN
-        studentRepository.save(new Student("1","esgoet","esgoet@fakeemail.com","123", List.of(), new HashMap<>()));
+        studentRepository.save(new Student("s-1", "esgoet", new ArrayList<>(), new HashMap<>()));
         //WHEN
-        mockMvc.perform(get("/api/students/1"))
+        mockMvc.perform(get("/api/students/s-1"))
                 //THEN
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                       {
-                          "id": "1",
+                          "id": "s-1",
                           "username": "esgoet",
-                          "email": "esgoet@fakeemail.com",
-                          "courses": []
+                          "courses": [],
+                          "grades": {}
                       }
                       """));
     }
 
-    @Test
-    @WithMockUser
-    @DirtiesContext
-    void createStudentTest() throws Exception {
-        //WHEN
-        mockMvc.perform(post("/api/students")
-                        .with(csrf().asHeader())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                         {
-                          "username": "esgoet",
-                          "email": "esgoet@fakeemail.com",
-                          "password": "123",
-                          "role": "STUDENT"
-                        }
-                        """))
-                //THEN
-                .andExpect(status().isOk())
-                .andExpect(content().json("""
-                        {
-                          "username": "esgoet",
-                          "email": "esgoet@fakeemail.com",
-                          "courses": [],
-                          "grades": {}
-                        }
-                """))
-                .andExpect(jsonPath("$.id").exists());
-    }
 
     @Test
     @WithMockUser
     @DirtiesContext
     void updateStudentTest() throws Exception {
         //GIVEN
-        studentRepository.save(new Student("1","esgoet","esgoet@fakeemail.com","123", List.of(), new HashMap<>()));
+        studentRepository.save(new Student("s-1", "esgoet", new ArrayList<>(), new HashMap<>()));
         //WHEN
-        mockMvc.perform(put("/api/students/1")
+        mockMvc.perform(put("/api/students/s-1")
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                             {
                               "username": "esgoet",
-                              "email": "esgoet@fakeemail.com",
                               "courses": ["courseId-1"],
                               "grades": {}
                             }
@@ -107,9 +79,8 @@ class StudentControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {
-                          "id": "1",
+                          "id": "s-1",
                           "username": "esgoet",
-                          "email": "esgoet@fakeemail.com",
                           "courses": ["courseId-1"],
                           "grades": {}
                         }
@@ -121,13 +92,12 @@ class StudentControllerTest {
     @DirtiesContext
     void updateStudentTest_whenStudentDoesNotExist() throws Exception {
        //WHEN
-        mockMvc.perform(put("/api/students/1")
+        mockMvc.perform(put("/api/students/s-1")
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                             {
                               "username": "esgoet",
-                              "email": "esgoet@fakeemail.com",
                               "courses": ["courseId-1"],
                               "grades": {}
                             }
@@ -136,37 +106,22 @@ class StudentControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().json("""
                         {
-                          "message": "No student found with id: 1",
+                          "message": "No student found with id: s-1",
                            "statusCode": 404
                         }
                         """))
                 .andExpect(jsonPath("$.timestamp").exists());
     }
 
-    @Test
-    @WithMockUser(authorities = {"STUDENT"})
-    @DirtiesContext
-    void deleteStudentTest() throws Exception {
-        studentRepository.save(new Student("1","esgoet","esgoet@fakeemail.com","123", List.of(), new HashMap<>()));
-        //WHEN
-        mockMvc.perform(delete("/api/students/1").with(csrf().asHeader()))
-                //THEN
-                .andExpect(status().isOk());
-        //THEN
-        mockMvc.perform(get("/api/students"))
-                .andExpect(status().isOk())
-                .andExpect(content().json("[]"));
-
-    }
 
     @Test
     @WithMockUser(authorities = {"INSTRUCTOR"})
     @DirtiesContext
     void updateStudentGradesTest() throws Exception {
         //GIVEN
-        studentRepository.save(new Student("1","esgoet","esgoet@fakeemail.com","123", List.of("courseId"), new HashMap<>()));
+        studentRepository.save(new Student("s-1", "esgoet", List.of("courseId"), new HashMap<>()));
         //WHEN
-        mockMvc.perform(put("/api/students/1/grades")
+        mockMvc.perform(put("/api/students/s-1/grades")
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -180,9 +135,8 @@ class StudentControllerTest {
                         .andExpect(status().isOk())
                         .andExpect(content().json("""
                                 {
-                                  "id": "1",
+                                  "id": "s-1",
                                   "username": "esgoet",
-                                  "email": "esgoet@fakeemail.com",
                                   "courses": ["courseId"],
                                   "grades": {"courseId": [
                                           {
@@ -200,7 +154,7 @@ class StudentControllerTest {
     @DirtiesContext
     void updateStudentGradesTest_whenStudentDoesNotExist() throws Exception {
         //WHEN
-        mockMvc.perform(put("/api/students/1/grades")
+        mockMvc.perform(put("/api/students/s-1/grades")
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -215,8 +169,8 @@ class StudentControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().json("""
                         {
-                          "message": "No student found with id: 1",
-                           "statusCode": 404
+                          "message": "No student found with id: s-1",
+                          "statusCode": 404
                         }
                         """))
                 .andExpect(jsonPath("$.timestamp").exists());
