@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import EditableTextDetail from "../../../components/Shared/EditableTextDetail.tsx";
 import {convertToLessonDto, convertToLessonDtoList} from "../../../utils/convertToLessonDto.ts";
 import {useAuth} from "../../../hooks/useAuth.ts";
-import {Button} from "@mui/material";
+import {Button, Stack} from "@mui/material";
 import {useCurrentCourse} from "../../../hooks/useCurrentCourse.ts";
 import EditableRichText from "../../../components/Shared/EditableRichText.tsx";
 import {useCourses} from "../../../hooks/useCourses.ts";
@@ -37,15 +37,13 @@ export default function LessonPage() {
         <>
             <Button component={Link} to={".."} relative={"path"} variant={"outlined"}>Back to All Lessons</Button>
             {lesson &&
-                <>
-                    <h3>
-                        <EditableTextDetail inputType={"text"} label={"Lesson Title"} name={"title"}
-                                            initialValue={lesson.title} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
-                    </h3>
+                <Stack component={"section"} sx={{my: 2}} spacing={2}>
+                    <EditableTextDetail inputType={"text"} label={"Lesson Title"} name={"title"}
+                                        initialValue={lesson.title} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
                     <EditableTextDetail inputType={"datetime-local"} label={"Lesson Release"} name={"whenPublic"}
                                         initialValue={lesson.whenPublic} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
                     <EditableRichText label={"Content"} name={"content"} initialValue={lesson.content} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
-                </>
+                </Stack>
             }
         </>
     )

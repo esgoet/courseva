@@ -51,11 +51,9 @@ export default function AssignmentPage() {
         <>
             <Button component={Link} to={".."} relative={"path"} variant={'outlined'}>Back to All Assignments</Button>
             {assignment &&
-                <>
-                    <h3>
-                        <EditableTextDetail inputType={"text"} label={"Assignment Title"} name={"title"}
-                                            initialValue={assignment.title} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
-                    </h3>
+                <Stack component={"section"} sx={{my: 2}} spacing={2}>
+                    <EditableTextDetail inputType={"text"} label={"Assignment Title"} name={"title"}
+                                        initialValue={assignment.title} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
                     <EditableTextDetail inputType={"datetime-local"} label={"Release"} name={"whenPublic"}
                                         initialValue={assignment.whenPublic} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
                     <EditableTextDetail inputType={"datetime-local"} label={"Deadline"} name={"deadline"}
@@ -113,7 +111,7 @@ export default function AssignmentPage() {
                             }
                         </>
                     }
-                </>
+                </Stack>
             }
         </>
     )
