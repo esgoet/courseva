@@ -1,6 +1,6 @@
 import './App.css'
 import {useEffect, useMemo, useState} from "react";
-import {AssignmentDto, Course, CourseDto, LessonDto, NewCourseDto} from "./types/courseTypes.ts";
+import {CourseDto} from "./types/courseTypes.ts";
 import {Route, Routes, useNavigate} from "react-router-dom";
 import CourseDetailsPage from "./pages/CourseDetails/CourseDetailsPage.tsx";
 import CourseCreator from "./pages/CourseCreator.tsx";
@@ -12,7 +12,6 @@ import AssignmentPage from "./pages/CourseDetails/Assignment/AssignmentPage.tsx"
 import LessonCreator from "./pages/CourseDetails/Lesson/LessonCreator.tsx";
 import AssignmentCreator from "./pages/CourseDetails/Assignment/AssignmentCreator.tsx";
 import SubmissionPage from "./pages/CourseDetails/Assignment/SubmissionPage.tsx";
-import {convertToCourse} from "./utils/convertToCourse.ts";
 import RegisterPage from "./pages/RegisterPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import {AppUser, Instructor, Student, UserLoginDto} from "./types/userTypes.ts";
@@ -27,61 +26,21 @@ import {themeOptions} from "./styles/themeOptions.ts";
 import ParticipantOverview from "./pages/CourseDetails/Participant/ParticipantOverview.tsx";
 import BrowsePage from "./pages/BrowsePage/BrowsePage.tsx";
 import axiosInstance from "./api/axiosInstance.ts";
-import axios, {AxiosResponse} from "axios";
+import axios from "axios";
+import {useDataArray} from "./hooks/useDataArray.ts";
+import {CoursesContext} from "./context/CoursesContext.ts";
 
 export default function App() {
-    const [courses, setCourses] = useState<Course[]>([]);
-    const [currentCourse, setCurrentCourse] = useState<Course | undefined>();
+    const {data: courses, setData: setCourses, loading, error} = useDataArray<CourseDto>('/api/courses');
     const [user, setUser] = useState<AppUser | null | undefined>();
     const [isInstructor, setIsInstructor] = useState<boolean>(false);
     const navigate = useNavigate();
     const theme = createTheme({cssVariables: true,...themeOptions});
 
+    const coursesContextValue = useMemo(() => ({courses, setCourses, loading, error}), [courses, setCourses, loading, error]);
+
     const authContextValue = useMemo(() => ({ user, isInstructor}), [user, isInstructor]);
 
-    const fetchCourses = () => {
-        axiosInstance.get("/api/courses")
-            .then((response : AxiosResponse<CourseDto[]>) => setCourses(response.data.map(convertToCourse)))
-            .catch((error) => console.error(error))
-    }
-
-    const createCourse = (course : NewCourseDto)  => {
-        axiosInstance.post("/api/courses", course)
-            .then((response : AxiosResponse<CourseDto>) => {
-                setCourses([...courses, convertToCourse(response.data)]);
-                navigate(`/course/${response.data.id}`);
-            })
-            .catch((error) => console.error(error.response.data));
-    }
-    const fetchCourse = (id: string) => {
-        axiosInstance.get(`/api/courses/${id}`)
-            .then((response: AxiosResponse<CourseDto>) => {
-                setCurrentCourse(convertToCourse(response.data));
-            })
-            .catch((error) => {
-                console.error(error.response.data);
-                setCurrentCourse(undefined);
-            });
-    }
-
-    const updateCourse = (updatedProperty: string, updatedValue: string | string[] | LessonDto[] | AssignmentDto[], courseToUpdate = currentCourse) => {
-        axiosInstance.put(`/api/courses/${courseToUpdate?.id}`, {...courseToUpdate, [updatedProperty]: updatedValue})
-            .then((response: AxiosResponse<CourseDto>) => {
-                    const updatedCourse = convertToCourse(response.data);
-                    setCourses(courses.map(course => course.id === updatedCourse.id ? updatedCourse : course));
-                    if (currentCourse?.id === updatedCourse.id) setCurrentCourse(updatedCourse);
-            })
-            .catch((error)=>console.error(error.response.data));
-    }
-
-
-    const deleteCourse = (courseId: string) => {
-        axiosInstance.delete(`/api/courses/${courseId}`)
-            .then(() => {
-                setCourses(courses.filter(course => course.id !== courseId))
-            })
-            .catch((error)=> console.error(error.response.data))
-    }
 
     async function fetchUser() : Promise<void> {
         return axiosInstance.get("/api/auth/me")
@@ -105,7 +64,7 @@ export default function App() {
             .then((response)=> {
                 setUser(response.data)
                 setIsInstructor(checkIsInstructor(response.data))
-                fetchCourses();
+                // fetchCourses();
                 // fetchStudents();
                 // fetchInstructors();
                 navigate("/");
@@ -184,41 +143,40 @@ export default function App() {
 
     useEffect(()=>{
         fetchUser()
-            .then(()=> {
-                fetchCourses();
-            })
     }, []);
 
     return (
         <ThemeProvider theme={theme}>
             <AuthContext.Provider value={authContextValue}>
-                <Header logout={logout}/>
-                <main>
+                <CoursesContext.Provider value={coursesContextValue}>
+                    <Header logout={logout}/>
+                    <main>
                         <Routes>
                             <Route path={"/register"} element={<RegisterPage />}/>
                             <Route path={"/login"} element={<LoginPage login={login}/>}/>
                             <Route element={<ProtectedRoutes />}>
-                                <Route path={"/"} element={<Dashboard courses={courses} deleteCourse={deleteCourse} updateUser={updateUserCourses} updateCourse={updateCourse}/>}/>
-                                <Route path={"/browse"} element={<BrowsePage courses={courses} deleteCourse={deleteCourse} updateUser={updateUserCourses} updateCourse={updateCourse}/>}/>
+                                <Route path={"/"} element={<Dashboard updateUser={updateUserCourses} />}/>
+                                <Route path={"/browse"} element={<BrowsePage updateUser={updateUserCourses}/>}/>
                                 <Route path={"/account"} element={<UserAccountPage updateUser={updateUser} deleteUser={deleteUser} updateInstructor={updateInstructor} updateStudent={updateStudent}/>}/>
-                                <Route path={"/course/:courseId"} element={<CourseDetailsPage updateCourse={updateCourse} course={currentCourse} fetchCourse={fetchCourse} deleteCourse={deleteCourse}  updateUser={updateUserCourses}/>}>
-                                    <Route index element={<ParticipantOverview updateCourse={updateCourse}/>}/>
-                                    <Route path={"lessons"} element={<LessonOverview updateCourse={updateCourse}/>}/>
-                                    <Route path={"lessons/:lessonId"} element={<LessonPage updateCourse={updateCourse}/>}/>
-                                    <Route path={"assignments"} element={<AssignmentOverview updateCourse={updateCourse}/>}/>
-                                    <Route path={"assignments/:assignmentId"} element={<AssignmentPage updateCourse={updateCourse}/>}/>
-                                    <Route path={"assignments/:assignmentId/submission/:submissionId"} element={<SubmissionPage updateCourse={updateCourse}/>}/>
+                                <Route path={"/course/:courseId"} element={<CourseDetailsPage updateUser={updateUserCourses}/>}>
+                                    <Route index element={<ParticipantOverview/>}/>
+                                    <Route path={"lessons"} element={<LessonOverview />}/>
+                                    <Route path={"lessons/:lessonId"} element={<LessonPage />}/>
+                                    <Route path={"assignments"} element={<AssignmentOverview />}/>
+                                    <Route path={"assignments/:assignmentId"} element={<AssignmentPage />}/>
+                                    <Route path={"assignments/:assignmentId/submission/:submissionId"} element={<SubmissionPage />}/>
                                     <Route element={<ProtectedInstructorRoutes />}>
-                                        <Route path={"lessons/create"} element={<LessonCreator updateCourse={updateCourse} course={currentCourse}/>}/>
-                                        <Route path={"assignments/create"} element={<AssignmentCreator updateCourse={updateCourse} course={currentCourse}/>}/>
+                                        <Route path={"lessons/create"} element={<LessonCreator/>}/>
+                                        <Route path={"assignments/create"} element={<AssignmentCreator/>}/>
                                     </Route>
                                 </Route>
                                 <Route element={<ProtectedInstructorRoutes/>}>
-                                    <Route path={"/course/create"} element={<CourseCreator createCourse={createCourse} />}/>
+                                    <Route path={"/course/create"} element={<CourseCreator />}/>
                                 </Route>
                             </Route>
                         </Routes>
-                </main>
+                    </main>
+                </CoursesContext.Provider>
             </AuthContext.Provider>
         </ThemeProvider>
     )

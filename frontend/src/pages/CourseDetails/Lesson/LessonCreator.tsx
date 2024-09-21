@@ -1,5 +1,5 @@
 import {ChangeEvent, FormEvent, useRef, useState} from "react";
-import {Course, LessonDto} from "../../../types/courseTypes.ts";
+import {LessonDto} from "../../../types/courseTypes.ts";
 import {Link, useNavigate} from "react-router-dom";
 import {convertToLessonDtoList} from "../../../utils/convertToLessonDto.ts";
 import {Button, Grid2, InputLabel, TextField} from "@mui/material";
@@ -7,20 +7,19 @@ import {
     type RichTextEditorRef,
 } from "mui-tiptap";
 import CustomRichTextEditor from "../../../components/Shared/CustomRichTextEditor.tsx";
+import {useCourses} from "../../../hooks/useCourses.ts";
+import {useCurrentCourse} from "../../../hooks/useCurrentCourse.ts";
 
-type LessonCreatorProps = {
-    updateCourse: (updatedProperty: string, updatedValue: LessonDto[]) => void,
-    course: Course | undefined
-}
-
-export default function LessonCreator({course, updateCourse}:Readonly<LessonCreatorProps>) {
+export default function LessonCreator() {
    const [lesson, setLesson] = useState<LessonDto>({
         id:"",
         title:"",
         content:"",
         whenPublic: new Date(Date.now()).toISOString().substring(0,19)
     });
+    const {course} = useCurrentCourse();
     const navigate = useNavigate();
+    const {updateCourse} = useCourses();
     const rteRef = useRef<RichTextEditorRef>(null);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

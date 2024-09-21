@@ -1,17 +1,16 @@
 import CourseList from "../../components/Course/CourseList/CourseList.tsx";
-import {Course} from "../../types/courseTypes.ts";
 import {Link} from "react-router-dom";
 import {useAuth} from "../../hooks/useAuth.ts";
 import {Button, Grid2, Paper} from "@mui/material";
+import {useCourses} from "../../hooks/useCourses.ts";
 
 type DashboardProps = {
-    courses: Course[],
-    deleteCourse: (courseId: string) => void,
     updateUser: (courseId: string, isAdded: boolean) => void,
-    updateCourse: (updatedProperty: string, updatedValue: string[], course: Course) => void,
 }
-export default function Dashboard({courses, deleteCourse, updateUser, updateCourse}: Readonly<DashboardProps>) {
+export default function Dashboard({updateUser}: Readonly<DashboardProps>) {
     const {user, isInstructor} = useAuth();
+    const {courses} = useCourses();
+
     return (
         <Paper elevation={3} square={false} sx={{p:'20px'}}>
         {user &&
@@ -27,9 +26,9 @@ export default function Dashboard({courses, deleteCourse, updateUser, updateCour
                             <h2>Your Courses</h2>
                             <CourseList
                                 courses={courses
-                                    .filter(course => course.students.includes(user.id) || course.instructors.includes(user.id))
+                                    .filter(course => user.student ? course.students.includes(user.student.id) : user.instructor ? course.instructors.includes(user.instructor?.id) : course)
                                     .toSorted((a, b) => a?.startDate.getTime() - b?.startDate.getTime())}
-                                deleteCourse={deleteCourse} updateUser={updateUser} updateCourse={updateCourse}/>
+                                 updateUser={updateUser} />
                         </section>
                     </Grid2>
                 </Grid2>

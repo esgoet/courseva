@@ -3,7 +3,7 @@ import {ReactNode} from "react";
 
 type DataStateHandlerProps = {
     loading: boolean,
-    error: Error | null,
+    error: Error | undefined,
     height: string
     children: ReactNode,
 };

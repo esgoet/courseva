@@ -4,11 +4,7 @@ import {Instructor, Student} from "../../../types/userTypes.ts";
 import {useCurrentCourse} from "../../../hooks/useCurrentCourse.ts";
 import {useDataArray} from "../../../hooks/useDataArray.ts";
 
-type ParticipantOverviewProps = {
-    updateCourse: (updatedProperty: string, updatedValue: string | string[]) => void,
-};
-
-export default function ParticipantOverview({updateCourse}: Readonly<ParticipantOverviewProps>) {
+export default function ParticipantOverview() {
     const {course} = useCurrentCourse();
     const students = useDataArray<Student>('/api/students');
     const instructors = useDataArray<Instructor>('/api/instructors');
@@ -20,11 +16,11 @@ export default function ParticipantOverview({updateCourse}: Readonly<Participant
             </Grid2>
             <Grid2 size={{xs:12, sm:6}}>
                 <EditableUserList label={"Students"} name={"students"} initialValue={course?.students || []}
-                                  updateCourse={updateCourse} options={Array.isArray(students) ? students : []}/>
+                                   options={students}/>
             </Grid2>
             <Grid2 size={{xs: 12, sm: 6}}>
                 <EditableUserList label={"Instructors"} name={"instructors"} initialValue={course?.instructors || []}
-                                  updateCourse={updateCourse} options={instructors}/>
+                                   options={instructors}/>
             </Grid2>
         </Grid2>
     );

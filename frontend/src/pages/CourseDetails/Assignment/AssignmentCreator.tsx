@@ -1,17 +1,14 @@
-import {AssignmentDto, Course} from "../../../types/courseTypes.ts";
+import {AssignmentDto} from "../../../types/courseTypes.ts";
 import {ChangeEvent, FormEvent, useRef, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
 import {Button, Grid2, InputLabel, TextField} from "@mui/material";
 import CustomRichTextEditor from "../../../components/Shared/CustomRichTextEditor.tsx";
 import type {RichTextEditorRef} from "mui-tiptap";
+import {useCourses} from "../../../hooks/useCourses.ts";
+import {useCurrentCourse} from "../../../hooks/useCurrentCourse.ts";
 
-type AssignmentCreatorProps = {
-    updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void,
-    course: Course | undefined
-}
-
-export default function AssignmentCreator({course, updateCourse}: Readonly<AssignmentCreatorProps>) {
+export default function AssignmentCreator() {
     const [assignment, setAssignment] = useState<AssignmentDto>({
         id: "",
         title: "",
@@ -21,6 +18,8 @@ export default function AssignmentCreator({course, updateCourse}: Readonly<Assig
         submissions: []
     })
     const navigate = useNavigate();
+    const {course} = useCurrentCourse();
+    const {updateCourse} = useCourses();
     const rteRef = useRef<RichTextEditorRef>(null);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

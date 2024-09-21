@@ -5,14 +5,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import CancelIcon from '@mui/icons-material/Cancel';
 import UserCheckList from "./UserCheckList.tsx";
-import {useCourse} from "../../hooks/useCourse.ts";
+import {useCurrentCourse} from "../../hooks/useCurrentCourse.ts";
 import {Instructor, Student} from "../../types/userTypes.ts";
+import {useCourses} from "../../hooks/useCourses.ts";
 
 type EditableListDetailProps = {
     label: string,
     name: string,
     initialValue: string[],
-    updateCourse: (updatedProperty: string, updatedValue: string[]) => void,
     options: { data: Student[]|Instructor[], loading: boolean, error: Error | undefined}
 }
 
@@ -20,11 +20,12 @@ export default function EditableUserList(props: Readonly<EditableListDetailProps
     const [editable, setEditable] = useState<boolean>(false);
     const [input, setInput ] = useState<string[]>(props.initialValue);
     const {isInstructor} = useAuth();
-    const {course} = useCourse();
+    const {course} = useCurrentCourse();
+    const {updateCourse} = useCourses();
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        props.updateCourse(props.name, input);
+        if (course) updateCourse(props.name, input);
     }
 
     const handleCancel = () => {

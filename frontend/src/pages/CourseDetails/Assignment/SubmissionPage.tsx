@@ -3,7 +3,7 @@ import {Assignment, AssignmentDto, SubmissionDto} from "../../../types/courseTyp
 import {FormEvent, useEffect, useRef, useState} from "react";
 import {Button, Grid2, IconButton, Paper, Typography} from "@mui/material";
 import {formatDate} from "../../../utils/formatDate.ts";
-import {useCourse} from "../../../hooks/useCourse.ts";
+import {useCurrentCourse} from "../../../hooks/useCurrentCourse.ts";
 import {RichTextEditorRef, RichTextReadOnly} from "mui-tiptap";
 import useExtensions from "../../../hooks/useExtensions.ts";
 import {convertToAssignmentDto, convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
@@ -13,14 +13,12 @@ import GradeSlider from "../../../components/Shared/GradeSlider.tsx";
 import EditIcon from "@mui/icons-material/Edit";
 import CancelIcon from "@mui/icons-material/Cancel";
 import axiosInstance from "../../../api/axiosInstance.ts";
+import {useCourses} from "../../../hooks/useCourses.ts";
 
-type SubmissionPageProps = {
-    updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void;
-}
-
-export default function SubmissionPage({updateCourse}:Readonly<SubmissionPageProps>) {
+export default function SubmissionPage() {
     const {submissionId, assignmentId} = useParams();
-    const {course} = useCourse();
+    const {course} = useCurrentCourse();
+    const {updateCourse} = useCourses();
     const {isInstructor} = useAuth();
     const [submission, setSubmission] = useState<SubmissionDto | undefined>();
     const [assignment, setAssignment] = useState<AssignmentDto | undefined>();

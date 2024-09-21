@@ -5,19 +5,16 @@ import EditableTextDetail from "../../../components/Shared/EditableTextDetail.ts
 import {convertToLessonDto, convertToLessonDtoList} from "../../../utils/convertToLessonDto.ts";
 import {useAuth} from "../../../hooks/useAuth.ts";
 import {Button} from "@mui/material";
-import {useCourse} from "../../../hooks/useCourse.ts";
+import {useCurrentCourse} from "../../../hooks/useCurrentCourse.ts";
 import EditableRichText from "../../../components/Shared/EditableRichText.tsx";
+import {useCourses} from "../../../hooks/useCourses.ts";
 
-type LessonPageProps = {
-    updateCourse: (updatedProperty: string, updatedValue: LessonDto[]) => void,
-}
-
-export default function LessonPage({updateCourse}: Readonly<LessonPageProps>) {
+export default function LessonPage() {
     const [lesson, setLesson] = useState<LessonDto | undefined>();
     const {lessonId} = useParams();
-    const {course} = useCourse();
+    const {course} = useCurrentCourse();
     const {isInstructor} = useAuth();
-
+    const {updateCourse} = useCourses();
 
     useEffect(()=>{
         if (course) {

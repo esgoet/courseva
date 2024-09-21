@@ -1,5 +1,4 @@
 import {useEffect, useRef} from "react";
-import {useNavigate} from "react-router-dom";
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 
 type DeleteDialogProps = {
@@ -13,7 +12,6 @@ type DeleteDialogProps = {
 
 export default function ConfirmDialog({toConfirmId, toConfirmName, toConfirmAction, modal, closeModal, toConfirmFunction}: Readonly<DeleteDialogProps>) {
     const dialogRef = useRef<HTMLDialogElement>(null);
-    const navigate = useNavigate();
 
     useEffect(() => {
         if (modal) {
@@ -26,7 +24,6 @@ export default function ConfirmDialog({toConfirmId, toConfirmName, toConfirmActi
     const handleConfirm = () => {
         toConfirmFunction(toConfirmId);
         closeModal();
-        navigate("/");
     }
 
     return (

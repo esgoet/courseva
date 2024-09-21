@@ -11,17 +11,17 @@ import type {RichTextEditorRef} from "mui-tiptap";
 import CustomRichTextEditor from "../components/Shared/CustomRichTextEditor.tsx";
 import {useDataArray} from "../hooks/useDataArray.ts";
 import {Instructor, Student} from "../types/userTypes.ts";
+import {useCourses} from "../hooks/useCourses.ts";
 
-type CourseCreatorProps = {
-    createCourse: (course: NewCourseDto) => void,
-}
-
-export default function CourseCreator({createCourse}: Readonly<CourseCreatorProps>) {
+export default function CourseCreator() {
     const [course, setCourse] = useState<NewCourseDto>({title:"", description:"", students:[], instructors:[], startDate: ""})
     const [courseStudents, setCourseStudents] = useState<string[]>([]);
     const [courseInstructors, setCourseInstructors] = useState<string[]>([]);
+    const {createCourse} = useCourses();
+
     const students = useDataArray<Student>('/api/students');
     const instructors = useDataArray<Instructor>('/api/instructors');
+
     const rteRef = useRef<RichTextEditorRef>(null);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

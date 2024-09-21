@@ -1,24 +1,20 @@
-import {LessonDto} from "../../../types/courseTypes.ts";
 import {Link} from "react-router-dom";
 import { convertToLessonDtoList} from "../../../utils/convertToLessonDto.ts";
 import {useAuth} from "../../../hooks/useAuth.ts";
 import {Button, List, ListItem, ListItemButton, ListItemText} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ConfirmedDeleteIconButton from "../../../components/Shared/ConfirmedDeleteIconButton.tsx";
-import {useCourse} from "../../../hooks/useCourse.ts";
+import {useCurrentCourse} from "../../../hooks/useCurrentCourse.ts";
+import {useCourses} from "../../../hooks/useCourses.ts";
 
-
-type LessonOverviewProps = {
-    updateCourse: (updatedProperty: string, updatedValue: LessonDto[]) => void;
-}
-
-export default function LessonOverview({updateCourse}: Readonly<LessonOverviewProps>) {
-    const {course} = useCourse();
+export default function LessonOverview() {
+    const {course} = useCurrentCourse();
     const {isInstructor} = useAuth();
+    const {updateCourse} = useCourses();
 
     const deleteLesson = (lessonId: string) => {
         if (course) {
-            updateCourse("lessons", convertToLessonDtoList(course.lessons.filter(lesson => lesson.id !== lessonId)))
+            updateCourse("lessons", convertToLessonDtoList(course.lessons.filter(lesson => lesson.id !== lessonId)));
         }
     }
     return (

@@ -16,7 +16,7 @@ export default function JoinOrLeaveCourse({course, updateUser, updateCourse}: Re
     const handleJoin = () => {
         if (user) {
             updateUser(course.id, true);
-            updateCourse(isInstructor ? "instructors" : "students", [...(isInstructor ? course.instructors : course.students), user.id], course);
+            updateCourse(isInstructor ? "instructors" : "students", user.instructor ? [...course.instructors, user.instructor.id] : user.student ? [...course.students, user.student.id] : [], course);
         }
     }
 
@@ -29,7 +29,7 @@ export default function JoinOrLeaveCourse({course, updateUser, updateCourse}: Re
 
     return (
         <>
-            {user && !course.students.includes(user.id) && !course.instructors.includes(user.id) ?
+            {user?.student && !course.students.includes(user.student.id) || user?.instructor && !course.instructors.includes(user.instructor.id) ?
                 <Button onClick={handleJoin}>Join Course</Button>
                 :
                 <>

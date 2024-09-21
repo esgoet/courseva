@@ -1,4 +1,3 @@
-import {AssignmentDto} from "../../../types/courseTypes.ts";
 import {Link} from "react-router-dom";
 import {convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
 import {useAuth} from "../../../hooks/useAuth.ts";
@@ -15,17 +14,16 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import ConfirmedDeleteIconButton from "../../../components/Shared/ConfirmedDeleteIconButton.tsx";
-import {useCourse} from "../../../hooks/useCourse.ts";
+import {useCurrentCourse} from "../../../hooks/useCurrentCourse.ts";
 import GradeDisplay from "../../../components/Shared/GradeDisplay.tsx";
 import {Grade, Student} from "../../../types/userTypes.ts";
+import {useCourses} from "../../../hooks/useCourses.ts";
 
-type AssignmentOverviewProps = {
-    updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void;
-}
 
-export default function AssignmentOverview({updateCourse}: Readonly<AssignmentOverviewProps>) {
+export default function AssignmentOverview() {
     const {user, isInstructor} = useAuth();
-    const {course} = useCourse();
+    const {course} = useCurrentCourse();
+    const {updateCourse} = useCourses();
     const theme = useTheme();
     const isMobile = !(useMediaQuery(theme.breakpoints.up('sm')));
 
@@ -53,8 +51,8 @@ export default function AssignmentOverview({updateCourse}: Readonly<AssignmentOv
             <List>
                 {course?.assignments.filter(assignment => isInstructor ? assignment : assignment.whenPublic.valueOf() < Date.now()).toSorted((a, b) => a?.whenPublic.getTime() - b?.whenPublic.getTime()).map(assignment => {
                     let grade : number | undefined;
-                    if (user && 'grades' in user && course && getStudentGrade(user, assignment.id, course.id)) {
-                        grade = getStudentGrade(user, assignment.id, course.id);
+                    if (user && user.student && course && getStudentGrade(user.student, assignment.id, course.id)) {
+                        grade = getStudentGrade(user.student, assignment.id, course.id);
                     }
                     return (
                         <ListItem

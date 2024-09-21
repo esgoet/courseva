@@ -22,5 +22,5 @@ export const useDataArray = <T>(endpoint: string) => {
             return () => controller.abort();
         }
     }, [endpoint]);
-    return {data, loading, error};
+    return {data, setData, loading, error};
 }

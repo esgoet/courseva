@@ -5,19 +5,18 @@ import {convertToAssignmentDto, convertToAssignmentDtoList} from "../../../utils
 import EditableTextDetail from "../../../components/Shared/EditableTextDetail.tsx";
 import { useAuth } from "../../../hooks/useAuth.ts";
 import {Button, List, ListItem, ListItemButton, ListItemText, Stack} from "@mui/material";
-import {useCourse} from "../../../hooks/useCourse.ts";
+import {useCurrentCourse} from "../../../hooks/useCurrentCourse.ts";
 import EditableRichText from "../../../components/Shared/EditableRichText.tsx";
 import CustomRichTextEditor from "../../../components/Shared/CustomRichTextEditor.tsx";
 import {RichTextEditorRef} from "mui-tiptap";
 import {getMostRecentSubmissionsByStudent} from "../../../utils/getMostRecentSubmissionsByStudent.ts";
+import {useCourses} from "../../../hooks/useCourses.ts";
 
-type AssignmentPageProps = {
-    updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void
-}
-export default function AssignmentPage({updateCourse}: Readonly<AssignmentPageProps>) {
+export default function AssignmentPage() {
     const [assignment, setAssignment] = useState<AssignmentDto|undefined>();
     const {assignmentId} = useParams();
-    const {course} = useCourse();
+    const {course} = useCurrentCourse();
+    const {updateCourse} = useCourses();
     const {user, isInstructor} = useAuth();
     const rteRef = useRef<RichTextEditorRef>(null);
 
@@ -104,7 +103,7 @@ export default function AssignmentPage({updateCourse}: Readonly<AssignmentPagePr
                                         .map(submission => (
                                         <ListItem key={`submission-${submission.id}`} disablePadding>
                                             <ListItemButton component={Link} to={`submission/${submission.id}`}>
-                                                <ListItemText primary={submission.studentId} secondary={submission.timestamp}/>
+                                                <ListItemText primary={submission.studentId} secondary={submission.timestamp.toString()}/>
                                             </ListItemButton>
                                         </ListItem>
                                     ))}
