@@ -1,8 +1,8 @@
 import {Box, Button, Paper} from "@mui/material";
 import {Link} from "react-router-dom";
-import CourseList from "../../components/Course/CourseList/CourseList.tsx";
-import {useAuth} from "../../hooks/useAuth.ts";
-import CreateButton from "../../components/Shared/CreateButton.tsx";
+import CourseList from "../components/Course/CourseList/CourseList.tsx";
+import {useAuth} from "../hooks/useAuth.ts";
+import CreateButton from "../components/Shared/CreateButton.tsx";
 
 type BrowsePageProps = {
     updateUser: (courseId: string, isAdded: boolean) => void,

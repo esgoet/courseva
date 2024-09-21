@@ -1,8 +1,8 @@
-import CourseList from "../../components/Course/CourseList/CourseList.tsx";
-import {Link} from "react-router-dom";
-import {useAuth} from "../../hooks/useAuth.ts";
-import {Button, Grid2, Paper} from "@mui/material";
-import {useCourses} from "../../hooks/useCourses.ts";
+import CourseList from "../components/Course/CourseList/CourseList.tsx";
+import {useAuth} from "../hooks/useAuth.ts";
+import {Grid2, Paper} from "@mui/material";
+import {useCourses} from "../hooks/useCourses.ts";
+import CreateButton from "../components/Shared/CreateButton.tsx";
 
 type DashboardProps = {
     updateUser: (courseId: string, isAdded: boolean) => void,
@@ -18,8 +18,11 @@ export default function Dashboard({updateUser}: Readonly<DashboardProps>) {
                     <Grid2>
                         <p>Hello {user.student?.username ?? user.instructor?.username}!</p>
                     </Grid2>
-                    <Grid2>
-                        {isInstructor && <Button component={Link} to={"/course/create"} variant={"outlined"} color={"secondary"}>Create a Course</Button>}
+                    <Grid2 size={12}>
+                        <section>
+                            <h3>Quick Actions</h3>
+                            {isInstructor && <CreateButton label={"Create Course"} baseUrl={"/course"}/>}
+                        </section>
                     </Grid2>
                     <Grid2 size={12}>
                         <section>
