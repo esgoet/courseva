@@ -30,10 +30,10 @@ export default function JoinOrLeaveCourse({course, updateUser, updateCourse}: Re
     return (
         <>
             {user?.student && !course.students.includes(user.student.id) || user?.instructor && !course.instructors.includes(user.instructor.id) ?
-                <Button onClick={handleJoin}>Join Course</Button>
+                <Button onClick={handleJoin} variant={'outlined'} color={'secondary'}>Join Course</Button>
                 :
                 <>
-                    <Button onClick={() => setConfirmLeave(true)}>Leave</Button>
+                    <Button onClick={() => setConfirmLeave(true)} variant={'outlined'} color={'secondary'}>Leave</Button>
                     <ConfirmDialog toConfirmId={course.id} toConfirmName={course.title} modal={confirmLeave} closeModal={() => setConfirmLeave(false)} toConfirmFunction={handleLeave} toConfirmAction={"leave"}/>
                 </>
 }

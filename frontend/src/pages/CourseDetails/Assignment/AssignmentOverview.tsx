@@ -2,7 +2,7 @@ import {Link} from "react-router-dom";
 import {convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
 import {useAuth} from "../../../hooks/useAuth.ts";
 import {
-    Button, Grid2,
+    Grid2,
     List,
     ListItem,
     ListItemButton,
@@ -11,13 +11,13 @@ import {
     useMediaQuery,
     useTheme
 } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import ConfirmedDeleteIconButton from "../../../components/Shared/ConfirmedDeleteIconButton.tsx";
 import {useCurrentCourse} from "../../../hooks/useCurrentCourse.ts";
 import GradeDisplay from "../../../components/Shared/GradeDisplay.tsx";
 import {Grade, Student} from "../../../types/userTypes.ts";
 import {useCourses} from "../../../hooks/useCourses.ts";
+import CreateButton from "../../../components/Shared/CreateButton.tsx";
 
 
 export default function AssignmentOverview() {
@@ -41,13 +41,7 @@ export default function AssignmentOverview() {
     return (
         <>
             <h3>Assignments</h3>
-            {isInstructor &&
-                <Button
-                    component={Link} to={"create"}
-                    color={"secondary"}
-                    startIcon={<AddIcon/>}
-                    variant={"outlined"}
-                >Create</Button>}
+            {isInstructor && <CreateButton />}
             <List>
                 {course?.assignments.filter(assignment => isInstructor ? assignment : assignment.whenPublic.valueOf() < Date.now()).toSorted((a, b) => a?.whenPublic.getTime() - b?.whenPublic.getTime()).map(assignment => {
                     let grade : number | undefined;
