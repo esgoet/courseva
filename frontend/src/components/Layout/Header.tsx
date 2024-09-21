@@ -131,7 +131,7 @@ export default function Header({logout}:Readonly<HeaderProps>) {
                                                   background: 'none'
                                               }}}
                                           disableRipple>
-                                    {user.username}
+                                    {user.student?.username ?? user.instructor?.username ?? ""}
                                 </MenuItem>
                                 <MenuItem onClick={handleCloseUserMenu} component={Link} to={"/account"}>
                                     My Account
@@ -145,7 +145,6 @@ export default function Header({logout}:Readonly<HeaderProps>) {
                             <Button component={Link} to={"/login"} color={"primary"} variant={"contained"}>Login</Button>
                             <Button component={Link} to={"/register"} color={"primary"} variant={"contained"}>Register</Button>
                         </Grid2>
-
                     }
                 </Toolbar>
             </Container>
