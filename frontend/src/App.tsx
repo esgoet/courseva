@@ -27,6 +27,7 @@ import BrowsePage from "./pages/BrowsePage.tsx";
 import {useDataArray} from "./hooks/useDataArray.ts";
 import {CoursesContext} from "./context/CoursesContext.ts";
 import {useDataObject} from "./hooks/useDataObject.ts";
+import CourseProvider from "./components/Routes/CourseProvider.tsx";
 
 export default function App() {
     const {data: courses, setData: setCourses, loading, error} = useDataArray<CourseDto>('/api/courses');
@@ -50,16 +51,18 @@ export default function App() {
                                 <Route path={"/"} element={<Dashboard />}/>
                                 <Route path={"/browse"} element={<BrowsePage />}/>
                                 <Route path={"/account"} element={<UserAccountPage />}/>
-                                <Route path={"/course/:courseId"} element={<CourseDetailsPage />}>
-                                    <Route index element={<ParticipantOverview/>}/>
-                                    <Route path={"lessons"} element={<LessonOverview />}/>
-                                    <Route path={"lessons/:lessonId"} element={<LessonPage />}/>
-                                    <Route path={"assignments"} element={<AssignmentOverview />}/>
-                                    <Route path={"assignments/:assignmentId"} element={<AssignmentPage />}/>
-                                    <Route path={"assignments/:assignmentId/submission/:submissionId"} element={<SubmissionPage />}/>
-                                    <Route element={<ProtectedInstructorRoutes />}>
-                                        <Route path={"lessons/create"} element={<LessonCreator/>}/>
-                                        <Route path={"assignments/create"} element={<AssignmentCreator/>}/>
+                                <Route element={<CourseProvider/>}>
+                                    <Route path={"/course/:courseId"} element={<CourseDetailsPage />}>
+                                        <Route index element={<ParticipantOverview/>}/>
+                                        <Route path={"lessons"} element={<LessonOverview />}/>
+                                        <Route path={"lessons/:lessonId"} element={<LessonPage />}/>
+                                        <Route path={"assignments"} element={<AssignmentOverview />}/>
+                                        <Route path={"assignments/:assignmentId"} element={<AssignmentPage />}/>
+                                        <Route path={"assignments/:assignmentId/submission/:submissionId"} element={<SubmissionPage />}/>
+                                        <Route element={<ProtectedInstructorRoutes />}>
+                                            <Route path={"lessons/create"} element={<LessonCreator/>}/>
+                                            <Route path={"assignments/create"} element={<AssignmentCreator/>}/>
+                                        </Route>
                                     </Route>
                                 </Route>
                                 <Route element={<ProtectedInstructorRoutes/>}>

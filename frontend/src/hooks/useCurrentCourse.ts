@@ -5,7 +5,7 @@ import {convertToCourse} from "../utils/convertToCourse.ts";
 import {Course} from "../types/courseTypes.ts";
 
 export const useCurrentCourse = () => {
-    const {currentCourse, setCurrentCourse} = useContext(CurrentCourseContext);
+    const {currentCourse, setCurrentCourse, loading, error} = useContext(CurrentCourseContext);
     const course: Course | undefined = currentCourse ? convertToCourse(currentCourse) : undefined;
-    return useMemo(() => ({course, setCurrentCourse}), [course, setCurrentCourse]);
+    return useMemo(() => ({course, setCurrentCourse, loading, error}), [course, setCurrentCourse, loading, error]);
 };

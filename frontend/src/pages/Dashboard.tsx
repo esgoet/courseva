@@ -3,11 +3,15 @@ import {useAuth} from "../hooks/useAuth.ts";
 import {Grid2, Paper} from "@mui/material";
 import {useCourses} from "../hooks/useCourses.ts";
 import CreateButton from "../components/Shared/CreateButton.tsx";
+import {Link} from "react-router-dom";
 
 
 export default function Dashboard() {
     const {user} = useAuth();
     const {courses} = useCourses();
+
+    const userCourses = user && courses
+        .filter(course => user.student ? course.students.includes(user.student.id) : user.instructor ? course.instructors.includes(user.instructor?.id) : course)
 
     return (
         <Paper elevation={3} square={false} sx={{p:'20px'}}>
@@ -25,10 +29,13 @@ export default function Dashboard() {
                     <Grid2 size={12}>
                         <section>
                             <h2>Your Courses</h2>
-                            <CourseList
-                                courses={courses
-                                    .filter(course => user.student ? course.students.includes(user.student.id) : user.instructor ? course.instructors.includes(user.instructor?.id) : course)
+                            {userCourses ?
+                                <CourseList
+                                courses={userCourses
                                     .toSorted((a, b) => a?.startDate.getTime() - b?.startDate.getTime())} />
+                                :
+                                <p>No courses yet. <Link to={"/browse"}>Browse Courseva's selection!</Link></p>
+                            }
                         </section>
                     </Grid2>
                 </Grid2>
