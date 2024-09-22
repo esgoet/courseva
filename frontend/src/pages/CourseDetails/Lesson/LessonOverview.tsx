@@ -9,7 +9,8 @@ import CreateButton from "../../../components/Shared/CreateButton.tsx";
 
 export default function LessonOverview() {
     const {course} = useCurrentCourse();
-    const {isInstructor} = useAuth();
+    const {user} = useAuth();
+
     const {updateCourse} = useCourses();
 
     const deleteLesson = (lessonId: string) => {
@@ -20,12 +21,12 @@ export default function LessonOverview() {
     return (
         <>
             <h3>Lessons</h3>
-            {isInstructor && <CreateButton />}
+            {user?.instructor && <CreateButton />}
             <List>
-                {course?.lessons?.filter(lesson => isInstructor ? lesson : lesson.whenPublic.valueOf() < Date.now()).toSorted((a, b) => a?.whenPublic.getTime() - b?.whenPublic.getTime()).toSorted((a, b) => a?.whenPublic.getTime() - b?.whenPublic.getTime()).map(lesson=> (
+                {course?.lessons?.filter(lesson => user?.instructor ? lesson : lesson.whenPublic.valueOf() < Date.now()).toSorted((a, b) => a?.whenPublic.getTime() - b?.whenPublic.getTime()).toSorted((a, b) => a?.whenPublic.getTime() - b?.whenPublic.getTime()).map(lesson=> (
                     <ListItem
                         key={`lesson-${lesson.id}`}
-                        secondaryAction={isInstructor &&
+                        secondaryAction={user?.instructor &&
                             <ConfirmedDeleteIconButton toConfirmId={lesson.id} toConfirmName={lesson.title} toConfirmFunction={deleteLesson}/>}
                         disablePadding
                         divider

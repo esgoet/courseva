@@ -1,14 +1,12 @@
-import {useContext, useState} from 'react';
+import {useContext} from 'react';
 import { AuthContext } from '../context/AuthContext';
 import axiosInstance from "../api/axiosInstance.ts";
-import {checkIsInstructor} from "../utils/checkIsInstructor.ts";
 import {UserLoginDto} from "../types/userTypes.ts";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 
 export const useAuth = () => {
-    const { user, setUser } = useContext(AuthContext);
-    const [isInstructor, setIsInstructor] = useState<boolean>(false);
+    const { user, setUser, userLoading: loading} = useContext(AuthContext);
     const navigate = useNavigate();
 
     const login = (user: UserLoginDto) => {
@@ -20,7 +18,6 @@ export const useAuth = () => {
         })
             .then((response)=> {
                 setUser(response.data)
-                setIsInstructor(checkIsInstructor(response.data))
                 navigate("/");
             })
             .catch(error => {
@@ -55,5 +52,5 @@ export const useAuth = () => {
             .catch((error)=>console.error(error.response.data));
     }
 
-    return {user, setUser, isInstructor, login, logout, updateUser, deleteUser};
+    return {user, setUser, loading, login, logout, updateUser, deleteUser};
 };

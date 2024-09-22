@@ -6,7 +6,7 @@ import CreateButton from "../components/Shared/CreateButton.tsx";
 
 
 export default function Dashboard() {
-    const {user, isInstructor} = useAuth();
+    const {user} = useAuth();
     const {courses} = useCourses();
 
     return (
@@ -19,7 +19,7 @@ export default function Dashboard() {
                     <Grid2 size={12}>
                         <section>
                             <h3>Quick Actions</h3>
-                            {isInstructor && <CreateButton label={"Create Course"} baseUrl={"/course"}/>}
+                            {user?.instructor && <CreateButton label={"Create Course"} baseUrl={"/course"}/>}
                         </section>
                     </Grid2>
                     <Grid2 size={12}>

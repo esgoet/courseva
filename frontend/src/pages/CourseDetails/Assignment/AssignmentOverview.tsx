@@ -21,7 +21,7 @@ import CreateButton from "../../../components/Shared/CreateButton.tsx";
 
 
 export default function AssignmentOverview() {
-    const {user, isInstructor} = useAuth();
+    const {user} = useAuth();
     const {course} = useCurrentCourse();
     const {updateCourse} = useCourses();
     const theme = useTheme();
@@ -41,9 +41,9 @@ export default function AssignmentOverview() {
     return (
         <>
             <h3>Assignments</h3>
-            {isInstructor && <CreateButton />}
+            {user?.instructor && <CreateButton />}
             <List>
-                {course?.assignments.filter(assignment => isInstructor ? assignment : assignment.whenPublic.valueOf() < Date.now()).toSorted((a, b) => a?.whenPublic.getTime() - b?.whenPublic.getTime()).map(assignment => {
+                {course?.assignments.filter(assignment => user?.instructor ? assignment : assignment.whenPublic.valueOf() < Date.now()).toSorted((a, b) => a?.whenPublic.getTime() - b?.whenPublic.getTime()).map(assignment => {
                     let grade : number | undefined;
                     if (user && user.student && course && getStudentGrade(user.student, assignment.id, course.id)) {
                         grade = getStudentGrade(user.student, assignment.id, course.id);
@@ -51,7 +51,7 @@ export default function AssignmentOverview() {
                     return (
                         <ListItem
                             key={`assignment-${assignment.id}`}
-                            secondaryAction={isInstructor &&
+                            secondaryAction={user?.instructor &&
                                 <ConfirmedDeleteIconButton toConfirmId={assignment.id} toConfirmName={assignment.title} toConfirmFunction={deleteAssignment}/>}
                             disablePadding
                             divider

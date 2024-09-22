@@ -6,7 +6,7 @@ import {useAuth} from "./useAuth.ts";
 export const useUsers = () => {
     const students = useDataArray<Student>('/api/students');
     const instructors = useDataArray<Instructor>('/api/instructors')
-    const {user, setUser, isInstructor} = useAuth();
+    const {user, setUser} = useAuth();
 
     const updateStudent = (updatedProperty?: string, updatedValue?: string, student = user?.student) => {
         if (user && student) {
@@ -32,7 +32,7 @@ export const useUsers = () => {
 
     const updateUserCourses = (courseId: string, isAdded: boolean, userToUpdate?: Student | Instructor): void => {
         if (!userToUpdate && user) {
-            userToUpdate = isInstructor ? user.instructor : user.student;
+            userToUpdate = user?.instructor ? user.instructor : user.student;
         }
         if (userToUpdate) {
             if (isAdded) {

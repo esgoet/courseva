@@ -9,13 +9,14 @@ type CourseActionsProps = {
 };
 
 export default function CourseActions({course}: Readonly<CourseActionsProps>) {
-    const {isInstructor} = useAuth();
+    const {user} = useAuth();
+
     const {deleteCourse} = useCourses();
 
     return (
         <>
             <JoinOrLeaveCourse course={course}/>
-            {isInstructor && <ConfirmedDeleteIconButton toConfirmId={course.id} toConfirmName={course.title} toConfirmFunction={deleteCourse}/>}
+            {user?.instructor && <ConfirmedDeleteIconButton toConfirmId={course.id} toConfirmName={course.title} toConfirmFunction={deleteCourse}/>}
         </>
     );
 };

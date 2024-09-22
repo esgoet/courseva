@@ -11,7 +11,7 @@ type JoinOrLeaveCourseProps = {
 };
 
 export default function JoinOrLeaveCourse({course}: Readonly<JoinOrLeaveCourseProps>) {
-    const {user, isInstructor} = useAuth();
+    const {user} = useAuth();
     const [confirmLeave, setConfirmLeave] = useState<boolean>(false);
     const {updateUserCourses} = useUsers();
     const {updateCourse} = useCourses();
@@ -19,14 +19,14 @@ export default function JoinOrLeaveCourse({course}: Readonly<JoinOrLeaveCoursePr
     const handleJoin = () => {
         if (user) {
             updateUserCourses(course.id, true);
-            updateCourse(isInstructor ? "instructors" : "students", user.instructor ? [...course.instructors, user.instructor.id] : user.student ? [...course.students, user.student.id] : [], course);
+            updateCourse(user?.instructor ? "instructors" : "students", user.instructor ? [...course.instructors, user.instructor.id] : user.student ? [...course.students, user.student.id] : [], course);
         }
     }
 
     const handleLeave = () => {
         if (user) {
             updateUserCourses(course.id, false);
-            updateCourse(isInstructor ? "instructors" : "students", (isInstructor ? course.instructors.filter(instructor => instructor !== user.instructor?.id) : course.students.filter(student => student !== user.student?.id)), course);
+            updateCourse(user?.instructor ? "instructors" : "students", (user?.instructor ? course.instructors.filter(instructor => instructor !== user.instructor?.id) : course.students.filter(student => student !== user.student?.id)), course);
         }
     }
 

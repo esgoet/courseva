@@ -10,7 +10,7 @@ import {useUsers} from "../hooks/useUsers.ts";
 
 export default function UserAccountPage() {
     const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
-    const {user, isInstructor, deleteUser, updateUser} = useAuth();
+    const {user, deleteUser, updateUser} = useAuth();
     const {updateStudent, updateInstructor} = useUsers();
 
 
@@ -32,7 +32,7 @@ export default function UserAccountPage() {
                                 label={"Username"}
                                 name={"username"}
                                 initialValue={user.student?.username ?? user.instructor?.username ?? ""}
-                                updateFunction={isInstructor ? updateInstructor : updateStudent}
+                                updateFunction={user?.instructor ? updateInstructor : updateStudent}
                                 allowedToEdit={true}/>
                         </Grid2>
                         <Grid2 size={{xs: 12, sm: 6}}>

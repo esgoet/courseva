@@ -1,11 +1,11 @@
 import {Checkbox, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Tooltip} from "@mui/material";
 import {Instructor, Student} from "../../types/userTypes.ts";
 import {Dispatch, SetStateAction} from "react";
-import {useAuth} from "../../hooks/useAuth.ts";
 import {calculateStudentGradeAverage} from "../../utils/calculateGradeAverage.ts";
 import GradeDisplay from "./GradeDisplay.tsx";
 import { Course } from "../../types/courseTypes.ts";
 import DataStateHandler from "./DataStateHandler.tsx";
+import {useAuth} from "../../hooks/useAuth.ts";
 
 type CheckListProps = {
     editable: boolean,
@@ -16,7 +16,8 @@ type CheckListProps = {
 };
 
 export default function UserCheckList(props: Readonly<CheckListProps>) {
-    const {isInstructor} = useAuth();
+    const {user} = useAuth();
+
     const handleToggle = (id: string) => {
         if (props.currentOptions.includes(id)) {
             props.setCurrentOptions(props.currentOptions.filter(option => option !== id));
@@ -49,7 +50,7 @@ export default function UserCheckList(props: Readonly<CheckListProps>) {
                                 primary={option.username}
                             />
                             {
-                                (props.course &&!props.editable && isInstructor && 'grades' in option  && option.grades[props.course.id]) &&
+                                (props.course &&!props.editable && user?.instructor && 'grades' in option  && option.grades[props.course.id]) &&
                                 <ListItemText
                                     id={`grade-average-list-${option.id}`}
                                     primary={

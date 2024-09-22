@@ -17,7 +17,7 @@ export default function AssignmentPage() {
     const {assignmentId} = useParams();
     const {course} = useCurrentCourse();
     const {updateCourse} = useCourses();
-    const {user, isInstructor} = useAuth();
+    const {user} = useAuth();
     const rteRef = useRef<RichTextEditorRef>(null);
 
 
@@ -53,13 +53,13 @@ export default function AssignmentPage() {
             {assignment &&
                 <Stack component={"section"} sx={{my: 2}} spacing={2}>
                     <EditableTextDetail inputType={"text"} label={"Assignment Title"} name={"title"}
-                                        initialValue={assignment.title} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
+                                        initialValue={assignment.title} updateFunction={handleUpdate} allowedToEdit={user?.instructor !== undefined || false}/>
                     <EditableTextDetail inputType={"datetime-local"} label={"Release"} name={"whenPublic"}
-                                        initialValue={assignment.whenPublic} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
+                                        initialValue={assignment.whenPublic} updateFunction={handleUpdate} allowedToEdit={user?.instructor !== undefined || false}/>
                     <EditableTextDetail inputType={"datetime-local"} label={"Deadline"} name={"deadline"}
-                                        initialValue={assignment.deadline} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
-                    <EditableRichText label={"Description"} name={"description"} initialValue={assignment.description} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
-                    {!isInstructor && user &&
+                                        initialValue={assignment.deadline} updateFunction={handleUpdate} allowedToEdit={user?.instructor !== undefined || false}/>
+                    <EditableRichText label={"Description"} name={"description"} initialValue={assignment.description} updateFunction={handleUpdate} allowedToEdit={user?.instructor !== undefined || false}/>
+                    {(user && user.student) &&
                         <>
                             {assignment.submissions.filter(submission => submission.studentId === user.id).length > 0 &&
                                 <>
@@ -92,7 +92,7 @@ export default function AssignmentPage() {
                             }
                         </>
                     }
-                    {isInstructor &&
+                    {user?.instructor &&
                         <>
                             <h4>Submissions</h4>
                             {assignment.submissions.length > 0 ?

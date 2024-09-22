@@ -20,7 +20,8 @@ type EditableListDetailProps = {
 export default function EditableUserList(props: Readonly<EditableListDetailProps>){
     const [editable, setEditable] = useState<boolean>(false);
     const [input, setInput ] = useState<string[]>(props.initialValue);
-    const {isInstructor} = useAuth();
+
+    const {user} = useAuth();
     const {course} = useCurrentCourse();
     const {updateCourse} = useCourses();
     const {updateUserCourses} = useUsers();
@@ -50,7 +51,7 @@ export default function EditableUserList(props: Readonly<EditableListDetailProps
             <label htmlFor={props.name}>{props.label}</label>
             <UserCheckList editable={editable} options={props.options} currentOptions={input}
                            setCurrentOptions={setInput} course={course}/>
-            {isInstructor &&
+            {user?.instructor &&
                 <IconButton onClick={() => setEditable(!editable)}>
                     {editable ? <CheckIcon fontSize={"small"} color={"secondary"}/> :
                         <EditIcon fontSize={"small"} color={"secondary"}/>}

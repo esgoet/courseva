@@ -24,7 +24,7 @@ export default function CourseDetailsPage() {
     const theme = useTheme();
     const isMobile = !(useMediaQuery(theme.breakpoints.up('sm')));
     const { courseId } = useParams();
-    const {user, isInstructor} = useAuth();
+    const {user} = useAuth();
     const {updateCourse} = useCourses();
     const {data: currentCourse, setData: setCurrentCourse, loading, error} = useDataObject<CourseDto>(`/api/courses/${courseId}`);
     const currentCourseContextValue = useMemo(() => ({currentCourse, setCurrentCourse}), [currentCourse, setCurrentCourse]);
@@ -52,19 +52,19 @@ export default function CourseDetailsPage() {
                                 <h2>
                                     <EditableTextDetail inputType={"text"} label={"Title"} name={"title"}
                                                         initialValue={course.title} updateFunction={updateCourse}
-                                                        allowedToEdit={isInstructor}/>
+                                                        allowedToEdit={user?.instructor !== undefined || false}/>
                                 </h2>
                             </ListItemText>
                         </ListItem>
                         <Paper sx={{p:'15px'}}>
                             <Grid2 container spacing={{xs:2,sm:4}} direction={{xs:'column-reverse', sm: 'row'}} >
                                 <Grid2 size={{xs:12,sm:8}}>
-                                    <EditableRichText label={"Description"} name={"description"} allowedToEdit={isInstructor} initialValue={course.description} updateFunction={updateCourse}/>
+                                    <EditableRichText label={"Description"} name={"description"} allowedToEdit={user?.instructor !== undefined || false} initialValue={course.description} updateFunction={updateCourse}/>
                                 </Grid2>
                                 <Grid2 size={{xs:12,sm:4}} display={"flex"} justifyContent={isMobile ? "flex-start" : "flex-end"} alignItems={"flex-start"}>
                                     <EditableTextDetail inputType={"date"} label={"Start Date"} name={"startDate"}
                                                         initialValue={course.startDate.toISOString().substring(0,10)} updateFunction={updateCourse}
-                                                        allowedToEdit={isInstructor}/>
+                                                        allowedToEdit={user?.instructor !== undefined || false}/>
                                 </Grid2>
                             </Grid2>
                             {gradeAverage &&
@@ -73,7 +73,7 @@ export default function CourseDetailsPage() {
                                     <GradeDisplay grade={gradeAverage}/>
                                 </>
                             }
-                            {(isInstructor && courseAverage) &&
+                            {(user?.instructor && courseAverage) &&
                                 <>
                                     <InputLabel disabled shrink>Course Average</InputLabel>
                                     <GradeDisplay grade={courseAverage}/>

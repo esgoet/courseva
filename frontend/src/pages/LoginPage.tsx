@@ -1,5 +1,5 @@
-import {Link} from "react-router-dom";
-import {ChangeEvent, FormEvent, useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
+import {ChangeEvent, FormEvent, useEffect, useState} from "react";
 import {UserLoginDto} from "../types/userTypes.ts";
 import {Button, TextField} from "@mui/material";
 import PasswordField from "../components/Shared/PasswordField.tsx";
@@ -7,11 +7,17 @@ import {useAuth} from "../hooks/useAuth.ts";
 
 export default function LoginPage() {
     const [user, setUser] = useState<UserLoginDto>({email:"", password:""});
-    const {login} = useAuth();
+    const {user: loggedInUser, login} = useAuth();
+    const navigate = useNavigate();
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setUser({...user,[e.target.name]: e.target.value});
     }
+
+    useEffect(()=> {
+        if (loggedInUser) navigate("/");
+    }
+    ,[])
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();

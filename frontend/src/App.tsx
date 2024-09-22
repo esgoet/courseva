@@ -30,11 +30,11 @@ import {useDataObject} from "./hooks/useDataObject.ts";
 
 export default function App() {
     const {data: courses, setData: setCourses, loading, error} = useDataArray<CourseDto>('/api/courses');
-    const {data: user, setData: setUser} = useDataObject<AppUser | null>('/api/auth/me');
+    const {data: user, setData: setUser, loading: userLoading} = useDataObject<AppUser | null>('/api/auth/me');
     const theme = createTheme({cssVariables: true,...themeOptions});
 
     const coursesContextValue = useMemo(() => ({courses, setCourses, loading, error}), [courses, setCourses, loading, error]);
-    const authContextValue = useMemo(() => ({ user, setUser}), [user, setUser]);
+    const authContextValue = useMemo(() => ({ user, setUser, userLoading}), [user, setUser, userLoading]);
 
 
     return (

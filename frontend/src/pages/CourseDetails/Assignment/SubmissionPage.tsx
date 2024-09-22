@@ -19,7 +19,8 @@ export default function SubmissionPage() {
     const {submissionId, assignmentId} = useParams();
     const {course} = useCurrentCourse();
     const {updateCourse} = useCourses();
-    const {isInstructor} = useAuth();
+    const {user} = useAuth();
+
     const [submission, setSubmission] = useState<SubmissionDto | undefined>();
     const [assignment, setAssignment] = useState<AssignmentDto | undefined>();
     const extensions = useExtensions();
@@ -83,7 +84,7 @@ export default function SubmissionPage() {
                         <Grid2 size={12}>
                             <Grid2 container justifyContent={'space-between'} alignItems={"center"}>
                                 <h4>Feedback</h4>
-                                {(isInstructor && submission.feedback) &&
+                                {(user?.instructor && submission.feedback) &&
                                     <IconButton
                                         onClick={() => setEditable(!editable)}
                                         color={"secondary"}
@@ -92,7 +93,7 @@ export default function SubmissionPage() {
                                     </IconButton>
                                 }
                             </Grid2>
-                            {isInstructor && !submission.feedback || isInstructor && editable ?
+                            {user?.instructor && !submission.feedback || user?.instructor && editable ?
                                 <FeedbackForm handleSubmit={handleFeedbackSubmission} submission={submission} setSubmission={setSubmission} ref={rteRef}/>
                                 :
                                 <>
