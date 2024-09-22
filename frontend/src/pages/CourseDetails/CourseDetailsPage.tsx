@@ -20,16 +20,12 @@ import {useCourses} from "../../hooks/useCourses.ts";
 import {CurrentCourseContext} from "../../context/CurrentCourseContext.ts";
 import {useMemo} from "react";
 
-type CoursePageProps = {
-    updateUser: (courseId: string, isAdded: boolean) => void
-}
-
-export default function CourseDetailsPage({updateUser}: Readonly<CoursePageProps>) {
+export default function CourseDetailsPage() {
     const theme = useTheme();
     const isMobile = !(useMediaQuery(theme.breakpoints.up('sm')));
     const { courseId } = useParams();
     const {user, isInstructor} = useAuth();
-    const {updateCourse, deleteCourse} = useCourses();
+    const {updateCourse} = useCourses();
     const {data: currentCourse, setData: setCurrentCourse, loading, error} = useDataObject<CourseDto>(`/api/courses/${courseId}`);
     const currentCourseContextValue = useMemo(() => ({currentCourse, setCurrentCourse}), [currentCourse, setCurrentCourse]);
     const course: Course | undefined = currentCourse && convertToCourse(currentCourse);
@@ -47,7 +43,7 @@ export default function CourseDetailsPage({updateUser}: Readonly<CoursePageProps
                 {course &&
                     <>
                         <ListItem
-                            secondaryAction={<CourseActions course={course} deleteCourse={deleteCourse} updateUser={updateUser} updateCourse={updateCourse}/>}
+                            secondaryAction={<CourseActions course={course} />}
                             disablePadding
                             component={"div"}
                             divider

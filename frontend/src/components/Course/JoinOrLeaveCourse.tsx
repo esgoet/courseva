@@ -3,26 +3,29 @@ import {useAuth} from "../../hooks/useAuth.ts";
 import ConfirmDialog from "../Shared/ConfirmDialog.tsx";
 import {useState} from "react";
 import {Button} from "@mui/material";
+import {useUsers} from "../../hooks/useUsers.ts";
+import {useCourses} from "../../hooks/useCourses.ts";
 
 type JoinOrLeaveCourseProps = {
-    course: Course,
-    updateUser: (courseId: string, isAdded: boolean) => void,
-    updateCourse: (updatedProperty: string, updatedValue: string[], course: Course) => void,
+    course: Course
 };
 
-export default function JoinOrLeaveCourse({course, updateUser, updateCourse}: Readonly<JoinOrLeaveCourseProps>) {
+export default function JoinOrLeaveCourse({course}: Readonly<JoinOrLeaveCourseProps>) {
     const {user, isInstructor} = useAuth();
     const [confirmLeave, setConfirmLeave] = useState<boolean>(false);
+    const {updateUserCourses} = useUsers();
+    const {updateCourse} = useCourses();
+
     const handleJoin = () => {
         if (user) {
-            updateUser(course.id, true);
+            updateUserCourses(course.id, true);
             updateCourse(isInstructor ? "instructors" : "students", user.instructor ? [...course.instructors, user.instructor.id] : user.student ? [...course.students, user.student.id] : [], course);
         }
     }
 
     const handleLeave = () => {
         if (user) {
-            updateUser(course.id, false);
+            updateUserCourses(course.id, false);
             updateCourse(isInstructor ? "instructors" : "students", (isInstructor ? course.instructors.filter(instructor => instructor !== user.instructor?.id) : course.students.filter(student => student !== user.student?.id)), course);
         }
     }

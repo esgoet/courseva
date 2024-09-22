@@ -5,17 +5,13 @@ import {useState} from "react";
 import {Link} from "react-router-dom";
 import {Button, Grid2, Paper} from "@mui/material";
 import {AccountCircle} from "@mui/icons-material";
+import {useUsers} from "../hooks/useUsers.ts";
 
-type UserAccountPageProps = {
-    updateUser: (updatedProperty: string, updatedValue: string) => void,
-    updateStudent: (updatedProperty: string, updatedValue: string) => void,
-    updateInstructor: (updatedProperty: string, updatedValue: string) => void,
-    deleteUser: (id: string) => void
-};
 
-export default function UserAccountPage({updateUser, updateStudent, updateInstructor, deleteUser}: Readonly<UserAccountPageProps>) {
+export default function UserAccountPage() {
     const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
-    const {user, isInstructor} = useAuth();
+    const {user, isInstructor, deleteUser, updateUser} = useAuth();
+    const {updateStudent, updateInstructor} = useUsers();
 
 
     return (

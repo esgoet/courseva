@@ -8,6 +8,7 @@ import UserCheckList from "./UserCheckList.tsx";
 import {useCurrentCourse} from "../../hooks/useCurrentCourse.ts";
 import {Instructor, Student} from "../../types/userTypes.ts";
 import {useCourses} from "../../hooks/useCourses.ts";
+import {useUsers} from "../../hooks/useUsers.ts";
 
 type EditableListDetailProps = {
     label: string,
@@ -22,10 +23,21 @@ export default function EditableUserList(props: Readonly<EditableListDetailProps
     const {isInstructor} = useAuth();
     const {course} = useCurrentCourse();
     const {updateCourse} = useCourses();
+    const {updateUserCourses} = useUsers();
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (course) updateCourse(props.name, input);
+        if (course) {
+            updateCourse(props.name, input);
+            props.options.data.map((option)=> {
+                if (input.includes(option.id) && !option.courses.includes(course.id)) {
+                    updateUserCourses(course.id, true, option)
+                } else if (!input.includes(option.id) && option.courses.includes(course.id)) {
+                    updateUserCourses(course.id, false, option)
+                }
+            })
+        }
+
     }
 
     const handleCancel = () => {

@@ -3,14 +3,11 @@ import {ChangeEvent, FormEvent, useState} from "react";
 import {UserLoginDto} from "../types/userTypes.ts";
 import {Button, TextField} from "@mui/material";
 import PasswordField from "../components/Shared/PasswordField.tsx";
+import {useAuth} from "../hooks/useAuth.ts";
 
-type LoginPageProps = {
-    login: (user : UserLoginDto) => void;
-}
-
-export default function LoginPage({login}:Readonly<LoginPageProps>) {
+export default function LoginPage() {
     const [user, setUser] = useState<UserLoginDto>({email:"", password:""});
-
+    const {login} = useAuth();
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setUser({...user,[e.target.name]: e.target.value});

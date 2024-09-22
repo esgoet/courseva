@@ -9,18 +9,15 @@ import {
 import UserCheckList from "../components/Shared/UserCheckList.tsx";
 import type {RichTextEditorRef} from "mui-tiptap";
 import CustomRichTextEditor from "../components/Shared/CustomRichTextEditor.tsx";
-import {useDataArray} from "../hooks/useDataArray.ts";
-import {Instructor, Student} from "../types/userTypes.ts";
 import {useCourses} from "../hooks/useCourses.ts";
+import {useUsers} from "../hooks/useUsers.ts";
 
 export default function CourseCreator() {
+    const {students, instructors} = useUsers();
     const [course, setCourse] = useState<NewCourseDto>({title:"", description:"", students:[], instructors:[], startDate: ""})
     const [courseStudents, setCourseStudents] = useState<string[]>([]);
     const [courseInstructors, setCourseInstructors] = useState<string[]>([]);
     const {createCourse} = useCourses();
-
-    const students = useDataArray<Student>('/api/students');
-    const instructors = useDataArray<Instructor>('/api/instructors');
 
     const rteRef = useRef<RichTextEditorRef>(null);
 

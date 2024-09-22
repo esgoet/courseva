@@ -4,10 +4,8 @@ import {Grid2, Paper} from "@mui/material";
 import {useCourses} from "../hooks/useCourses.ts";
 import CreateButton from "../components/Shared/CreateButton.tsx";
 
-type DashboardProps = {
-    updateUser: (courseId: string, isAdded: boolean) => void,
-}
-export default function Dashboard({updateUser}: Readonly<DashboardProps>) {
+
+export default function Dashboard() {
     const {user, isInstructor} = useAuth();
     const {courses} = useCourses();
 
@@ -30,8 +28,7 @@ export default function Dashboard({updateUser}: Readonly<DashboardProps>) {
                             <CourseList
                                 courses={courses
                                     .filter(course => user.student ? course.students.includes(user.student.id) : user.instructor ? course.instructors.includes(user.instructor?.id) : course)
-                                    .toSorted((a, b) => a?.startDate.getTime() - b?.startDate.getTime())}
-                                 updateUser={updateUser} />
+                                    .toSorted((a, b) => a?.startDate.getTime() - b?.startDate.getTime())} />
                         </section>
                     </Grid2>
                 </Grid2>

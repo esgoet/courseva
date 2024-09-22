@@ -1,18 +1,15 @@
 import {Link} from "react-router-dom";
-import {AuthContext} from "../../context/AuthContext.ts";
-import {useContext, useState} from "react";
+import {useState} from "react";
 import {AppBar, Box, Button, Container, Grid2, IconButton, Menu, MenuItem, Toolbar, Tooltip} from "@mui/material";
 import {AccountCircle} from "@mui/icons-material";
 import MenuIcon from '@mui/icons-material/Menu';
 import {pages} from "../../utils/constants.ts";
-
-type HeaderProps = {
-    logout: () => void;
-}
+import {useAuth} from "../../hooks/useAuth.ts";
 
 
-export default function Header({logout}:Readonly<HeaderProps>) {
-    const {user} = useContext(AuthContext);
+
+export default function Header() {
+    const {user, logout} = useAuth();
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 

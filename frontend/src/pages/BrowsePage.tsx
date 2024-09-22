@@ -4,11 +4,7 @@ import CourseList from "../components/Course/CourseList/CourseList.tsx";
 import {useAuth} from "../hooks/useAuth.ts";
 import CreateButton from "../components/Shared/CreateButton.tsx";
 
-type BrowsePageProps = {
-    updateUser: (courseId: string, isAdded: boolean) => void,
-};
-
-export default function BrowsePage({updateUser}: Readonly<BrowsePageProps>) {
+export default function BrowsePage() {
     const {isInstructor} = useAuth();
 
     return (
@@ -19,7 +15,7 @@ export default function BrowsePage({updateUser}: Readonly<BrowsePageProps>) {
                     <CreateButton baseUrl={"/course"}/>}
             </Box>
             <h2>Browse Courses</h2>
-            <CourseList updateUser={updateUser}/>
+            <CourseList />
         </Paper>
     );
 };

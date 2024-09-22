@@ -1,13 +1,11 @@
 import {Grid2} from "@mui/material";
 import EditableUserList from "../../../components/Shared/EditableUserList.tsx";
-import {Instructor, Student} from "../../../types/userTypes.ts";
 import {useCurrentCourse} from "../../../hooks/useCurrentCourse.ts";
-import {useDataArray} from "../../../hooks/useDataArray.ts";
+import {useUsers} from "../../../hooks/useUsers.ts";
 
 export default function ParticipantOverview() {
     const {course} = useCurrentCourse();
-    const students = useDataArray<Student>('/api/students');
-    const instructors = useDataArray<Instructor>('/api/instructors');
+    const {students, instructors} = useUsers();
 
     return (
         <Grid2 container spacing={2}>
