@@ -16,8 +16,7 @@ export default function LoginPage() {
 
     useEffect(()=> {
         if (loggedInUser) navigate("/");
-    }
-    ,[])
+    },[loggedInUser, navigate])
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
