@@ -33,7 +33,9 @@ public class SecurityConfig {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(requestAttributeHandler))
                 .authorizeHttpRequests(a -> a
-                        .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                        .requestMatchers( "/","/index.html","/assets/**")
+                        .permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/courses").hasAuthority(AppUserRole.INSTRUCTOR.name())
                         .requestMatchers(HttpMethod.DELETE, "/api/courses/**").hasAuthority(AppUserRole.INSTRUCTOR.name())
                         .requestMatchers(HttpMethod.PUT, "/api/instructors/**").hasAuthority(AppUserRole.INSTRUCTOR.name())
