@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 import {
     Button,
     Grid2, InputLabel,
-    TextField
+    TextField, Typography
 } from "@mui/material";
 import UserCheckList from "../components/Shared/UserCheckList.tsx";
 import type {RichTextEditorRef} from "mui-tiptap";
@@ -34,8 +34,8 @@ export default function CourseCreator() {
 
     return (
         <>
-            <Button component={Link} color={"info"} to={"/"} variant={"outlined"}>Back to Dashboard</Button>
-            <h2>Create a Course</h2>
+            <Button component={Link} color={"info"} to={"/"} variant={"outlined"} sx={{mb: 2}}>Back to Dashboard</Button>
+            <Typography variant={"h2"}>Create a Course</Typography>
             <form onSubmit={handleSubmit}>
                 <TextField
                     label={"Course Title"}
@@ -66,10 +66,10 @@ export default function CourseCreator() {
                     required
                     aria-required
                 />
-                <h3>Select Students (Optional)</h3>
+                <Typography variant={"h3"}>Select Students (Optional)</Typography>
                 <UserCheckList editable={true} options={students} currentOptions={courseStudents}
                                setCurrentOptions={setCourseStudents}/>
-                <h3>Select Instructors (Optional)</h3>
+                <Typography variant={"h3"}>Select Instructors (Optional)</Typography>
                 <UserCheckList editable={true} options={instructors} currentOptions={courseInstructors}
                                setCurrentOptions={setCourseInstructors}/>
                 <Grid2 container spacing={2}>

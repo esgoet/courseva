@@ -2,7 +2,7 @@ import {AssignmentDto} from "../../../types/courseTypes.ts";
 import {ChangeEvent, FormEvent, useRef, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
-import {Button, Grid2, InputLabel, TextField} from "@mui/material";
+import {Button, Grid2, InputLabel, TextField, Typography} from "@mui/material";
 import CustomRichTextEditor from "../../../components/Shared/CustomRichTextEditor.tsx";
 import type {RichTextEditorRef} from "mui-tiptap";
 import {useCourses} from "../../../hooks/useCourses.ts";
@@ -33,8 +33,8 @@ export default function AssignmentCreator() {
 
     return (
         <>
-            <Button component={Link} color={"info"} to={".."} relative={"path"} variant={"outlined"}>Back to All Assignments</Button>
-            <h3>Create New Assignment</h3>
+            <Button component={Link} color={"info"} to={".."} relative={"path"} variant={"outlined"} sx={{mb: 2}}>Back to All Assignments</Button>
+            <Typography variant={"h3"} sx={{mb: 2}}>Create New Assignment</Typography>
             <form onSubmit={handleSubmit}>
                 <TextField
                     label={"Assignment Title"}

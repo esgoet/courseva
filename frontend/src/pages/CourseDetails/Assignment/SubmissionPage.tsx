@@ -63,7 +63,7 @@ export default function SubmissionPage() {
             <Button component={Link} color={"info"} to={"../.."} relative={"path"} variant={'outlined'}>Back to Assignment</Button>
             {submission &&
                 <>
-                    <h3>Submission</h3>
+                    <Typography variant={"h3"}>Submission</Typography>
                     <Grid2 container spacing={2}>
                         <Grid2 size={{xs: 12, sm: 6}}>
                             <Typography variant={"body2"} color={"secondary"}>

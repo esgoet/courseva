@@ -1,4 +1,4 @@
-import {Grid2} from "@mui/material";
+import {Grid2, Typography} from "@mui/material";
 import EditableUserList from "../../../components/Shared/EditableUserList.tsx";
 import {useCurrentCourse} from "../../../hooks/useCurrentCourse.ts";
 import {useUsers} from "../../../hooks/useUsers.ts";
@@ -10,7 +10,7 @@ export default function ParticipantOverview() {
     return (
         <Grid2 container spacing={2}>
             <Grid2 size={12}>
-                <h3>Participants</h3>
+                <Typography variant={"h3"}>Participants</Typography>
             </Grid2>
             <Grid2 size={{xs:12, sm:6}}>
                 <EditableUserList label={"Students"} name={"students"} initialValue={course?.students || []}

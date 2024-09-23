@@ -31,7 +31,7 @@ export default function CourseDetailsPage() {
             <Container>
                 <Breadcrumbs aria-label={"breadcrumb"}>
                     <Link to={"/"}>Dashboard</Link>
-                    <Typography>{course?.title ?? `No course found`}</Typography>
+                    <Typography>{loading ? 'Loading...' : course?.title ?? `No course found`}</Typography>
                 </Breadcrumbs>
                 <DataStateHandler loading={loading} error={error} height={'70vh'}>
                     {course &&
