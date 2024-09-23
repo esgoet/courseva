@@ -1,19 +1,5 @@
 import { ThemeOptions } from '@mui/material/styles';
 
-declare module '@mui/material/styles' {
-    interface Theme {
-        link: {
-            main: string;
-        };
-    }
-    // allow configuration using `createTheme`
-    interface ThemeOptions {
-        link?: {
-            main?: string;
-        };
-    }
-}
-
 export const themeOptions: ThemeOptions = {
     palette: {
         mode: 'dark',
@@ -25,6 +11,21 @@ export const themeOptions: ThemeOptions = {
         },
         info: {
             main: '#ff6637'
+        }
+    },
+    typography: {
+        h1: {
+            fontFamily: 'Playwrite DE SAS',
+            fontSize: '2rem',
+        },
+        h2: {
+            fontSize: '1.5rem',
+            marginBottom: 5,
+            marginTop: 5
+        },
+        h3: {
+            fontSize: '1rem',
+            marginBottom: 5
         }
     },
     components: {

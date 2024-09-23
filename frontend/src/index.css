@@ -2,7 +2,7 @@
   --bg: #121212ff;
   --bg-accent: #303030ff;
   --accent-1: #4c83f5;
-  --accent-2: #ffe4a8;
+  --accent-2: #fae496;
   --accent-4: #ff6637;
   --accent-3: #ffb300;
   --text: #ffffffff;
@@ -27,9 +27,13 @@ main {
   max-width: 900px;
 }
 
-h1, .cursive-font {
+h1 {
   font-family: "Playwrite DE LA", cursive;
   padding: 0;
+}
+
+.cursive-font {
+  font-family: "Playwrite DE LA", cursive;
 }
 
 h2 {
