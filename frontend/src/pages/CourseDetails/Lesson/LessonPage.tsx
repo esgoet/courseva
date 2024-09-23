@@ -36,7 +36,7 @@ export default function LessonPage() {
     return (
 
         <>
-            <Button component={Link} to={".."} relative={"path"} variant={"outlined"}>Back to All Lessons</Button>
+            <Button component={Link} color={"info"} to={".."} relative={"path"} variant={"outlined"}>Back to All Lessons</Button>
             {lesson &&
                 <Stack component={"section"} sx={{my: 2}} spacing={2}>
                     <EditableTextDetail inputType={"text"} label={"Lesson Title"} name={"title"}

@@ -16,7 +16,7 @@ export default function UserAccountPage() {
 
     return (
         <>
-            <Button component={Link} to={"/"} variant={'outlined'}>Back to Dashboard</Button>
+            <Button component={Link} color={"info"} to={"/"} variant={'outlined'}>Back to Dashboard</Button>
             {user &&
                 <Paper sx={{p:'20px', mt: '10px'}} square={false}>
                     <Grid2 container spacing={2}>

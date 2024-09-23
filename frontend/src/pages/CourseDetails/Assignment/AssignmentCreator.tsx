@@ -33,7 +33,7 @@ export default function AssignmentCreator() {
 
     return (
         <>
-            <Button component={Link} to={".."} relative={"path"} variant={"outlined"}>Back to All Assignments</Button>
+            <Button component={Link} color={"info"} to={".."} relative={"path"} variant={"outlined"}>Back to All Assignments</Button>
             <h3>Create New Assignment</h3>
             <form onSubmit={handleSubmit}>
                 <TextField

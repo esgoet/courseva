@@ -14,7 +14,7 @@ export default function DataStateHandler({loading, error, height, children}: Rea
     }
 
     if (error) {
-        return <p>Something went wrong. {error.message}</p>;
+        return <p>Apologies. Something went wrong. {error.message}.</p>;
     }
 
     return <>{children}</>;

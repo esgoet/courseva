@@ -34,7 +34,7 @@ export default function LessonCreator() {
 
     return (
         <>
-            <Button component={Link} to={".."} relative={"path"} variant={"outlined"}>Back to All Lessons</Button>
+            <Button component={Link} color={"info"} to={".."} relative={"path"} variant={"outlined"}>Back to All Lessons</Button>
             <h3>Create New Lesson</h3>
             <form onSubmit={handleSubmit}>
                 <TextField

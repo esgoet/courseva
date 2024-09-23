@@ -21,7 +21,7 @@ export default function CourseTabsMobile() {
                         key={page.url}
                         label={page.title}
                         icon={<page.icon/>}
-                        component={Link}
+                        component={Link} color={"info"}
                         to={page.url}
                         disableRipple
                     />

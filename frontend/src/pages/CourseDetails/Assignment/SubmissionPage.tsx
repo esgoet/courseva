@@ -60,7 +60,7 @@ export default function SubmissionPage() {
 
     return (
         <>
-            <Button component={Link} to={"../.."} relative={"path"} variant={'outlined'}>Back to Assignment</Button>
+            <Button component={Link} color={"info"} to={"../.."} relative={"path"} variant={'outlined'}>Back to Assignment</Button>
             {submission &&
                 <>
                     <h3>Submission</h3>

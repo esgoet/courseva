@@ -34,7 +34,7 @@ export default function CourseCreator() {
 
     return (
         <>
-            <Button component={Link} to={"/"} variant={"outlined"}>Back to Dashboard</Button>
+            <Button component={Link} color={"info"} to={"/"} variant={"outlined"}>Back to Dashboard</Button>
             <h2>Create a Course</h2>
             <form onSubmit={handleSubmit}>
                 <TextField
