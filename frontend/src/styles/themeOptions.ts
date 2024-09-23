@@ -14,12 +14,6 @@ export const themeOptions: ThemeOptions = {
             main: '#0288d1',
         }
     },
-    typography: {
-        h1: {
-            fontFamily: 'Playwrite DE SAS',
-            fontSize: '5rem',
-        },
-    },
     components: {
         MuiInput: {
             styleOverrides: {

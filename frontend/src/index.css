@@ -30,6 +30,7 @@ main {
 
 h1 {
   font-family: "Playwrite DE LA", cursive;
+  padding: 0;
 }
 
 h2 {
