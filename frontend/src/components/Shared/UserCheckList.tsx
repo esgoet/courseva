@@ -55,7 +55,7 @@ export default function UserCheckList(props: Readonly<CheckListProps>) {
                                     id={`grade-average-list-${option.id}`}
                                     primary={
                                         <Tooltip title={"Grade Average"}>
-                                            <GradeDisplay grade={calculateStudentGradeAverage(option.grades[props.course.id])}/>
+                                            <GradeDisplay grade={calculateStudentGradeAverage(option.grades[props.course.id]) ?? 0}/>
                                         </Tooltip>
                                     }
                                     sx={{textAlign: 'right'}}
