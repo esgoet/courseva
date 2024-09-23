@@ -6,7 +6,7 @@ import {
     Button,
     FormControl,
     FormControlLabel,
-    FormLabel,
+    FormLabel, Stack,
     Radio,
     RadioGroup,
     TextField
@@ -41,45 +41,47 @@ export default function RegisterPage() {
     }
 
     return (
-        <>
+        <Stack spacing={2} maxWidth={"sm"} sx={{mx: "auto"}}>
             <h2>Register</h2>
             <form onSubmit={handleSubmit}>
-                <FormControl>
-                    <FormLabel>I want to use the platform as</FormLabel>
-                    <RadioGroup
-                        row
-                        aria-labelledby="demo-row-radio-buttons-group-label"
-                        name="role"
-                        value={user.role}
+                <Stack spacing={2}>
+                    <FormControl>
+                        <FormLabel>I want to use the platform as</FormLabel>
+                        <RadioGroup
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="role"
+                            value={user.role}
+                            onChange={handleChange}
+                        >
+                            <FormControlLabel value="STUDENT" control={<Radio />} label="Student" />
+                            <FormControlLabel value="INSTRUCTOR" control={<Radio />} label="Instructor" />
+                        </RadioGroup>
+                    </FormControl>
+                    <TextField
+                        label={"Username"}
+                        type={"text"}
+                        name={"username"}
+                        value={user.username}
                         onChange={handleChange}
-                    >
-                        <FormControlLabel value="STUDENT" control={<Radio />} label="Student" />
-                        <FormControlLabel value="INSTRUCTOR" control={<Radio />} label="Instructor" />
-                    </RadioGroup>
-                </FormControl>
-                <TextField
-                    label={"Username"}
-                    type={"text"}
-                    name={"username"}
-                    value={user.username}
-                    onChange={handleChange}
-                    required
-                    aria-required
-                />
-                <TextField
-                    label={"Email"}
-                    type={"email"}
-                    name={"email"}
-                    value={user.email}
-                    onChange={handleChange}
-                    required
-                    aria-required
-                />
-                <PasswordField password={user.password} handleChange={handleChange}/>
-                <Button type={"submit"} variant={"outlined"} color={"secondary"}>Register</Button>
+                        required
+                        aria-required
+                    />
+                    <TextField
+                        label={"Email"}
+                        type={"email"}
+                        name={"email"}
+                        value={user.email}
+                        onChange={handleChange}
+                        required
+                        aria-required
+                    />
+                    <PasswordField password={user.password} handleChange={handleChange}/>
+                    <Button type={"submit"} variant={"outlined"} color={"secondary"}>Register</Button>
+                </Stack>
             </form>
             <p>Been here before? <Link to={"/login"}>Login</Link> instead.</p>
 
-        </>
+        </Stack>
     );
 };
