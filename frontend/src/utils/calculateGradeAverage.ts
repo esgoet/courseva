@@ -2,11 +2,11 @@ import {Course} from "../types/courseTypes";
 import {Grade} from "../types/userTypes";
 import {getMostRecentSubmissionsByStudent} from "./getMostRecentSubmissionsByStudent.ts";
 
-const calculateStudentGradeAverage = (grades: Grade[]): number => {
-    return grades.reduce((acc, currentValue) => acc + currentValue.grade, 0)/grades.length;
+const calculateStudentGradeAverage = (grades: Grade[]): number | undefined => {
+    return grades.length > 0 ? grades.reduce((acc, currentValue) => acc + currentValue.grade, 0)/grades.length : undefined;
 }
 
-const calculateCourseGradeAverage = (course: Course): number => {
+const calculateCourseGradeAverage = (course: Course): number | undefined => {
     const allGrades: number[] = [];
 
     course.assignments.forEach((assignment) => {
@@ -20,7 +20,7 @@ const calculateCourseGradeAverage = (course: Course): number => {
     });
 
     const gradesSum = allGrades.reduce((sum, grade) => sum + grade, 0);
-    return allGrades.length > 0 ? gradesSum / allGrades.length : 0;
+    return allGrades.length > 0 ? gradesSum / allGrades.length : undefined;
 };
 
 export {calculateStudentGradeAverage, calculateCourseGradeAverage};
