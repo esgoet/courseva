@@ -1,8 +1,9 @@
 import axiosInstance from "../api/axiosInstance.ts";
 import {useEffect, useState} from "react";
 import {AxiosResponse} from "axios";
+import {AppUser} from "../types/userTypes.ts";
 
-export const useDataArray = <T>(endpoint: string) => {
+export const useDataArray = <T>(endpoint: string, userDependency?: (AppUser | null | undefined)) => {
     const [data, setData] = useState<T[]>([]);
     const [error, setError] = useState<Error>();
     const [loading, setLoading] = useState<boolean>(false);
@@ -21,6 +22,6 @@ export const useDataArray = <T>(endpoint: string) => {
                 .finally(() => setLoading(false));
             return () => controller.abort();
         }
-    }, [endpoint]);
+    }, userDependency ? [endpoint, userDependency] : [endpoint]);
     return {data, setData, loading, error};
 }
