@@ -28,7 +28,12 @@ export default function EditableUserList(props: Readonly<EditableListDetailProps
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+    }
+
+    const handleButtonSubmit = () => {
+        setEditable(!editable);
         if (course) {
+            console.log("test")
             updateCourse(props.name, input);
             props.options.data.map((option)=> {
                 if (input.includes(option.id) && !option.courses.includes(course.id)) {
@@ -38,7 +43,6 @@ export default function EditableUserList(props: Readonly<EditableListDetailProps
                 }
             })
         }
-
     }
 
     const handleCancel = () => {
@@ -51,11 +55,15 @@ export default function EditableUserList(props: Readonly<EditableListDetailProps
             <label htmlFor={props.name}>{props.label}</label>
             <UserCheckList editable={editable} options={props.options} currentOptions={input}
                            setCurrentOptions={setInput} course={course}/>
-            {user?.instructor &&
-                <IconButton onClick={() => setEditable(!editable)}>
-                    {editable ? <CheckIcon fontSize={"small"} color={"secondary"}/> :
-                        <EditIcon fontSize={"small"} color={"secondary"}/>}
-                </IconButton>}
+            {user?.instructor && editable &&
+                        <IconButton onClick={handleButtonSubmit} type={"submit"}>
+                            <CheckIcon fontSize={"small"} color={"secondary"}/>
+                        </IconButton>}
+            {user?.instructor && !editable &&
+                        <IconButton onClick={() => setEditable(!editable)} type={"button"}>
+                            <EditIcon fontSize={"small"} color={"secondary"}/>
+                        </IconButton>
+            }
             {editable && <IconButton type={"reset"} onClick={handleCancel}>
                 <CancelIcon fontSize={"small"} color={"secondary"}/>
             </IconButton>}
