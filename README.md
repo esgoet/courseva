@@ -1,8 +1,8 @@
-# 🎓 Learning Management System
+# 🎓 Cousreva
 
 ## 📋 Overview
 
-This Learning Management System is a comprehensive web application tailored for managing, providing and partaking in educational courses, including lessons and assignments. The project integrates a React frontend with a Spring Boot backend, utilizing MongoDB for persistent storage.
+Courseva is a comprehensive full stack web application tailored for managing, providing and partaking in educational courses, including lessons and assignments. The project integrates a React frontend with a Spring Boot backend, utilizing MongoDB for persistent storage.
 
 ### Table of Contents
 - [Planned Features](#planned-features)
