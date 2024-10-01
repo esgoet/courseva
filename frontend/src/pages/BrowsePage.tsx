@@ -1,4 +1,4 @@
-import {Box, Button, Paper} from "@mui/material";
+import {Box, Button, Paper, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
 import CourseList from "../components/Course/CourseList/CourseList.tsx";
 import {useAuth} from "../hooks/useAuth.ts";
@@ -9,12 +9,12 @@ export default function BrowsePage() {
 
     return (
         <Paper elevation={3} square={false} sx={{p:'20px'}}>
-            <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+            <Box sx={{display: 'flex', justifyContent: 'space-between', mb: 2}}>
                 <Button component={Link} color={"info"} to={"/"} variant={'outlined'}>Back to Dashboard</Button>
                 {user?.instructor &&
                     <CreateButton baseUrl={"/course"}/>}
             </Box>
-            <h2>Browse Courses</h2>
+            <Typography variant={"h2"}>Browse Courses</Typography>
             <CourseList />
         </Paper>
     );

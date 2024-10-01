@@ -9,7 +9,7 @@ import {
     FormLabel, Stack,
     Radio,
     RadioGroup,
-    TextField
+    TextField, Typography
 } from "@mui/material";
 import PasswordField from "../components/Shared/PasswordField.tsx";
 
@@ -42,7 +42,7 @@ export default function RegisterPage() {
 
     return (
         <Stack spacing={2} maxWidth={"sm"} sx={{mx: "auto"}}>
-            <h2>Register</h2>
+            <Typography variant={"h2"}>Register</Typography>
             <form onSubmit={handleSubmit}>
                 <Stack spacing={2}>
                     <FormControl>

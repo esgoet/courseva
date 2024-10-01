@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 import { convertToLessonDtoList} from "../../../utils/convertToLessonDto.ts";
 import {useAuth} from "../../../hooks/useAuth.ts";
-import {List, ListItem, ListItemButton, ListItemText} from "@mui/material";
+import {List, ListItem, ListItemButton, ListItemText, Typography} from "@mui/material";
 import ConfirmedDeleteIconButton from "../../../components/Shared/ConfirmedDeleteIconButton.tsx";
 import {useCurrentCourse} from "../../../hooks/useCurrentCourse.ts";
 import {useCourses} from "../../../hooks/useCourses.ts";
@@ -20,7 +20,7 @@ export default function LessonOverview() {
     }
     return (
         <>
-            <h3>Lessons</h3>
+            <Typography variant={"h3"}>Lessons</Typography>
             {user?.instructor && <CreateButton />}
             <List>
                 {course?.lessons?.filter(lesson => user?.instructor ? lesson : lesson.whenPublic.valueOf() < Date.now()).toSorted((a, b) => a?.whenPublic.getTime() - b?.whenPublic.getTime()).toSorted((a, b) => a?.whenPublic.getTime() - b?.whenPublic.getTime()).map(lesson=> (

@@ -2,7 +2,7 @@ import {ChangeEvent, FormEvent, useRef, useState} from "react";
 import {LessonDto} from "../../../types/courseTypes.ts";
 import {Link, useNavigate} from "react-router-dom";
 import {convertToLessonDtoList} from "../../../utils/convertToLessonDto.ts";
-import {Button, Grid2, InputLabel, TextField} from "@mui/material";
+import {Button, Grid2, InputLabel, TextField, Typography} from "@mui/material";
 import {
     type RichTextEditorRef,
 } from "mui-tiptap";
@@ -34,8 +34,8 @@ export default function LessonCreator() {
 
     return (
         <>
-            <Button component={Link} color={"info"} to={".."} relative={"path"} variant={"outlined"}>Back to All Lessons</Button>
-            <h3>Create New Lesson</h3>
+            <Button component={Link} color={"info"} to={".."} relative={"path"} variant={"outlined"} sx={{mb: 2}}>Back to All Lessons</Button>
+            <Typography variant={"h3"} sx={{mb: 2}}>Create New Lesson</Typography>
             <form onSubmit={handleSubmit}>
                 <TextField
                     label={"Lesson Title"}

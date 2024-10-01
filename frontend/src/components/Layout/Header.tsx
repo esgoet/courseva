@@ -143,10 +143,10 @@ export default function Header() {
                                                   background: 'none'
                                               }}}
                                           disableRipple>
-                                    {user.student?.username ?? user.instructor?.username ?? ""}
+                                    <p className={"cursive-font"}>{user.student?.username ?? user.instructor?.username ?? ""}</p>
                                 </MenuItem>
                                 <MenuItem onClick={handleCloseUserMenu} component={Link} to={"/account"}>
-                                    My Account
+                                    Account
                                 </MenuItem>
                                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
                             </Menu>

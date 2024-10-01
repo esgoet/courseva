@@ -40,10 +40,10 @@ export default function LessonPage() {
             {lesson &&
                 <Stack component={"section"} sx={{my: 2}} spacing={2}>
                     <EditableTextDetail inputType={"text"} label={"Lesson Title"} name={"title"}
-                                        initialValue={lesson.title} updateFunction={handleUpdate} allowedToEdit={user?.instructor !== undefined || false}/>
+                                        initialValue={lesson.title} updateFunction={handleUpdate} allowedToEdit={!!user?.instructor}/>
                     <EditableTextDetail inputType={"datetime-local"} label={"Lesson Release"} name={"whenPublic"}
-                                        initialValue={lesson.whenPublic} updateFunction={handleUpdate} allowedToEdit={user?.instructor !== undefined || false}/>
-                    <EditableRichText label={"Content"} name={"content"} initialValue={lesson.content} updateFunction={handleUpdate} allowedToEdit={user?.instructor !== undefined || false}/>
+                                        initialValue={lesson.whenPublic} updateFunction={handleUpdate} allowedToEdit={!!user?.instructor}/>
+                    <EditableRichText label={"Content"} name={"content"} initialValue={lesson.content} updateFunction={handleUpdate} allowedToEdit={!!user?.instructor}/>
                 </Stack>
             }
         </>

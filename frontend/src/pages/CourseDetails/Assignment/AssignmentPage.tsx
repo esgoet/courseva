@@ -39,9 +39,10 @@ export default function AssignmentPage() {
 
     const handleStudentSubmission = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (assignment && user) {
-            const updatedSubmissions : SubmissionDto[] = [...assignment.submissions, {id: "", studentId: user.id, feedback: undefined, grade: undefined, timestamp: new Date(Date.now()).toISOString().substring(0,19), content: rteRef.current?.editor?.getHTML().toString() || ""}];
+        if (assignment && user?.student) {
+            const updatedSubmissions : SubmissionDto[] = [...assignment.submissions, {id: "", studentId: user.student.id, feedback: undefined, grade: undefined, timestamp: new Date(Date.now()).toISOString().substring(0,19), content: rteRef.current?.editor?.getHTML().toString() || ""}];
             handleUpdate("submissions", updatedSubmissions);
+            rteRef.current?.editor?.destroy();
         }
     }
 
@@ -53,20 +54,20 @@ export default function AssignmentPage() {
             {assignment &&
                 <Stack component={"section"} sx={{my: 2}} spacing={2}>
                     <EditableTextDetail inputType={"text"} label={"Assignment Title"} name={"title"}
-                                        initialValue={assignment.title} updateFunction={handleUpdate} allowedToEdit={user?.instructor !== undefined || false}/>
+                                        initialValue={assignment.title} updateFunction={handleUpdate} allowedToEdit={!!user?.instructor}/>
                     <EditableTextDetail inputType={"datetime-local"} label={"Release"} name={"whenPublic"}
-                                        initialValue={assignment.whenPublic} updateFunction={handleUpdate} allowedToEdit={user?.instructor !== undefined || false}/>
+                                        initialValue={assignment.whenPublic} updateFunction={handleUpdate} allowedToEdit={!!user?.instructor}/>
                     <EditableTextDetail inputType={"datetime-local"} label={"Deadline"} name={"deadline"}
-                                        initialValue={assignment.deadline} updateFunction={handleUpdate} allowedToEdit={user?.instructor !== undefined || false}/>
-                    <EditableRichText label={"Description"} name={"description"} initialValue={assignment.description} updateFunction={handleUpdate} allowedToEdit={user?.instructor !== undefined || false}/>
+                                        initialValue={assignment.deadline} updateFunction={handleUpdate} allowedToEdit={!!user?.instructor}/>
+                    <EditableRichText label={"Description"} name={"description"} initialValue={assignment.description} updateFunction={handleUpdate} allowedToEdit={!!user?.instructor}/>
                     {(user && user.student) &&
                         <>
-                            {assignment.submissions.filter(submission => submission.studentId === user.id).length > 0 &&
+                            {assignment.submissions.filter(submission => submission.studentId === user?.student?.id).length > 0 &&
                                 <>
                                     <h4>Your Past Submissions</h4>
                                     <p>Please note: only your most recent submission will be shown to your instructor.</p>
                                     <List dense >
-                                        {assignment.submissions.filter(submission => submission.studentId === user.id).map(submission =>
+                                        {assignment.submissions.filter(submission => submission.studentId === user?.student?.id).map(submission =>
                                             (
                                                 <ListItem key={`submission-${submission.id}`} disablePadding>
                                                     <ListItemButton component={Link} to={`submission/${submission.id}`}>

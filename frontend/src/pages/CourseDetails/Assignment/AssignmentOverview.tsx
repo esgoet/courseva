@@ -9,7 +9,7 @@ import {
     ListItemIcon,
     ListItemText,
     useMediaQuery,
-    useTheme
+    useTheme, Typography
 } from "@mui/material";
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import ConfirmedDeleteIconButton from "../../../components/Shared/ConfirmedDeleteIconButton.tsx";
@@ -40,7 +40,7 @@ export default function AssignmentOverview() {
 
     return (
         <>
-            <h3>Assignments</h3>
+            <Typography variant={"h3"}>Assignments</Typography>
             {user?.instructor && <CreateButton />}
             <List>
                 {course?.assignments.filter(assignment => user?.instructor ? assignment : assignment.whenPublic.valueOf() < Date.now()).toSorted((a, b) => a?.whenPublic.getTime() - b?.whenPublic.getTime()).map(assignment => {

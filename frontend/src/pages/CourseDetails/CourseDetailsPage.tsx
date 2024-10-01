@@ -31,7 +31,7 @@ export default function CourseDetailsPage() {
             <Container>
                 <Breadcrumbs aria-label={"breadcrumb"}>
                     <Link to={"/"}>Dashboard</Link>
-                    <Typography>{course?.title ?? `No course found`}</Typography>
+                    <Typography>{loading ? 'Loading...' : course?.title ?? `No course found`}</Typography>
                 </Breadcrumbs>
                 <DataStateHandler loading={loading} error={error} height={'70vh'}>
                     {course &&
@@ -50,19 +50,19 @@ export default function CourseDetailsPage() {
                                             name={"title"}
                                             initialValue={course.title}
                                             updateFunction={updateCourse}
-                                            allowedToEdit={user?.instructor !== undefined || false}/>
+                                            allowedToEdit={!!user?.instructor}/>
                                     </h2>
                                 </ListItemText>
                             </ListItem>
                             <Paper sx={{p:'15px'}}>
                                 <Grid2 container spacing={{xs:2,sm:4}} direction={{xs:'column-reverse', sm: 'row'}} >
                                     <Grid2 size={{xs:12,sm:8}}>
-                                        <EditableRichText label={"Description"} name={"description"} allowedToEdit={user?.instructor !== undefined || false} initialValue={course.description} updateFunction={updateCourse}/>
+                                        <EditableRichText label={"Description"} name={"description"} allowedToEdit={!!user?.instructor} initialValue={course.description} updateFunction={updateCourse}/>
                                     </Grid2>
                                     <Grid2 size={{xs:12,sm:4}} display={"flex"} justifyContent={isMobile ? "flex-start" : "flex-end"} alignItems={"flex-start"}>
                                         <EditableTextDetail inputType={"date"} label={"Start Date"} name={"startDate"}
                                                             initialValue={course.startDate.toISOString().substring(0,10)} updateFunction={updateCourse}
-                                                            allowedToEdit={user?.instructor !== undefined || false}/>
+                                                            allowedToEdit={!!user?.instructor}/>
                                     </Grid2>
                                 </Grid2>
                                 {gradeAverage &&

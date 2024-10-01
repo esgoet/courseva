@@ -3,7 +3,7 @@ import { useAuth } from "../hooks/useAuth.ts";
 import ConfirmDialog from "../components/Shared/ConfirmDialog.tsx";
 import {useState} from "react";
 import {Link} from "react-router-dom";
-import {Button, Grid2, Paper} from "@mui/material";
+import {Button, Grid2, Paper, Typography} from "@mui/material";
 import {AccountCircle} from "@mui/icons-material";
 import {useUsers} from "../hooks/useUsers.ts";
 
@@ -21,10 +21,10 @@ export default function UserAccountPage() {
                 <Paper sx={{p:'20px', mt: '10px'}} square={false}>
                     <Grid2 container spacing={2}>
                         <Grid2 size={12} textAlign={"center"}>
-                            <AccountCircle sx={{fontSize: 80}} color={"primary"}/>
+                            <AccountCircle sx={{fontSize: 80}}/>
                         </Grid2>
                         <Grid2 size={12}>
-                            <h2>Account</h2>
+                            <Typography variant={"h2"}>Account</Typography>
                         </Grid2>
                         <Grid2 size={{xs: 12, sm: 6}}>
                         <EditableTextDetail
