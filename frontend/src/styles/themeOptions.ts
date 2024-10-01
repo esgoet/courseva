@@ -1,5 +1,18 @@
 import { ThemeOptions } from '@mui/material/styles';
 
+declare module '@mui/material/styles' {
+    interface Theme {
+        link: {
+            main: string;
+        };
+    }
+    // allow configuration using `createTheme`
+    interface ThemeOptions {
+        link?: {
+            main?: string;
+        };
+    }
+}
 
 export const themeOptions: ThemeOptions = {
     palette: {
@@ -11,14 +24,8 @@ export const themeOptions: ThemeOptions = {
             main: '#ffb300',
         },
         info: {
-            main: '#0288d1',
+            main: '#ff6637'
         }
-    },
-    typography: {
-        h1: {
-            fontFamily: 'Playwrite DE SAS',
-            fontSize: '5rem',
-        },
     },
     components: {
         MuiInput: {

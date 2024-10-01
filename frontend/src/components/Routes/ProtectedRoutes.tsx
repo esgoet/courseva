@@ -2,11 +2,11 @@ import {Navigate, Outlet} from "react-router-dom";
 import {useAuth} from "../../hooks/useAuth.ts";
 
 export default function ProtectedRoutes() {
-    const {user} = useAuth();
+    const {user,loading} = useAuth();
 
-    if (user === undefined) {
+    if (loading) {
         return <div>Loading...</div>
     }
-    return user ? <Outlet/> : <Navigate to={"/login"}/>;
+    return (!loading && user) ? <Outlet/> : <Navigate to={"/login"}/>;
 }
 

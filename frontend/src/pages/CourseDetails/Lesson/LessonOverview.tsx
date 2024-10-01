@@ -1,41 +1,32 @@
-import {LessonDto} from "../../../types/courseTypes.ts";
 import {Link} from "react-router-dom";
 import { convertToLessonDtoList} from "../../../utils/convertToLessonDto.ts";
 import {useAuth} from "../../../hooks/useAuth.ts";
-import {Button, List, ListItem, ListItemButton, ListItemText} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import {List, ListItem, ListItemButton, ListItemText} from "@mui/material";
 import ConfirmedDeleteIconButton from "../../../components/Shared/ConfirmedDeleteIconButton.tsx";
-import {useCourse} from "../../../hooks/useCourse.ts";
+import {useCurrentCourse} from "../../../hooks/useCurrentCourse.ts";
+import {useCourses} from "../../../hooks/useCourses.ts";
+import CreateButton from "../../../components/Shared/CreateButton.tsx";
 
+export default function LessonOverview() {
+    const {course} = useCurrentCourse();
+    const {user} = useAuth();
 
-type LessonOverviewProps = {
-    updateCourse: (updatedProperty: string, updatedValue: LessonDto[]) => void;
-}
-
-export default function LessonOverview({updateCourse}: Readonly<LessonOverviewProps>) {
-    const {course} = useCourse();
-    const {isInstructor} = useAuth();
+    const {updateCourse} = useCourses();
 
     const deleteLesson = (lessonId: string) => {
         if (course) {
-            updateCourse("lessons", convertToLessonDtoList(course.lessons.filter(lesson => lesson.id !== lessonId)))
+            updateCourse("lessons", convertToLessonDtoList(course.lessons.filter(lesson => lesson.id !== lessonId)));
         }
     }
     return (
         <>
             <h3>Lessons</h3>
-            {isInstructor &&
-                <Button
-                    component={Link} to={"create"}
-                    color={"secondary"}
-                    startIcon={<AddIcon/>}
-                    variant={"outlined"}
-                >Create</Button>}
+            {user?.instructor && <CreateButton />}
             <List>
-                {course?.lessons?.filter(lesson => isInstructor ? lesson : lesson.whenPublic.valueOf() < Date.now()).toSorted((a, b) => a?.whenPublic.getTime() - b?.whenPublic.getTime()).toSorted((a, b) => a?.whenPublic.getTime() - b?.whenPublic.getTime()).map(lesson=> (
+                {course?.lessons?.filter(lesson => user?.instructor ? lesson : lesson.whenPublic.valueOf() < Date.now()).toSorted((a, b) => a?.whenPublic.getTime() - b?.whenPublic.getTime()).toSorted((a, b) => a?.whenPublic.getTime() - b?.whenPublic.getTime()).map(lesson=> (
                     <ListItem
                         key={`lesson-${lesson.id}`}
-                        secondaryAction={isInstructor &&
+                        secondaryAction={user?.instructor &&
                             <ConfirmedDeleteIconButton toConfirmId={lesson.id} toConfirmName={lesson.title} toConfirmFunction={deleteLesson}/>}
                         disablePadding
                         divider

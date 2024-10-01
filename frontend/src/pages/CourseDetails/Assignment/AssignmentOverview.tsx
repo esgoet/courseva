@@ -1,9 +1,8 @@
-import {AssignmentDto} from "../../../types/courseTypes.ts";
 import {Link} from "react-router-dom";
 import {convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
 import {useAuth} from "../../../hooks/useAuth.ts";
 import {
-    Button, Grid2,
+    Grid2,
     List,
     ListItem,
     ListItemButton,
@@ -12,20 +11,19 @@ import {
     useMediaQuery,
     useTheme
 } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import ConfirmedDeleteIconButton from "../../../components/Shared/ConfirmedDeleteIconButton.tsx";
-import {useCourse} from "../../../hooks/useCourse.ts";
+import {useCurrentCourse} from "../../../hooks/useCurrentCourse.ts";
 import GradeDisplay from "../../../components/Shared/GradeDisplay.tsx";
 import {Grade, Student} from "../../../types/userTypes.ts";
+import {useCourses} from "../../../hooks/useCourses.ts";
+import CreateButton from "../../../components/Shared/CreateButton.tsx";
 
-type AssignmentOverviewProps = {
-    updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void;
-}
 
-export default function AssignmentOverview({updateCourse}: Readonly<AssignmentOverviewProps>) {
-    const {user, isInstructor} = useAuth();
-    const {course} = useCourse();
+export default function AssignmentOverview() {
+    const {user} = useAuth();
+    const {course} = useCurrentCourse();
+    const {updateCourse} = useCourses();
     const theme = useTheme();
     const isMobile = !(useMediaQuery(theme.breakpoints.up('sm')));
 
@@ -43,23 +41,17 @@ export default function AssignmentOverview({updateCourse}: Readonly<AssignmentOv
     return (
         <>
             <h3>Assignments</h3>
-            {isInstructor &&
-                <Button
-                    component={Link} to={"create"}
-                    color={"secondary"}
-                    startIcon={<AddIcon/>}
-                    variant={"outlined"}
-                >Create</Button>}
+            {user?.instructor && <CreateButton />}
             <List>
-                {course?.assignments.filter(assignment => isInstructor ? assignment : assignment.whenPublic.valueOf() < Date.now()).toSorted((a, b) => a?.whenPublic.getTime() - b?.whenPublic.getTime()).map(assignment => {
+                {course?.assignments.filter(assignment => user?.instructor ? assignment : assignment.whenPublic.valueOf() < Date.now()).toSorted((a, b) => a?.whenPublic.getTime() - b?.whenPublic.getTime()).map(assignment => {
                     let grade : number | undefined;
-                    if (user && 'grades' in user && course && getStudentGrade(user, assignment.id, course.id)) {
-                        grade = getStudentGrade(user, assignment.id, course.id);
+                    if (user && user.student && course && getStudentGrade(user.student, assignment.id, course.id)) {
+                        grade = getStudentGrade(user.student, assignment.id, course.id);
                     }
                     return (
                         <ListItem
                             key={`assignment-${assignment.id}`}
-                            secondaryAction={isInstructor &&
+                            secondaryAction={user?.instructor &&
                                 <ConfirmedDeleteIconButton toConfirmId={assignment.id} toConfirmName={assignment.title} toConfirmFunction={deleteAssignment}/>}
                             disablePadding
                             divider

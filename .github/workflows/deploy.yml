@@ -81,8 +81,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: push-to-docker-hub
     environment:
-      name: Learning Management System # Capstone Project name
-      url: https://learning-management-system-82aj.onrender.com/ # Link to deployment
+      name: Courseva # Capstone Project name
+      url: https://courseva.onrender.com/ # Link to deployment
     steps:
       - name: Trigger Render.com Deployment
         run: |

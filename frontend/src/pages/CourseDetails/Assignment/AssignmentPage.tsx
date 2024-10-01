@@ -5,20 +5,19 @@ import {convertToAssignmentDto, convertToAssignmentDtoList} from "../../../utils
 import EditableTextDetail from "../../../components/Shared/EditableTextDetail.tsx";
 import { useAuth } from "../../../hooks/useAuth.ts";
 import {Button, List, ListItem, ListItemButton, ListItemText, Stack} from "@mui/material";
-import {useCourse} from "../../../hooks/useCourse.ts";
+import {useCurrentCourse} from "../../../hooks/useCurrentCourse.ts";
 import EditableRichText from "../../../components/Shared/EditableRichText.tsx";
 import CustomRichTextEditor from "../../../components/Shared/CustomRichTextEditor.tsx";
 import {RichTextEditorRef} from "mui-tiptap";
 import {getMostRecentSubmissionsByStudent} from "../../../utils/getMostRecentSubmissionsByStudent.ts";
+import {useCourses} from "../../../hooks/useCourses.ts";
 
-type AssignmentPageProps = {
-    updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void
-}
-export default function AssignmentPage({updateCourse}: Readonly<AssignmentPageProps>) {
+export default function AssignmentPage() {
     const [assignment, setAssignment] = useState<AssignmentDto|undefined>();
     const {assignmentId} = useParams();
-    const {course} = useCourse();
-    const {user, isInstructor} = useAuth();
+    const {course} = useCurrentCourse();
+    const {updateCourse} = useCourses();
+    const {user} = useAuth();
     const rteRef = useRef<RichTextEditorRef>(null);
 
 
@@ -50,19 +49,17 @@ export default function AssignmentPage({updateCourse}: Readonly<AssignmentPagePr
 
     return (
         <>
-            <Button component={Link} to={".."} relative={"path"} variant={'outlined'}>Back to All Assignments</Button>
+            <Button component={Link} color={"info"} to={".."} relative={"path"} variant={'outlined'}>Back to All Assignments</Button>
             {assignment &&
-                <>
-                    <h3>
-                        <EditableTextDetail inputType={"text"} label={"Assignment Title"} name={"title"}
-                                            initialValue={assignment.title} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
-                    </h3>
+                <Stack component={"section"} sx={{my: 2}} spacing={2}>
+                    <EditableTextDetail inputType={"text"} label={"Assignment Title"} name={"title"}
+                                        initialValue={assignment.title} updateFunction={handleUpdate} allowedToEdit={user?.instructor !== undefined || false}/>
                     <EditableTextDetail inputType={"datetime-local"} label={"Release"} name={"whenPublic"}
-                                        initialValue={assignment.whenPublic} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
+                                        initialValue={assignment.whenPublic} updateFunction={handleUpdate} allowedToEdit={user?.instructor !== undefined || false}/>
                     <EditableTextDetail inputType={"datetime-local"} label={"Deadline"} name={"deadline"}
-                                        initialValue={assignment.deadline} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
-                    <EditableRichText label={"Description"} name={"description"} initialValue={assignment.description} updateFunction={handleUpdate} allowedToEdit={isInstructor}/>
-                    {!isInstructor && user &&
+                                        initialValue={assignment.deadline} updateFunction={handleUpdate} allowedToEdit={user?.instructor !== undefined || false}/>
+                    <EditableRichText label={"Description"} name={"description"} initialValue={assignment.description} updateFunction={handleUpdate} allowedToEdit={user?.instructor !== undefined || false}/>
+                    {(user && user.student) &&
                         <>
                             {assignment.submissions.filter(submission => submission.studentId === user.id).length > 0 &&
                                 <>
@@ -95,7 +92,7 @@ export default function AssignmentPage({updateCourse}: Readonly<AssignmentPagePr
                             }
                         </>
                     }
-                    {isInstructor &&
+                    {user?.instructor &&
                         <>
                             <h4>Submissions</h4>
                             {assignment.submissions.length > 0 ?
@@ -104,7 +101,7 @@ export default function AssignmentPage({updateCourse}: Readonly<AssignmentPagePr
                                         .map(submission => (
                                         <ListItem key={`submission-${submission.id}`} disablePadding>
                                             <ListItemButton component={Link} to={`submission/${submission.id}`}>
-                                                <ListItemText primary={submission.studentId} secondary={submission.timestamp}/>
+                                                <ListItemText primary={submission.studentId} secondary={submission.timestamp.toString()}/>
                                             </ListItemButton>
                                         </ListItem>
                                     ))}
@@ -114,7 +111,7 @@ export default function AssignmentPage({updateCourse}: Readonly<AssignmentPagePr
                             }
                         </>
                     }
-                </>
+                </Stack>
             }
         </>
     )

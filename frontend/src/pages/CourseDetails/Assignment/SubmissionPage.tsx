@@ -3,7 +3,7 @@ import {Assignment, AssignmentDto, SubmissionDto} from "../../../types/courseTyp
 import {FormEvent, useEffect, useRef, useState} from "react";
 import {Button, Grid2, IconButton, Paper, Typography} from "@mui/material";
 import {formatDate} from "../../../utils/formatDate.ts";
-import {useCourse} from "../../../hooks/useCourse.ts";
+import {useCurrentCourse} from "../../../hooks/useCurrentCourse.ts";
 import {RichTextEditorRef, RichTextReadOnly} from "mui-tiptap";
 import useExtensions from "../../../hooks/useExtensions.ts";
 import {convertToAssignmentDto, convertToAssignmentDtoList} from "../../../utils/convertToAssignmentDto.ts";
@@ -13,15 +13,14 @@ import GradeSlider from "../../../components/Shared/GradeSlider.tsx";
 import EditIcon from "@mui/icons-material/Edit";
 import CancelIcon from "@mui/icons-material/Cancel";
 import axiosInstance from "../../../api/axiosInstance.ts";
+import {useCourses} from "../../../hooks/useCourses.ts";
 
-type SubmissionPageProps = {
-    updateCourse: (updatedProperty: string, updatedValue: AssignmentDto[]) => void;
-}
-
-export default function SubmissionPage({updateCourse}:Readonly<SubmissionPageProps>) {
+export default function SubmissionPage() {
     const {submissionId, assignmentId} = useParams();
-    const {course} = useCourse();
-    const {isInstructor} = useAuth();
+    const {course} = useCurrentCourse();
+    const {updateCourse} = useCourses();
+    const {user} = useAuth();
+
     const [submission, setSubmission] = useState<SubmissionDto | undefined>();
     const [assignment, setAssignment] = useState<AssignmentDto | undefined>();
     const extensions = useExtensions();
@@ -61,12 +60,11 @@ export default function SubmissionPage({updateCourse}:Readonly<SubmissionPagePro
 
     return (
         <>
-            <Button component={Link} to={"../.."} relative={"path"} variant={'outlined'}>Back to Assignment</Button>
+            <Button component={Link} color={"info"} to={"../.."} relative={"path"} variant={'outlined'}>Back to Assignment</Button>
             {submission &&
                 <>
                     <h3>Submission</h3>
                     <Grid2 container spacing={2}>
-
                         <Grid2 size={{xs: 12, sm: 6}}>
                             <Typography variant={"body2"} color={"secondary"}>
                                 Student ID
@@ -86,7 +84,7 @@ export default function SubmissionPage({updateCourse}:Readonly<SubmissionPagePro
                         <Grid2 size={12}>
                             <Grid2 container justifyContent={'space-between'} alignItems={"center"}>
                                 <h4>Feedback</h4>
-                                {(isInstructor && submission.feedback) &&
+                                {(user?.instructor && submission.feedback) &&
                                     <IconButton
                                         onClick={() => setEditable(!editable)}
                                         color={"secondary"}
@@ -95,7 +93,7 @@ export default function SubmissionPage({updateCourse}:Readonly<SubmissionPagePro
                                     </IconButton>
                                 }
                             </Grid2>
-                            {isInstructor && !submission.feedback || isInstructor && editable ?
+                            {user?.instructor && !submission.feedback || user?.instructor && editable ?
                                 <FeedbackForm handleSubmit={handleFeedbackSubmission} submission={submission} setSubmission={setSubmission} ref={rteRef}/>
                                 :
                                 <>

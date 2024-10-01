@@ -1,21 +1,27 @@
 import {Course} from "../../../types/courseTypes.ts";
 import CourseEntry from "../CourseEntry.tsx";
 import {List} from "@mui/material";
+import {useCourses} from "../../../hooks/useCourses.ts";
+import DataStateHandler from "../../Shared/DataStateHandler.tsx";
 
 type CourseListProps = {
-    courses: Course[],
-    deleteCourse: (courseId: string) => void,
-    updateUser: (courseId: string, isAdded: boolean) => void,
-    updateCourse: (updatedProperty: string, updatedValue: string[], course: Course) => void,
+    courses?: Course[]
 }
 
-export default function CourseList({courses, deleteCourse, updateUser, updateCourse}: Readonly<CourseListProps>) {
+export default function CourseList({courses}: Readonly<CourseListProps>) {
+    const {courses: allCourses, loading, error} = useCourses();
+
+    if (!courses) {
+        courses = allCourses;
+    }
 
     return (
-        <List>
-            {courses.map((course) => (
-                <CourseEntry key={course.id} course={course} deleteCourse={deleteCourse} updateUser={updateUser} updateCourse={updateCourse}/>
-            ))}
-        </List>
+        <DataStateHandler loading={loading} error={error} height={'100px'}>
+            <List>
+                {courses.map((course) => (
+                    <CourseEntry key={course.id} course={course} />
+                ))}
+            </List>
+        </DataStateHandler>
     )
 }
